@@ -1,0 +1,11 @@
+{
+  "name": "twelve",
+  "version": "1.0.0",
+  "description": "Proyecto base Taller Web I (Maven and Thymeleaf) ===============================",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
