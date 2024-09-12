@@ -1,4 +1,4 @@
-package org.twelve.dominio;
+package org.twelve.dominio.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

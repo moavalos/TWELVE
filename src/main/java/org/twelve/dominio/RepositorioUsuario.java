@@ -1,5 +1,7 @@
 package org.twelve.dominio;
 
+import org.twelve.dominio.entities.Usuario;
+
 public interface RepositorioUsuario {
 
     Usuario buscarUsuario(String email, String password);

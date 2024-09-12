@@ -1,5 +1,8 @@
-package org.twelve.dominio;
+package org.twelve.dominio.serviceImpl;
 
+import org.twelve.dominio.RepositorioUsuario;
+import org.twelve.dominio.ServicioLogin;
+import org.twelve.dominio.entities.Usuario;
 import org.twelve.dominio.excepcion.UsuarioExistente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

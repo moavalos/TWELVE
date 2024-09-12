@@ -1,7 +1,7 @@
 package org.twelve.presentacion;
 
 import org.twelve.dominio.ServicioLogin;
-import org.twelve.dominio.Usuario;
+import org.twelve.dominio.entities.Usuario;
 import org.twelve.dominio.excepcion.UsuarioExistente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

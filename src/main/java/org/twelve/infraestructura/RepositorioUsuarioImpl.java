@@ -1,7 +1,7 @@
 package org.twelve.infraestructura;
 
 import org.twelve.dominio.RepositorioUsuario;
-import org.twelve.dominio.Usuario;
+import org.twelve.dominio.entities.Usuario;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
