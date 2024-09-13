@@ -1,0 +1,62 @@
+body {
+    background-color: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    padding: 50px;
+}
+
+h1 {
+    font-size: 4em;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 1.2em;
+    line-height: 1.6;
+}
+
+.movie-poster {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.btn-primary {
+    background-color: #dc3545;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+.arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 3em;
+    cursor: pointer;
+}
+
+.arrow-left {
+    left: 10px;
+}
+
+.arrow-right {
+    right: 10px;
+}
