@@ -12,6 +12,8 @@ import javax.sql.DataSource;
 @Configuration
 public class DatabaseInitializationConfig {
 
+    // toma scripts y ejecuta en la bdd q lee el archivo .sql
+
     @Autowired
     private DataSource dataSource;
 
