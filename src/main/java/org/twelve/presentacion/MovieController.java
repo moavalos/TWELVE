@@ -7,9 +7,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.twelve.dominio.MovieService;
-import org.twelve.dominio.entities.Movie;
+import org.twelve.presentacion.dto.MovieDTO;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -24,7 +23,7 @@ public class MovieController {
 
     @RequestMapping(path = "/movies", method = RequestMethod.GET)
     public ModelAndView getAllMoviesView() {
-        List<Movie> movies = movieService.getAll();
+        List<MovieDTO> movies = movieService.getAll();
 
         ModelMap modelo = new ModelMap();
         modelo.put("movies", movies);
@@ -34,31 +33,32 @@ public class MovieController {
 
     // TODO modifidcar estos endpoints
 
-    //@RequestMapping(path = "/getAll", method = RequestMethod.GET)
-    public ResponseEntity<List<Movie>> getAllMovies(@ModelAttribute("movie") DatosMovie datosMovie, HttpServletRequest request) {
+    /*@RequestMapping(path = "/getAll", method = RequestMethod.GET)
+    public ResponseEntity<List<Movie>> getAllMovies(@ModelAttribute("movie") MovieDTO datosMovie, HttpServletRequest request) {
         List<Movie> movies = movieService.getAll();
         return ResponseEntity.ok(movies);
-    }
+        return null;
+    }*/
 
-    @RequestMapping(path = "/{id}]", method = RequestMethod.GET)
-    public ResponseEntity<Movie> getMovieById(@PathVariable Integer id) {
-        Movie movie = movieService.getById(id);
-        if (movie != null) {
-            return ResponseEntity.ok(movie);
+    @RequestMapping(path = "/{id}", method = RequestMethod.GET)
+    public ResponseEntity<MovieDTO> getMovieById(@PathVariable Integer id) {
+        MovieDTO movieDTO = movieService.getById(id);
+        if (movieDTO != null) {
+            return ResponseEntity.ok(movieDTO);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
     @RequestMapping(path = "/agregar]", method = RequestMethod.POST)
-    public ResponseEntity<Movie> addMovie(@RequestBody Movie movie) {
-        Movie createdMovie = movieService.create(movie);
+    public ResponseEntity<MovieDTO> addMovie(@RequestBody MovieDTO movie) {
+        MovieDTO createdMovie = movieService.create(movie);
         return ResponseEntity.ok(createdMovie);
     }
 
     @RequestMapping(path = "/search", method = RequestMethod.GET)
-    public ResponseEntity<Movie> searchMovies(@RequestParam String title) {
-        Movie movie = movieService.searchByTitle(title);
+    public ResponseEntity<MovieDTO> searchMovies(@RequestParam String title) {
+        MovieDTO movie = movieService.searchByTitle(title);
         if (movie != null) {
             return ResponseEntity.ok(movie);
         } else {
@@ -67,20 +67,20 @@ public class MovieController {
     }
 
     @RequestMapping(path = "/most-viewed", method = RequestMethod.GET)
-    public ResponseEntity<List<Movie>> getMostViewedMovies() {
-        List<Movie> movies = movieService.getMovieMasVista();
+    public ResponseEntity<List<MovieDTO>> getMostViewedMovies() {
+        List<MovieDTO> movies = movieService.getMovieMasVista();
         return ResponseEntity.ok(movies);
     }
 
     @RequestMapping(path = "/top-rated", method = RequestMethod.GET)
-    public ResponseEntity<List<Movie>> getTopRatedMovies() {
-        List<Movie> movies = movieService.getMovieByValoracion();
+    public ResponseEntity<List<MovieDTO>> getTopRatedMovies() {
+        List<MovieDTO> movies = movieService.getMovieByValoracion();
         return ResponseEntity.ok(movies);
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Movie> updateMovie(@PathVariable Integer id, @RequestBody Movie movie) {
-        Movie existingMovie = movieService.getById(id);
+    public ResponseEntity<MovieDTO> updateMovie(@PathVariable Integer id, @RequestBody MovieDTO movie) {
+        MovieDTO existingMovie = movieService.getById(id);
         if (existingMovie != null) {
             existingMovie.setNombre(movie.getNombre());
             existingMovie.setDescripcion(movie.getDescripcion());
@@ -92,7 +92,7 @@ public class MovieController {
             existingMovie.setImagen(movie.getImagen());
             existingMovie.setLikes(movie.getLikes());
             existingMovie.setValoracion(movie.getValoracion());
-            Movie updatedMovie = movieService.create(existingMovie);
+            MovieDTO updatedMovie = movieService.create(existingMovie);
             return ResponseEntity.ok(updatedMovie);
         } else {
             return ResponseEntity.notFound().build();

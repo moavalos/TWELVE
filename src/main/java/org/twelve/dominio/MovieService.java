@@ -1,24 +1,25 @@
 package org.twelve.dominio;
 
 import org.twelve.dominio.entities.Movie;
+import org.twelve.presentacion.dto.MovieDTO;
 
 import java.util.List;
 
 public interface MovieService {
 
-    List<Movie> getAll();
+    List<MovieDTO> getAll();
 
-    Movie getById(Integer id);
+    MovieDTO getById(Integer id);
 
-    Movie create(Movie movie);
+    MovieDTO create(MovieDTO movie);
 
     //Movie update(Movie movie);
 
-    Movie searchByTitle(String title);
+    MovieDTO searchByTitle(String title);
 
-    List<Movie> getMovieMasVista();
+    List<MovieDTO> getMovieMasVista();
 
-    List<Movie> getMovieByValoracion(); // mejor valoradas
+    List<MovieDTO> getMovieByValoracion(); // mejor valoradas
 
 
 }
