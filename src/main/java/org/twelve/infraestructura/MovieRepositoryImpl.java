@@ -62,13 +62,20 @@ public class MovieRepositoryImpl implements MovieRepository {
     }
 
     @Override
+    public List<Movie> findByCategoriaId(Integer idCategoria) {
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "from Movie where idCategoria = :idCategoria";
+        return session.createQuery(hql, Movie.class)
+                .setParameter("idCategoria", idCategoria)
+                .list();
+    }
+
+    @Override
     public List<Movie> findNewestMovie() {
         Session session = sessionFactory.getCurrentSession();
         String hql = "from Movie order by añoLanzamiento desc";
         return session.createQuery(hql, Movie.class).setMaxResults(10).list();
     }
-
-
 }
 
 

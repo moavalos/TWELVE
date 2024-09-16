@@ -5,35 +5,44 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>Taller Web I</title>
+    <title>TWELVE</title>
 
-    <!-- Boostrap core css -->
+    <!-- Bootstrap core CSS -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
 
-    <!-- custom style -->
+    <!-- Custom Style -->
     <link rel="stylesheet" th:href="@{/css/login.css}"/>
-
 </head>
 
 <body>
-    <div class="container">
-        <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="col-md-6">
+        <div class="card p-4 shadow-lg">
+            <div class="card-body">
+                <h1 class="text-center mb-4 text-gray">Iniciar Sesión</h1>
                 <form action="#" th:action="@{/validar-login}" method="POST" th:object="${datosLogin}">
-                <h1 class="text-gray">INGRESE SU E-MAIL</h1>
-                <input th:field="*{email}" id="email" type="email" class="form-control" required/>
+                    <div class="form-group mb-3">
+                        <label for="email" class="form-label text-gray">Ingrese su E-mail</label>
+                        <input th:field="*{email}" id="email" type="email" class="form-control" required
+                               placeholder="Correo electrónico"/>
+                    </div>
 
-                <h1 class="text-gray">INGRESE CLAVE</h1>
-                <input th:field="*{password}" type="password" id="password" class="form-control" required/>
+                    <div class="form-group mb-4">
+                        <label for="password" class="form-label text-gray">Ingrese Clave</label>
+                        <input th:field="*{password}" id="password" type="password" class="form-control" required
+                               placeholder="Contraseña"/>
+                    </div>
 
-                <button id="btn-login" class="btn btn-lg btn-primary btn-block" Type="Submit">Login</button>
+                    <button id="btn-login" class="btn btn-primary btn-block mb-3" type="submit">Login</button>
 
-                <p th:if="${error != null}" class="alert alert-danger" th:text="'Error ' + ${error}"></p>
+                    <p th:if="${error != null}" class="alert alert-danger" th:text="'Error: ' + ${error}"></p>
 
-            </form>
-            <a id="ir-a-registrarme" href="nuevo-usuario">Registrarme</a>
+                    <p class="text-center text-gray">¿No tienes una cuenta? <a href="nuevo-usuario" class="text-primary">Registrarme</a></p>
+                </form>
+            </div>
         </div>
     </div>
-<div class="twelve">TWELVE+</div>
+</div>
 
 <script type="text/javascript" th:src="@{webjars/bootstrap/5.2.0/js/bootstrap.min.js}"></script>
 </body>

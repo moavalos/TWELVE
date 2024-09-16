@@ -1,48 +1,49 @@
 <!DOCTYPE HTML>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>Taller Web I</title>
+    <title>TWELVE</title>
 
-  <!-- Boostrap core css -->
-  <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
 
-  <!-- custom style -->
-  <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <!-- Custom style -->
+    <link rel="stylesheet" th:href="@{/css/nuevousuario.css}"/>
 
 </head>
 
 <body>
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="col-md-6">
+        <div class="card p-4 shadow-lg">
+            <div class="card-body">
+                <h1 class="text-center mb-4 text-gray">Nuevo Usuario</h1>
+                <form action="#" th:action="@{/registrarme}" method="POST" th:object="${usuario}">
+                    <div class="form-group mb-3">
+                        <label for="email" class="form-label text-gray">Ingrese su E-mail</label>
+                        <input th:field="*{email}" id="email" type="email" class="form-control" required
+                               placeholder="Correo electrónico"/>
+                    </div>
 
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-  <a class="navbar-brand" href="#">UNLAM</a>
-</nav>
+                    <div class="form-group mb-4">
+                        <label for="password" class="form-label text-gray">Ingrese Clave</label>
+                        <input th:field="*{password}" id="password" type="password" class="form-control" required
+                               placeholder="Contraseña"/>
+                    </div>
 
-<main role="main" class="container">
+                    <button id="btn-registrarme" class="btn btn-primary btn-block mb-3" type="submit">Registrarme</button>
 
-  <div class = "container">
-    <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-      <form action="#" th:action="@{/registrarme}" method="POST" th:object="${usuario}">
-        <h3 class="form-signin-heading">Nuevo Usuario</h3>
-        <hr class="colorgraph"><br>
-
-        <input th:field="*{email}" id="email" class="form-control" required/>
-        <input th:field="*{password}" type="password" id="password" class="form-control" required/>
-
-        <button id="btn-registrarme" class="btn btn-lg btn-primary btn-block" Type="Submit">Registrarme</button>
-        <p th:if="${error != null}" class="alert alert-danger" th:text="'Error ' + ${error}">
-        </p>
-      </form>
-
+                    <p th:if="${error != null}" class="alert alert-danger" th:text="'Error: ' + ${error}"></p>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
+</div>
 
-</main>
-<!-- /.container -->
-
-<!-- Boostrap core js -->
-<script type="text/javascript" th:src="@{webjars/bootstrap/5.2.0/js/bootstrap.min.js}"></script>
+<!-- Bootstrap core JS -->
+<script type="text/javascript" th:src="@{/webjars/bootstrap/5.2.0/js/bootstrap.min.js}"></script>
 </body>
 </html>

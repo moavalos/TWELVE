@@ -8,6 +8,7 @@ public class MovieDTO {
     private Double duracion;
     private String pais;
     private Integer cantVistas;
+    private Integer idCategoria;
     private String anioLanzamiento;
     private String imagen;
     private Integer likes;
@@ -16,13 +17,14 @@ public class MovieDTO {
     public MovieDTO() {
     }
 
-    public MovieDTO(String nombre, String descripcion, String frase, Double duracion, String pais, Integer cantVistas, String anioLanzamiento, String imagen, Integer likes, Double valoracion) {
+    public MovieDTO(String nombre, String descripcion, String frase, Double duracion, String pais, Integer cantVistas, Integer idCategoria, String anioLanzamiento, String imagen, Integer likes, Double valoracion) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.frase = frase;
         this.duracion = duracion;
         this.pais = pais;
         this.cantVistas = cantVistas;
+        this.idCategoria = idCategoria;
         this.anioLanzamiento = anioLanzamiento;
         this.imagen = imagen;
         this.likes = likes;
@@ -75,6 +77,14 @@ public class MovieDTO {
 
     public void setCantVistas(Integer cantVistas) {
         this.cantVistas = cantVistas;
+    }
+
+    public Integer getIdCategoria() {
+        return idCategoria;
+    }
+
+    public void setIdCategoria(Integer idCategoria) {
+        this.idCategoria = idCategoria;
     }
 
     public String getAnioLanzamiento() {

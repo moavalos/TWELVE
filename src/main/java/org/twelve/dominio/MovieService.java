@@ -1,6 +1,5 @@
 package org.twelve.dominio;
 
-import org.twelve.dominio.entities.Movie;
 import org.twelve.presentacion.dto.MovieDTO;
 
 import java.util.List;
@@ -21,6 +20,7 @@ public interface MovieService {
 
     List<MovieDTO> getMovieByValoracion(); // mejor valoradas
 
+    List<MovieDTO> getMoviesByCategory(Integer idCategoria);
 
     List<MovieDTO> getMovieByAnio();
 }

@@ -1,9 +1,9 @@
 package org.twelve;
 
+import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 import org.twelve.config.DatabaseInitializationConfig;
 import org.twelve.config.HibernateConfig;
 import org.twelve.config.SpringWebConfig;
-import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class MyServletInitializer
         extends AbstractAnnotationConfigDispatcherServletInitializer {
