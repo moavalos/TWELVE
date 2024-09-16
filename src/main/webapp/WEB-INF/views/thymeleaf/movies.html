@@ -30,7 +30,8 @@
                     <label for="idCategoria">Filtrar por categoría:</label>
                     <select class="form-control" id="idCategoria" name="idCategoria" onchange="submitCategoryForm()">
                         <option value="">Todas</option>
-                        <option th:each="category : ${categorias}" th:value="${category.id}" th:text="${category.nombre}"></option>
+                        <option th:each="category : ${categorias}" th:value="${category.id}"
+                                th:text="${category.nombre}"></option>
                     </select>
                 </div>
             </form>

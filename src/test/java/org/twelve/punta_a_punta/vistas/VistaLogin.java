@@ -9,23 +9,23 @@ public class VistaLogin extends VistaWeb {
         page.navigate("localhost:8080/login");
     }
 
-    public String obtenerTextoDeLaBarraDeNavegacion(){
+    public String obtenerTextoDeLaBarraDeNavegacion() {
         return this.obtenerTextoDelElemento("nav a.navbar-brand");
     }
 
-    public String obtenerMensajeDeError(){
+    public String obtenerMensajeDeError() {
         return this.obtenerTextoDelElemento("p.alert.alert-danger");
     }
 
-    public void escribirEMAIL(String email){
+    public void escribirEMAIL(String email) {
         this.escribirEnElElemento("#email", email);
     }
 
-    public void escribirClave(String clave){
+    public void escribirClave(String clave) {
         this.escribirEnElElemento("#password", clave);
     }
 
-    public void darClickEnIniciarSesion(){
+    public void darClickEnIniciarSesion() {
         this.darClickEnElElemento("#btn-login");
     }
 }

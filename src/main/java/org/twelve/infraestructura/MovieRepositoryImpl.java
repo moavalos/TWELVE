@@ -15,7 +15,7 @@ public class MovieRepositoryImpl implements MovieRepository {
     private SessionFactory sessionFactory;
 
     @Autowired
-    public MovieRepositoryImpl(SessionFactory sessionFactory){
+    public MovieRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

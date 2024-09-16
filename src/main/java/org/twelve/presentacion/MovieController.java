@@ -21,7 +21,7 @@ public class MovieController {
     private CategoriaService categoriaService;
 
     @Autowired
-    public MovieController(MovieService movieService, CategoriaService categoriaService){
+    public MovieController(MovieService movieService, CategoriaService categoriaService) {
         this.movieService = movieService;
         this.categoriaService = categoriaService;
     }
