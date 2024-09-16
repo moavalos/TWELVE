@@ -15,7 +15,7 @@ public class MovieRepositoryImpl implements MovieRepository {
     private SessionFactory sessionFactory;
 
     @Autowired
-    public MovieRepositoryImpl(SessionFactory sessionFactory){
+    public MovieRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
@@ -60,6 +60,15 @@ public class MovieRepositoryImpl implements MovieRepository {
         String hql = "from Movie order by valoracion desc";
         return session.createQuery(hql, Movie.class).setMaxResults(10).list();
     }
+
+    @Override
+    public List<Movie> findNewestMovie() {
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "from Movie order by añoLanzamiento desc";
+        return session.createQuery(hql, Movie.class).setMaxResults(10).list();
+    }
+
+
 }
 
 

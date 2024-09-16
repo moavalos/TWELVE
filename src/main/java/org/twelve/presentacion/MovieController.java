@@ -17,7 +17,7 @@ public class MovieController {
     private MovieService movieService;
 
     @Autowired
-    public MovieController(MovieService movieService){
+    public MovieController(MovieService movieService) {
         this.movieService = movieService;
     }
 
@@ -30,6 +30,28 @@ public class MovieController {
 
         return new ModelAndView("movies", modelo);
     }
+
+
+    @RequestMapping(path = "/top-rated-movies", method = RequestMethod.GET)
+    public ModelAndView getTopRatedMoviesView() {
+        List<MovieDTO> topRated = movieService.getMovieByValoracion();
+
+        ModelMap modelo = new ModelMap();
+        modelo.put("topRated", topRated);
+
+        return new ModelAndView("topRatedMovies", modelo);
+    }
+
+    @RequestMapping(path = "/newestMovies", method = RequestMethod.GET)
+    public ModelAndView getNewestMoviesView() {
+        List<MovieDTO> newestMovies = movieService.getMovieByAnio();
+
+        ModelMap modelo = new ModelMap();
+        modelo.put("newestMovies", newestMovies);
+
+        return new ModelAndView("newestMovies", modelo);
+    }
+
 
     // TODO modifidcar estos endpoints
 
@@ -72,12 +94,6 @@ public class MovieController {
         return ResponseEntity.ok(movies);
     }
 
-    @RequestMapping(path = "/top-rated", method = RequestMethod.GET)
-    public ResponseEntity<List<MovieDTO>> getTopRatedMovies() {
-        List<MovieDTO> movies = movieService.getMovieByValoracion();
-        return ResponseEntity.ok(movies);
-    }
-
     @RequestMapping(path = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<MovieDTO> updateMovie(@PathVariable Integer id, @RequestBody MovieDTO movie) {
         MovieDTO existingMovie = movieService.getById(id);
@@ -88,7 +104,7 @@ public class MovieController {
             existingMovie.setDuracion(movie.getDuracion());
             existingMovie.setPais(movie.getPais());
             existingMovie.setCantVistas(movie.getCantVistas());
-            existingMovie.setAñoLanzamiento(movie.getAñoLanzamiento());
+            existingMovie.setAnioLanzamiento(movie.getAnioLanzamiento());
             existingMovie.setImagen(movie.getImagen());
             existingMovie.setLikes(movie.getLikes());
             existingMovie.setValoracion(movie.getValoracion());
