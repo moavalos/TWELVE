@@ -19,4 +19,7 @@ public interface MovieRepository {
     List<Movie> findTopRated();
 
     List<Movie> findByCategoriaId(Integer idCategoria);
+
+    List<Movie> findNewestMovie();
+
 }

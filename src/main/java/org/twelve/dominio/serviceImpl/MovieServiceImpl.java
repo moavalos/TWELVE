@@ -65,6 +65,12 @@ public class MovieServiceImpl implements MovieService {
         return movies.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
+    @Override
+    public List<MovieDTO> getMovieByAnio() {
+        List<Movie> newestMovies = movieRepository.findNewestMovie();
+        return newestMovies.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
     // dto a entidad en
     private Movie convertToEntity(MovieDTO movieDTO) {
         Movie movie = new Movie();
@@ -75,7 +81,7 @@ public class MovieServiceImpl implements MovieService {
         movie.setPais(movieDTO.getPais());
         movie.setCantVistas(movieDTO.getCantVistas());
         movie.setIdCategoria(movieDTO.getIdCategoria());
-        movie.setAñoLanzamiento(movieDTO.getAñoLanzamiento());
+        movie.setAñoLanzamiento(movieDTO.getAnioLanzamiento());
         movie.setImagen(movieDTO.getImagen());
         movie.setLikes(movieDTO.getLikes());
         movie.setValoracion(movieDTO.getValoracion());
