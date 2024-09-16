@@ -17,4 +17,6 @@ public interface MovieRepository {
     List<Movie> findMostViewed();
 
     List<Movie> findTopRated();
+
+    List<Movie> findNewestMovie();
 }

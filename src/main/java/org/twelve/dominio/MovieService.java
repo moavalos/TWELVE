@@ -22,4 +22,5 @@ public interface MovieService {
     List<MovieDTO> getMovieByValoracion(); // mejor valoradas
 
 
+    List<MovieDTO> getMovieByAnio();
 }
