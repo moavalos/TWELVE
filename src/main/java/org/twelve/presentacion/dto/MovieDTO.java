@@ -1,7 +1,5 @@
 package org.twelve.presentacion.dto;
 
-import java.util.Date;
-
 public class MovieDTO {
 
     private String nombre;
@@ -10,6 +8,7 @@ public class MovieDTO {
     private Double duracion;
     private String pais;
     private Integer cantVistas;
+    private Integer idCategoria;
     private String añoLanzamiento;
     private String imagen;
     private Integer likes;
@@ -18,13 +17,14 @@ public class MovieDTO {
     public MovieDTO() {
     }
 
-    public MovieDTO(String nombre, String descripcion, String frase, Double duracion, String pais, Integer cantVistas, String añoLanzamiento, String imagen, Integer likes, Double valoracion) {
+    public MovieDTO(String nombre, String descripcion, String frase, Double duracion, String pais, Integer cantVistas, Integer idCategoria, String añoLanzamiento, String imagen, Integer likes, Double valoracion) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.frase = frase;
         this.duracion = duracion;
         this.pais = pais;
         this.cantVistas = cantVistas;
+        this.idCategoria = idCategoria;
         this.añoLanzamiento = añoLanzamiento;
         this.imagen = imagen;
         this.likes = likes;
@@ -77,6 +77,14 @@ public class MovieDTO {
 
     public void setCantVistas(Integer cantVistas) {
         this.cantVistas = cantVistas;
+    }
+
+    public Integer getIdCategoria() {
+        return idCategoria;
+    }
+
+    public void setIdCategoria(Integer idCategoria) {
+        this.idCategoria = idCategoria;
     }
 
     public String getAñoLanzamiento() {

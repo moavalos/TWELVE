@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -30,7 +31,7 @@ public class Movie {
 
     private Integer cantVistas;
 
-    //private Categoria categorias;
+    private Integer idCategoria;
 
     private String añoLanzamiento;
 
@@ -40,8 +41,8 @@ public class Movie {
 
     //private Director director;
 
-    // una pelicula tiene n comentarios
-    //private Comentario comentario;
+    //@OneToMany(mappedBy = "movie") // una pelicula puede tener n comentarios
+    //private List<Comentario> comentarios;
 
     private Integer likes;
 

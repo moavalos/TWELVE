@@ -6,7 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.twelve.dominio.CategoriaService;
 import org.twelve.dominio.MovieService;
+import org.twelve.presentacion.dto.CategoriaDTO;
 import org.twelve.presentacion.dto.MovieDTO;
 
 import java.util.List;
@@ -16,29 +18,31 @@ public class MovieController {
 
     private MovieService movieService;
 
+    private CategoriaService categoriaService;
+
     @Autowired
-    public MovieController(MovieService movieService){
+    public MovieController(MovieService movieService, CategoriaService categoriaService){
         this.movieService = movieService;
+        this.categoriaService = categoriaService;
     }
 
     @RequestMapping(path = "/movies", method = RequestMethod.GET)
-    public ModelAndView getAllMoviesView() {
-        List<MovieDTO> movies = movieService.getAll();
+    public ModelAndView getAllMoviesView(@RequestParam(value = "idCategoria", required = false) Integer idCategoria) {
+        List<MovieDTO> movies;
+        if (idCategoria != null) {
+            movies = movieService.getMoviesByCategory(idCategoria);
+        } else {
+            movies = movieService.getAll();
+        }
+
+        List<CategoriaDTO> categorias = categoriaService.getAll();
 
         ModelMap modelo = new ModelMap();
         modelo.put("movies", movies);
+        modelo.put("categorias", categorias);
 
         return new ModelAndView("movies", modelo);
     }
-
-    // TODO modifidcar estos endpoints
-
-    /*@RequestMapping(path = "/getAll", method = RequestMethod.GET)
-    public ResponseEntity<List<Movie>> getAllMovies(@ModelAttribute("movie") MovieDTO datosMovie, HttpServletRequest request) {
-        List<Movie> movies = movieService.getAll();
-        return ResponseEntity.ok(movies);
-        return null;
-    }*/
 
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<MovieDTO> getMovieById(@PathVariable Integer id) {
@@ -94,6 +98,17 @@ public class MovieController {
             existingMovie.setValoracion(movie.getValoracion());
             MovieDTO updatedMovie = movieService.create(existingMovie);
             return ResponseEntity.ok(updatedMovie);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // GET /movies/category?idCategoria=ID_CATEGORIA
+    @RequestMapping(path = "/movies/category", method = RequestMethod.GET)
+    public ResponseEntity<List<MovieDTO>> getMoviesByCategory(@RequestParam Integer idCategoria) {
+        List<MovieDTO> movies = movieService.getMoviesByCategory(idCategoria);
+        if (movies != null && !movies.isEmpty()) {
+            return ResponseEntity.ok(movies);
         } else {
             return ResponseEntity.notFound().build();
         }

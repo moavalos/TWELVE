@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.twelve.dominio.MovieRepository;
 import org.twelve.dominio.MovieService;
+import org.twelve.dominio.entities.Categoria;
 import org.twelve.dominio.entities.Movie;
 import org.twelve.presentacion.dto.MovieDTO;
 
@@ -59,6 +60,12 @@ public class MovieServiceImpl implements MovieService {
         return topRatedMovies.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
+    @Override
+    public List<MovieDTO> getMoviesByCategory(Integer idCategoria) {
+        List<Movie> movies = movieRepository.findByCategoriaId(idCategoria);
+        return movies.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
     // dto a entidad en
     private Movie convertToEntity(MovieDTO movieDTO) {
         Movie movie = new Movie();
@@ -68,6 +75,7 @@ public class MovieServiceImpl implements MovieService {
         movie.setDuracion(movieDTO.getDuracion());
         movie.setPais(movieDTO.getPais());
         movie.setCantVistas(movieDTO.getCantVistas());
+        movie.setIdCategoria(movieDTO.getIdCategoria());
         movie.setAñoLanzamiento(movieDTO.getAñoLanzamiento());
         movie.setImagen(movieDTO.getImagen());
         movie.setLikes(movieDTO.getLikes());
@@ -84,6 +92,7 @@ public class MovieServiceImpl implements MovieService {
                 movie.getDuracion(),
                 movie.getPais(),
                 movie.getCantVistas(),
+                movie.getIdCategoria(),
                 movie.getAñoLanzamiento(),
                 movie.getImagen(),
                 movie.getLikes(),
