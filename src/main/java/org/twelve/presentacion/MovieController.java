@@ -29,11 +29,10 @@ public class MovieController {
     @RequestMapping(path = "/movies", method = RequestMethod.GET)
     public ModelAndView getAllMoviesView(@RequestParam(value = "idCategoria", required = false) Integer idCategoria) {
         List<MovieDTO> movies;
-        if (idCategoria != null) {
+        if (idCategoria != null)
             movies = movieService.getMoviesByCategory(idCategoria);
-        } else {
+        else
             movies = movieService.getAll();
-        }
 
         List<CategoriaDTO> categorias = categoriaService.getAll();
 

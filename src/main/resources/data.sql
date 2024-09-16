@@ -1,6 +1,9 @@
 INSERT INTO Usuario(id, email, password, rol, activo)
 VALUES (null, 'test@unlam.edu.ar', 'test', 'ADMIN', true);
 
+INSERT INTO Usuario(id, email, password, rol, activo)
+VALUES (null, 'mora@unlam.edu.ar', 'mora', 'ADMIN', true);
+
 INSERT INTO Movie (nombre, descripcion, frase, duracion, pais, cantVistas, idCategoria, añoLanzamiento, imagen, likes,
                    valoracion)
 VALUES ('El Origen',
