@@ -9,37 +9,142 @@
     <!-- Bootstrap core css -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
 
-    <!-- custom style -->
-    <link rel="stylesheet" th:href="@{/css/home.css}"/>
+
+    <!-- <link rel="stylesheet" th:href="@{/css/home.css}"/> -->
 </head>
 
 <body>
+<nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand" href="#">TWELVE+</a>
+    <form class="form-inline">
+        <input class="form-control mr-sm-2" type="search" placeholder="Buscar..." aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
+    </form>
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+            <a class="nav-link" href="login.html">Iniciar sesión</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="nuevo-usuario.html">Crear cuenta</a>
+        </li>
+    </ul>
+</nav>
 <div class="container">
     <div class="row">
-        <div class="col-md-12 text-center">
-            <h1>TWELVE+</h1>
-            <h2>Llegó una nueva forma de ver películas</h2>
-            <p>Donde encuentras lo que buscas..... cuando quieres</p>
+        <div class="col-md-12 text-center mt-5">
+            <h1>CREA TU PROPIO SEGUIMIENTO DE PELICULAS</h1>
         </div>
     </div>
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h2 class="mb-3">Populares</h2>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card mb-3">
+                        <img th:src="@{/css/volver1.jpg}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">Película 1</h5>
+                            <p class="card-text">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vero
+                                distinctio impedit hic optio.</p>
+                            <div class="rating">
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star"></span>
+                                <span class="fa fa-star"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card mb-3">
+                        <img th:src="@{/css/volver1.jpg}" class="card-img-top" alt="...">
 
-    <div class="row">
-        <div class="col-md-6 text-center">
-            <button class="btn btn-primary">
-                <a href="nuevo-usuario.html" class="btn">REGISTRARSE</a>
-            </button>
+                        <div class="card-body">
+                            <h5 class="card-title">Película 2</h5>
+                            <p class="card-text">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vero
+                                distinctio impedit hic optio.</p>
+                            <div class="rating">
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card mb-3">
+                        <img th:src="@{/css/volver1.jpg}" class="card-img-top" alt="...">
+
+                        <div class="card-body">
+                            <h5 class="card-title">Película 3</h5>
+                            <p class="card-text">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vero
+                                distinctio impedit hic optio.</p>
+                            <div class="rating">
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card mb-3">
+                        <img th:src="@{/css/volver1.jpg}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">Película 4</h5>
+                            <p class="card-text">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vero
+                                distinctio impedit hic optio.</p>
+                            <div class="rating">
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <a href="movies.html">Ver mas</a>
+                </div>
+            </div>
         </div>
-
-        <div class="col-md-6 text-center">
-            <button class="btn btn-success">
-                <a href="login.html" class="btn">INICIAR SESION</a>
-            </button>
-        </div>
-
-        <div class="col-md-12 text-center">
-            <button class="btn btn-secondary">
-                <a href="movies.html" class="btn">VER PELICULAS</a>
-            </button>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h2 class="mb-3">Reseñas populares esta semana.</h2>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card mb-3">
+                        <img th:src="@{/css/volver1.jpg}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">Volver al futuro (1985)</h5>
+                            <p class="card-text">Tremenda peli cada vez que la pasan por la tele la veo jaja </p>
+                            <div class="rating">
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star"></span>
+                            </div>
+                            <small class="text-muted">Jose</small>
+                            <small class="text-muted">9.122 likes</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <a href="#">Mas Reseñas</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
