@@ -14,7 +14,7 @@ VALUES ('El Origen',
         5000000,
         1, -- SUSPENSO
         '2010-07-16',
-        'el_origen.jpg',
+        'el_origen.jpeg',
         35000,
         8.8);
 

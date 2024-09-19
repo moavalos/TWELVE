@@ -1,14 +1,19 @@
 package org.twelve.presentacion;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.web.servlet.ModelAndView;
 import org.twelve.dominio.ServicioLogin;
 import org.twelve.dominio.entities.Usuario;
+import org.twelve.dominio.excepcion.UsuarioExistente;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalToIgnoringCase;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 public class ControladorLoginTest {
 
@@ -30,7 +35,8 @@ public class ControladorLoginTest {
         servicioLoginMock = mock(ServicioLogin.class);
         controladorLogin = new ControladorLogin(servicioLoginMock);
     }
-	/*
+
+
 	@Test
 	public void loginConUsuarioYPasswordInorrectosDeberiaLlevarALoginNuevamente(){
 		// preparacion
@@ -97,5 +103,5 @@ public class ControladorLoginTest {
 		// validacion
 		assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-usuario"));
 		assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Error al registrar el nuevo usuario"));
-	}*/
+	}
 }
