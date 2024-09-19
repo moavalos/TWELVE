@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Entity
 @EqualsAndHashCode
 @Table(name = "Categoria")
+
 public class Categoria {
 
     @Id

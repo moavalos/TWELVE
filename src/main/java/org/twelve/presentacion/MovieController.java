@@ -28,40 +28,29 @@ public class MovieController {
     }
 
     @RequestMapping(path = "/movies", method = RequestMethod.GET)
-    public ModelAndView getAllMoviesView(@RequestParam(value = "idCategoria", required = false) Integer idCategoria) {
+    public ModelAndView getAllMoviesView(
+            @RequestParam(value = "idCategoria", required = false) Integer idCategoria,
+            @RequestParam(value = "filter", required = false) String filter) {
+
         List<MovieDTO> movies;
-        if (idCategoria != null)
+        if ("topRated".equals(filter)) {
+            movies = movieService.getMovieByValoracion();
+        } else if ("newest".equals(filter)) {
+            movies = movieService.getMovieByAnio();
+        } else if (idCategoria != null) {
             movies = movieService.getMoviesByCategory(idCategoria);
-        else
+        } else {
             movies = movieService.getAll();
+        }
 
         List<CategoriaDTO> categorias = categoriaService.getAll();
 
         ModelMap modelo = new ModelMap();
         modelo.put("movies", movies);
         modelo.put("categorias", categorias);
+        modelo.put("selectedFilter", filter);
 
         return new ModelAndView("movies", modelo);
-    }
-
-    @RequestMapping(path = "/top-rated-movies", method = RequestMethod.GET)
-    public ModelAndView getTopRatedMoviesView() {
-        List<MovieDTO> topRated = movieService.getMovieByValoracion();
-
-        ModelMap modelo = new ModelMap();
-        modelo.put("topRated", topRated);
-
-        return new ModelAndView("topRatedMovies", modelo);
-    }
-
-    @RequestMapping(path = "/newestMovies", method = RequestMethod.GET)
-    public ModelAndView getNewestMoviesView() {
-        List<MovieDTO> newestMovies = movieService.getMovieByAnio();
-
-        ModelMap modelo = new ModelMap();
-        modelo.put("newestMovies", newestMovies);
-
-        return new ModelAndView("newestMovies", modelo);
     }
 
 
