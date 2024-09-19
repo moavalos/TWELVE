@@ -48,23 +48,20 @@ public class MovieControllerTest {
         movieController = new MovieController(movieService, categoriaService);
     }
 
-    /*
     @Test
-    public void testGetAllMoviesViewWithoutCategory() {
+    public void testGetAllMoviesViewWithoutCategoryAndWithoutFilter() {
         List<MovieDTO> moviesMock = Arrays.asList(mock(MovieDTO.class), mock(MovieDTO.class));
         List<CategoriaDTO> categoriasMock = Arrays.asList(mock(CategoriaDTO.class));
 
         when(movieService.getAll()).thenReturn(moviesMock);
         when(categoriaService.getAll()).thenReturn(categoriasMock);
 
-        ModelAndView modelAndView = movieController.getAllMoviesView(null);
+        ModelAndView modelAndView = movieController.getAllMoviesView(null, null);
 
         assertThat(modelAndView.getViewName(), is("movies"));
         assertThat(((List<MovieDTO>) modelAndView.getModel().get("movies")).size(), is(2));
         assertThat(((List<CategoriaDTO>) modelAndView.getModel().get("categorias")).size(), is(1));
     }
-
-     */
 
     @Test
     public void testGetMoviesByCategory() {
@@ -77,20 +74,6 @@ public class MovieControllerTest {
         assertNotNull(response.getBody());
         assertThat(response.getBody().size(), is(1));
     }
-
-    /*
-    @Test
-    public void testGetTopRatedMoviesView() {
-        List<MovieDTO> topRatedMoviesMock = Arrays.asList(mock(MovieDTO.class));
-        when(movieService.getMovieByValoracion()).thenReturn(topRatedMoviesMock);
-
-        ModelAndView modelAndView = movieController.getTopRatedMoviesView();
-
-        assertThat(modelAndView.getViewName(), is("topRatedMovies"));
-        assertThat(((List<MovieDTO>) modelAndView.getModel().get("topRated")).size(), is(1));
-    }
-
-     */
 
     @Test
     public void testGetMovieById_ValidId() {
