@@ -30,6 +30,7 @@ VALUES ('El Caballero de la Noche',
         '2008-07-18',
         'el_caballero_de_la_noche.jpg',
         2,
+        70,
         9.0);
 
 INSERT INTO Movie (nombre, descripcion, frase, duracion, pais, cantVistas, idCategoria, añoLanzamiento, imagen, idComentario, likes, valoracion)
