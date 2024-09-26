@@ -53,16 +53,6 @@ public class MovieController {
         return new ModelAndView("movies", modelo);
     }
 
-
-    // TODO modifidcar estos endpoints
-
-    /*@RequestMapping(path = "/getAll", method = RequestMethod.GET)
-    public ResponseEntity<List<Movie>> getAllMovies(@ModelAttribute("movie") MovieDTO datosMovie, HttpServletRequest request) {
-        List<Movie> movies = movieService.getAll();
-        return ResponseEntity.ok(movies);
-        return null;
-    }*/
-
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<MovieDTO> getMovieById(@PathVariable Integer id) {
         MovieDTO movieDTO = movieService.getById(id);
