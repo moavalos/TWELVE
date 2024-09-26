@@ -17,11 +17,11 @@ public class Comentario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    private Integer idMovie;
+
     private String descripcion;
 
-    //@ManyToOne // definir una relacion de muchos a uno entre dos entidades con JPA
-    //private Usuario usuario; // usuario que hizo el comentario
-    // comentario esta asociado a un solo usuario pero usuario puede tener muchos comentarios
+    private Integer idUsuario;
 
     private Integer likes;
 }

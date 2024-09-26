@@ -4,7 +4,7 @@ VALUES (null, 'test@unlam.edu.ar', 'test', 'ADMIN', true);
 INSERT INTO Usuario(id, email, password, rol, activo)
 VALUES (null, 'mora@unlam.edu.ar', 'mora', 'ADMIN', true);
 
-INSERT INTO Movie (nombre, descripcion, frase, duracion, pais, cantVistas, idCategoria, añoLanzamiento, imagen, likes,
+INSERT INTO Movie (nombre, descripcion, frase, duracion, pais, cantVistas, idCategoria, añoLanzamiento, imagen, idComentario, likes,
                    valoracion)
 VALUES ('El Origen',
         'Un thriller que desafía la mente sobre la infiltración en los sueños.',
@@ -15,11 +15,11 @@ VALUES ('El Origen',
         1, -- SUSPENSO
         '2010-07-16',
         'el_origen.jpeg',
+        1,
         35000,
         8.8);
 
-INSERT INTO Movie (nombre, descripcion, frase, duracion, pais, cantVistas, idCategoria, añoLanzamiento, imagen, likes,
-                   valoracion)
+INSERT INTO Movie (nombre, descripcion, frase, duracion, pais, cantVistas, idCategoria, añoLanzamiento, imagen, idComentario, likes, valoracion)
 VALUES ('El Caballero de la Noche',
         'Cuando el peligroso Joker emerge, Batman debe enfrentar una de las mayores pruebas psicológicas y físicas.',
         '¿Por qué tan serio?',
@@ -29,11 +29,10 @@ VALUES ('El Caballero de la Noche',
         2, -- ACCION
         '2008-07-18',
         'el_caballero_de_la_noche.jpg',
-        45000,
+        2,
         9.0);
 
-INSERT INTO Movie (nombre, descripcion, frase, duracion, pais, cantVistas, idCategoria, añoLanzamiento, imagen, likes,
-                   valoracion)
+INSERT INTO Movie (nombre, descripcion, frase, duracion, pais, cantVistas, idCategoria, añoLanzamiento, imagen, idComentario, likes, valoracion)
 VALUES ('Matrix',
         'Un hacker informático descubre la verdadera naturaleza de la realidad y su papel en la guerra contra sus controladores.',
         'No hay cuchara.',
@@ -43,11 +42,11 @@ VALUES ('Matrix',
         3, -- CIENCIA_FICCION
         '1999-03-31',
         'matrix.jpg',
+        2, -- Cambié a null porque no se especifica
         38000,
         8.7);
 
-INSERT INTO Movie (nombre, descripcion, frase, duracion, pais, cantVistas, idCategoria, añoLanzamiento, imagen, likes,
-                   valoracion)
+INSERT INTO Movie (nombre, descripcion, frase, duracion, pais, cantVistas, idCategoria, añoLanzamiento, imagen, idComentario, likes, valoracion)
 VALUES ('Interestelar',
         'Un equipo de exploradores viaja a través de un agujero de gusano en el espacio para asegurar la supervivencia de la humanidad.',
         'La humanidad nació en la Tierra. Nunca estuvo destinada a morir aquí.',
@@ -57,11 +56,11 @@ VALUES ('Interestelar',
         3, -- CIENCIA_FICCION
         '2014-11-07',
         'interestelar.jpg',
+        null, -- Cambié a null porque no se especifica
         42000,
         8.6);
 
-INSERT INTO Movie (nombre, descripcion, frase, duracion, pais, cantVistas, idCategoria, añoLanzamiento, imagen, likes,
-                   valoracion)
+INSERT INTO Movie (nombre, descripcion, frase, duracion, pais, cantVistas, idCategoria, añoLanzamiento, imagen, idComentario, likes, valoracion)
 VALUES ('Parásitos',
         'La codicia y la discriminación de clases amenazan la relación simbiótica recién formada entre la rica familia Park y el empobrecido clan Kim.',
         'Actúa como si fueras dueño del lugar.',
@@ -71,11 +70,11 @@ VALUES ('Parásitos',
         4, -- DRAMA
         '2019-05-30',
         'parasitos.jpg',
+        null,
         40000,
         8.6);
 
-INSERT INTO Movie (nombre, descripcion, frase, duracion, pais, cantVistas, idCategoria, añoLanzamiento, imagen, likes,
-                   valoracion)
+INSERT INTO Movie (nombre, descripcion, frase, duracion, pais, cantVistas, idCategoria, añoLanzamiento, imagen, idComentario, likes, valoracion)
 VALUES ('Tiempos Violentos',
         'Las vidas de dos sicarios, un boxeador, un gánster y su esposa se entrelazan en cuatro historias de violencia y redención.',
         'Inglés, hijo de p***, ¿lo hablas?',
@@ -85,16 +84,17 @@ VALUES ('Tiempos Violentos',
         5, -- CRIMEN
         '1994-10-14',
         'tiempos_violentos.jpg',
+        null,
         50000,
         8.9);
 
 INSERT INTO Categoria (id, nombre)
-VALUES (1, 'SUSPENSO');
-INSERT INTO Categoria (id, nombre)
-VALUES (2, 'ACCION');
-INSERT INTO Categoria (id, nombre)
-VALUES (3, 'CIENCIA_FICCION');
-INSERT INTO Categoria (id, nombre)
-VALUES (4, 'DRAMA');
-INSERT INTO Categoria (id, nombre)
-VALUES (5, 'CRIMEN');
+VALUES (1, 'SUSPENSO'),
+       (2, 'ACCION'),
+       (3, 'CIENCIA_FICCION'),
+       (4, 'DRAMA'),
+       (5, 'CRIMEN');
+
+INSERT INTO Comentario (id, idMovie, descripcion, idUsuario, likes)
+VALUES (null, 1, 'horrible pelicula', 1, 1),
+       (null, 1, 'muy buena', 2, 9);

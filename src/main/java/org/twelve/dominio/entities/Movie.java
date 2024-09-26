@@ -39,10 +39,10 @@ public class Movie {
 
     //private Director director;
 
-    //@OneToMany(mappedBy = "movie") // una pelicula puede tener n comentarios
-    //private List<Comentario> comentarios;
+    private Integer idComentario;
 
     private Integer likes;
 
+    //@Size(min=2, max=)
     private Double valoracion;
 }
