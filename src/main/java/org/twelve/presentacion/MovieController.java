@@ -33,15 +33,14 @@ public class MovieController {
             @RequestParam(value = "filter", required = false) String filter) {
 
         List<MovieDTO> movies;
-        if ("topRated".equals(filter)) {
+        if ("topRated".equals(filter))
             movies = movieService.getMovieByValoracion();
-        } else if ("newest".equals(filter)) {
+        else if ("newest".equals(filter))
             movies = movieService.getMovieByAnio();
-        } else if (idCategoria != null) {
+        else if (idCategoria != null)
             movies = movieService.getMoviesByCategory(idCategoria);
-        } else {
+        else
             movies = movieService.getAll();
-        }
 
         List<CategoriaDTO> categorias = categoriaService.getAll();
 
@@ -56,11 +55,10 @@ public class MovieController {
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<MovieDTO> getMovieById(@PathVariable Integer id) {
         MovieDTO movieDTO = movieService.getById(id);
-        if (movieDTO != null) {
+        if (movieDTO != null)
             return ResponseEntity.ok(movieDTO);
-        } else {
+        else
             return ResponseEntity.notFound().build();
-        }
     }
 
     @RequestMapping(path = "/agregar]", method = RequestMethod.POST)
@@ -72,11 +70,10 @@ public class MovieController {
     @RequestMapping(path = "/search", method = RequestMethod.GET)
     public ResponseEntity<MovieDTO> searchMovies(@RequestParam String title) {
         MovieDTO movie = movieService.searchByTitle(title);
-        if (movie != null) {
+        if (movie != null)
             return ResponseEntity.ok(movie);
-        } else {
+        else
             return ResponseEntity.notFound().build();
-        }
     }
 
     @RequestMapping(path = "/most-viewed", method = RequestMethod.GET)
@@ -101,19 +98,17 @@ public class MovieController {
             existingMovie.setValoracion(movie.getValoracion());
             MovieDTO updatedMovie = movieService.create(existingMovie);
             return ResponseEntity.ok(updatedMovie);
-        } else {
+        } else
             return ResponseEntity.notFound().build();
-        }
     }
 
     // GET /movies/category?idCategoria=ID_CATEGORIA
     @RequestMapping(path = "/movies/category", method = RequestMethod.GET)
     public ResponseEntity<List<MovieDTO>> getMoviesByCategory(@RequestParam Integer idCategoria) {
         List<MovieDTO> movies = movieService.getMoviesByCategory(idCategoria);
-        if (movies != null && !movies.isEmpty()) {
+        if (movies != null && !movies.isEmpty())
             return ResponseEntity.ok(movies);
-        } else {
+        else
             return ResponseEntity.notFound().build();
-        }
     }
 }
