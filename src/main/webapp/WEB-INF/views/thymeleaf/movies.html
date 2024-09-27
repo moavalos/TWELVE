@@ -62,6 +62,7 @@
                 </thead>
                 <tbody>
                 <tr th:each="movie : ${movies}">
+                    <td> <img th:src="@{'/images/' + ${movie.imagen}}" style="width: 150px; height: 200px;" class="card-img-top" alt="Imagen de la película"></td>
                     <td th:text="${movie.nombre}"></td>
                     <td th:text="${movie.descripcion}"></td>
                     <td th:text="${movie.duracion} + ' mins'"></td>
