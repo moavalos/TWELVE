@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Usuario</title>
+   <link rel="stylesheet" th:href="@{/css/perfil.css}"/>
+
+</head>
+<body>
+<header>
+    <a href="#" class="back">Volver</a>
+    <div class="logo">LOGO</div>
+    <input type="text" placeholder="Buscar..." class="search-bar">
+</header>
+
+<section class="profile">
+    <div class="profile-info">
+        <div class="profile-left">
+        <div class="avatar">
+            <img src="imagenes/foto-perfil.jpg">
+        </div>
+        <div class="info">
+            <h1>Jose</h1>
+            <button class="edit-profile">Seguir</button>
+            <p>Descripción del perfil por el usuario</p>
+            <span class="location">🇦🇷 Argentina</span>
+            <p class="username">@Joseee123</p>
+
+        </div>
+        </div>
+        <div class="stats">
+            <div class="stat-item">
+                <p class="stat-title">Películas</p>
+                <p class="stat-number">205</p>
+            </div>
+            <div class="stat-item">
+                <p class="stat-title">Vistas este año</p>
+                <p class="stat-number">58</p>
+            </div>
+            <div class="stat-item">
+                <p class="stat-title">Seguidores</p>
+                <p class="stat-number">100</p>
+            </div>
+            <div class="stat-item">
+                <p class="stat-title">Siguiendo</p>
+                <p class="stat-number">78</p>
+            </div>
+        </div>
+
+    </div>
+    <nav class="menu">
+        <ul>
+            <li><a href="#perfil">Perfil</a></li>
+            <li><a href="#actividad">Actividad</a></li>
+            <li><a href="#peliculas">Películas</a></li>
+            <li><a href="#historial">Historial</a></li>
+            <li><a href="#reseñas">Reseñas</a></li>
+            <li><a href="#watchlist">Watchlist</a></li>
+            <li><a href="#listas">Listas</a></li>
+            <li><a href="#favoritos">Favoritos</a></li>
+            <li><a href="#tags">Tags</a></li>
+            <li><a href="#amigos">Amigos</a></li>
+            <li><a href="#invitaciones">Invitaciones</a></li>
+        </ul>
+    </nav>
+
+</section>
+
+<section class="content">
+    <div class="favorite-movies">
+        <h2>Películas favoritas</h2>
+        <div class="movies-grid">
+            <div class="movie">
+                <img src="ruta/a/la/imagen1.jpg" alt="Película 1">
+            </div>
+            <div class="movie">
+                <img src="ruta/a/la/imagen2.jpg" alt="Película 2">
+            </div>
+            <div class="movie">
+                <img src="ruta/a/la/imagen3.jpg" alt="Película 3">
+            </div>
+            <!-- Botón con símbolo "+" -->
+            <div class="movie add-more">
+                <a href="url/a/la/nueva/pagina.html">+</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="watchlist">
+        <h2>Watchlist</h2>
+        <div class="movies-grid watchlist-grid">
+            <div class="movie">
+                <img src="ruta/a/la/imagen4.jpg" alt="Película 4">
+            </div>
+            <div class="movie">
+                <img src="ruta/a/la/imagen5.jpg" alt="Película 5">
+            </div>
+            <div class="movie">
+                <img src="ruta/a/la/imagen6.jpg" alt="Película 6">
+            </div>
+            <!-- Botón con símbolo "+" -->
+            <div class="movie add-more">
+                <a href="url/a/la/nueva/pagina.html">+</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="recent-activity">
+        <h2>Actividad reciente</h2>
+
+        <div class="review">
+            <img src="./imagenes/venom.jpg" alt="Venom 2" class="review-image">
+            <div class="review-content">
+                <h3>Venom 2 (2021)</h3>
+                <p>Es muy mala peli, no me gustó porque la relación de Eddie y Venom no es como en los comics...</p>
+            </div>
+        </div>
+
+        <div class="review">
+            <img src="./imagenes/orgulloyprejuicio.jpg" alt="Orgullo y Prejuicio" class="review-image">
+            <div class="review-content">
+                <h3>Orgullo y Prejuicio (2008)</h3>
+                <p>bla bla bla bla bla...</p>
+            </div>
+        </div>
+
+        <div class="review">
+            <img src="./imagenes/nowyouseeme.jpg" alt="Now you see me" class="review-image">
+            <div class="review-content">
+                <h3>Now you see me (2013)</h3>
+                <p>bla bla bla bla bla...</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="history">
+        <h2>Historial</h2>
+        <div class="months">
+            <div class="month">Abril</div>
+            <div class="month">Marzo</div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <h2>Siguiendo</h2>
+    <div class="followers">
+        <div class="follower"></div>
+        <div class="follower"></div>
+        <div class="follower"></div>
+        <div class="follower"></div>
+        <div class="follower"></div>
+        <div class="follower"></div>
+    </div>
+</footer>
+
+<script src="scripts.js"></script>
+</body>
+</html>
