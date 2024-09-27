@@ -12,6 +12,7 @@ import org.twelve.presentacion.dto.CategoriaDTO;
 import org.twelve.presentacion.dto.MovieDTO;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class MovieController {
@@ -26,6 +27,21 @@ public class MovieController {
         this.movieService = movieService;
         this.categoriaService = categoriaService;
     }
+
+
+    @RequestMapping(path = "/home", method = RequestMethod.GET)
+    public ModelAndView getTopRatedMovies() {
+        List<MovieDTO> topMovies = movieService.getMovieByValoracion().stream()
+                .limit(4) // limita 4 peli nomas
+                .collect(Collectors.toList());
+
+        ModelMap modelo = new ModelMap();
+        modelo.put("movies", topMovies);
+
+        return new ModelAndView("home", modelo);
+    }
+
+
 
     @RequestMapping(path = "/movies", method = RequestMethod.GET)
     public ModelAndView getAllMoviesView(
