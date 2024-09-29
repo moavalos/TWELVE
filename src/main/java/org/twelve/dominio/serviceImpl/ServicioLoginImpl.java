@@ -29,7 +29,7 @@ public class ServicioLoginImpl implements ServicioLogin {
     @Override
     public void registrar(Usuario usuario, String confirmPassword) throws UsuarioExistente {
         if (!usuario.getPassword().equals(confirmPassword)) {
-            throw new ContrasenasNoCoinciden("Las contraseñas no coinciden");
+            throw new ContrasenasNoCoinciden();
         }
 
         Usuario usuarioEncontrado = repositorioUsuario.buscarUsuario(usuario.getEmail(), usuario.getPassword());

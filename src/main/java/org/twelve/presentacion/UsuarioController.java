@@ -30,7 +30,7 @@ public class UsuarioController {
             return new ModelAndView("usuario-datos", model);
         }
         model.put("usuario", usuario);
-        System.out.println(usuario);
+
         return new ModelAndView("usuario-datos", model);
     }
 
@@ -40,6 +40,7 @@ public class UsuarioController {
         Usuario usuarioExistente = usuarioService.buscarPorId(usuario.getId());
         try {
             usuarioExistente.setNombre(usuario.getNombre());
+            usuarioExistente.setUsername(usuario.getUsername());
             usuarioExistente.setDescripcion(usuario.getDescripcion());
             usuarioExistente.setPais(usuario.getPais());
 

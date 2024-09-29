@@ -1,8 +1,8 @@
 package org.twelve.dominio.excepcion;
 
 public class ContrasenasNoCoinciden extends RuntimeException {
-    public ContrasenasNoCoinciden(String message) {
+    public ContrasenasNoCoinciden() {
 
-        super(message);
+        super();
     }
 }

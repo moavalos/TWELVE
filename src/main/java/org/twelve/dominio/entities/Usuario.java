@@ -14,6 +14,7 @@ public class Usuario {
     private String email;
     private String password;
     private String nombre;
+    private String username;
     private String pais;
     private String descripcion;
     private String rol;
@@ -51,6 +52,15 @@ public class Usuario {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPais() {

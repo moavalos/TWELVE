@@ -26,29 +26,35 @@
                     <input type="hidden" th:field="*{id}" />
 
                     <div class="form-group mb-3">
-                        <label for="nombre" class="form-label">Nombre</label>
+                        <label for="nombre" class="form-label text-gray">Nombre completo</label>
                         <input th:field="*{nombre}"  id="nombre" type="text" class="form-control" required placeholder="Nombre completo"/>
                     </div>
 
                     <div class="form-group mb-3">
-                        <label for="descripcion" class="form-label">Descripción</label>
+                        <label for="nombre" class="form-label text-gray">Nombre de usuario</label>
+                        <input th:field="*{username}"  id="username" type="text" class="form-control" required placeholder="Nombre de usuario"/>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="descripcion" class="form-label text-gray">Descripción</label>
                         <textarea th:field="*{descripcion}" id="descripcion" class="form-control" required placeholder="Descripción"></textarea>
                     </div>
 
                     <div class="form-group mb-3">
-                        <label for="pais" class="form-label">País</label>
+                        <label for="pais" class="form-label text-gray">País</label>
                         <select th:field="*{pais}" id="pais" class="form-control" required>
-                            <option value="" disabled selected>Selecciona tu país</option>
-                            <!-- Añade aquí tus opciones de país -->
-                            <option value="argentina">Argentina</option>
-                            <option value="uruguay">Uruguay</option>
-                            <option value="chile">Chile</option>
-                            <option value="brasil">Brasil</option>
-                            <option value="bolivia">Bolivia</option>
-                            <option value="paraguay">Paraguay</option>
-                            <!-- Puedes seguir añadiendo opciones -->
+                            <option value="" disabled selected>Seleccioná tu país</option>
+
+                            <option value="Argentina">Argentina</option>
+                            <option value="Uruguay">Uruguay</option>
+                            <option value="Chile">Chile</option>
+                            <option value="Brasil">Brasil</option>
+                            <option value="Bolivia">Bolivia</option>
+                            <option value="Paraguay">Paraguay</option>
+
                         </select>
                     </div>
+                    <p th:if="${error != null}" class="alert alert-danger" th:text="'Error: ' + ${error}"></p>
 
                     <button class="btn btn-primary btn-block" type="submit">Guardar Datos</button>
                 </form>

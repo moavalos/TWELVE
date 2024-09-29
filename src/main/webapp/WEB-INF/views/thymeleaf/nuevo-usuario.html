@@ -20,7 +20,7 @@
     <div class="col-md-6">
         <div class="card p-4 shadow-lg">
             <div class="card-body">
-                <h1 class="text-center mb-4 text-gray">Nuevo Usuario</h1>
+                <h1 class="text-center mb-4 text-gray">Registrate</h1>
                 <form action="#" th:action="@{/registrarme}" method="POST" th:object="${usuario}">
                     <div class="form-group mb-3">
                         <label for="email" class="form-label text-gray">Ingrese su E-mail</label>
@@ -51,16 +51,6 @@
 
 <!-- Bootstrap core JS -->
 <script type="text/javascript" th:src="@{/webjars/bootstrap/5.2.0/js/bootstrap.min.js}"></script>
-<script>
-    document.querySelector("form").addEventListener("submit", function (e) {
-        var password = document.getElementById("password").value;
-        var confirmPassword = document.getElementById("password-confirm").value;
 
-        if (password !== confirmPassword) {
-            e.preventDefault();  // Evita el envío del formulario
-            alert("Las contraseñas no coinciden");
-        }
-    });
-</script>
 </body>
 </html>
