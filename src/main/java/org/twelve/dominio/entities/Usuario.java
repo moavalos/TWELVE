@@ -13,6 +13,10 @@ public class Usuario {
     private Long id;
     private String email;
     private String password;
+    private String nombre;
+    private String fotoperfil;
+    private String pais;
+    private String descripcion;
     private String rol;
     private Boolean activo = false;
 

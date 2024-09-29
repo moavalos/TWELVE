@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.twelve.dominio.RepositorioUsuario;
 import org.twelve.dominio.ServicioLogin;
 import org.twelve.dominio.entities.Usuario;
+import org.twelve.dominio.excepcion.ContrasenasNoCoinciden;
 import org.twelve.dominio.excepcion.UsuarioExistente;
 
 import javax.transaction.Transactional;
@@ -26,7 +27,11 @@ public class ServicioLoginImpl implements ServicioLogin {
     }
 
     @Override
-    public void registrar(Usuario usuario) throws UsuarioExistente {
+    public void registrar(Usuario usuario, String confirmPassword) throws UsuarioExistente {
+        if (!usuario.getPassword().equals(confirmPassword)) {
+            throw new ContrasenasNoCoinciden("Las contraseñas no coinciden");
+        }
+
         Usuario usuarioEncontrado = repositorioUsuario.buscarUsuario(usuario.getEmail(), usuario.getPassword());
         if (usuarioEncontrado != null) {
             throw new UsuarioExistente();
