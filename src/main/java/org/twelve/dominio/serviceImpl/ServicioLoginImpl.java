@@ -37,18 +37,26 @@ public class ServicioLoginImpl implements ServicioLogin {
     // busco solo por mail, comparo password encriptada de la bdd con la del usuario
     @Override
     public void registrar(Usuario usuario, String confirmPassword) throws UsuarioExistente {
-        if (!usuario.getPassword().equals(confirmPassword)) {
+        validarContrasenas(usuario.getPassword(), confirmPassword);
+        verificarUsuarioExistente(usuario);
+
+        // encripto contraseña antes de guardar
+        String passwordEncriptada = passwordEncoder.encode(usuario.getPassword());
+        usuario.setPassword(passwordEncriptada);
+        repositorioUsuario.guardar(usuario);
+    }
+
+    private void validarContrasenas(String password, String confirmPassword) {
+        if (!password.equals(confirmPassword)) {
             throw new ContrasenasNoCoinciden();
         }
+    }
 
+    private void verificarUsuarioExistente(Usuario usuario) throws UsuarioExistente {
         Usuario usuarioEncontrado = repositorioUsuario.buscarUsuario(usuario.getEmail(), usuario.getPassword());
         if (usuarioEncontrado != null) {
             throw new UsuarioExistente();
         }
-        // encripto contraselña antes de guardar
-        String passwordEncriptada = passwordEncoder.encode(usuario.getPassword());
-        usuario.setPassword(passwordEncriptada);
-        repositorioUsuario.guardar(usuario);
     }
 }
 

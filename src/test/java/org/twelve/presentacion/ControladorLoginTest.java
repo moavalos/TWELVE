@@ -1,6 +1,7 @@
 package org.twelve.presentacion;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
 import org.twelve.dominio.ServicioLogin;
@@ -12,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalToIgnoringCase;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -121,6 +122,34 @@ public class ControladorLoginTest {
 		// validación
 		assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-usuario"));
 		assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Las contraseñas no coinciden"));
+	}
+
+	@Test
+	public void irALogin_DeberiaRetornarVistaLoginYModeloConDatosLogin() {
+		ModelAndView modelAndView = controladorLogin.irALogin();
+
+		assertThat(modelAndView.getViewName(), equalTo("login"));
+
+		assertThat(modelAndView.getModel().containsKey("datosLogin"), equalTo(true));
+
+		assertThat(modelAndView.getModel().get("datosLogin"), instanceOf(DatosLogin.class));
+	}
+
+	@Test
+	public void nuevoUsuario_DeberiaRetornarVistaNuevoUsuarioYModeloUsuario() {
+		ModelAndView modelAndView = controladorLogin.nuevoUsuario();
+
+		assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-usuario"));
+
+		assertThat(modelAndView.getModel().containsKey("usuario"), equalTo(true));
+		assertThat(modelAndView.getModel().get("usuario"), equalTo(new Usuario()));
+	}
+
+	@Test
+	public void inicio_DeberiaRedirigirALogin() {
+		ModelAndView modelAndView = controladorLogin.inicio();
+
+		assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/login"));
 	}
 
 }

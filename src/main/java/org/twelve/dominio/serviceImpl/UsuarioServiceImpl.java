@@ -20,7 +20,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
 
-@Transactional
+    @Transactional
     public void actualizarPerfil(Usuario usuario) {
         repositorioUsuario.modificar(usuario);
     }
