@@ -21,7 +21,7 @@
         <div class="card p-4 shadow-lg">
             <div class="card-body">
                 <h1 class="text-center mb-4 text-gray">Completá tu perfil</h1>
-                <form action="#" th:action="@{/completarPerfil}" method="POST" th:object="${usuario}">
+                <form action="#" th:action="@{/completarPerfil}" method="POST" th:object="${usuario}" >
 
                     <input type="hidden" th:field="*{id}" />
 
@@ -31,9 +31,21 @@
                     </div>
 
                     <div class="form-group mb-3">
-                        <label for="nombre" class="form-label text-gray">Nombre de usuario</label>
-                        <input th:field="*{username}"  id="username" type="text" class="form-control" required placeholder="Nombre de usuario"/>
+                        <label for="username" class="form-label text-gray">Nombre de usuario</label>
+                        <div class="input-group has-validation">
+                            <input
+                                    th:field="*{username}"
+                                    id="username"
+                                    type="text"
+                                    class="form-control"
+                                    required
+                                    placeholder="Nombre de usuario"
+                                    pattern="^[a-zA-Z0-9_]+$"
+                                    title="El nombre de usuario solo puede contener letras, números y guiones bajos, sin espacios ni caracteres especiales."
+                                    aria-describedby="usernameFeedback" />
+                        </div>
                     </div>
+
 
                     <div class="form-group mb-3">
                         <label for="descripcion" class="form-label text-gray">Descripción</label>
@@ -64,6 +76,8 @@
 </div>
 <!-- Bootstrap core JS -->
 <script type="text/javascript" th:src="@{/webjars/bootstrap/5.2.0/js/bootstrap.min.js}"></script>
+
+
 
 </body>
 </html>
