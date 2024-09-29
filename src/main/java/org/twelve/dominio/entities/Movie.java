@@ -43,6 +43,6 @@ public class Movie {
 
     private Integer likes;
 
-    //@Size(min=2, max=)
+    @Column(length = 5)
     private Double valoracion;
 }
