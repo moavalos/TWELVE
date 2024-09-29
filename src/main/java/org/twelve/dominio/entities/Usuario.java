@@ -14,7 +14,6 @@ public class Usuario {
     private String email;
     private String password;
     private String nombre;
-    private String fotoperfil;
     private String pais;
     private String descripcion;
     private String rol;
@@ -101,7 +100,6 @@ public class Usuario {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", nombre='" + nombre + '\'' +
-                ", fotoperfil='" + fotoperfil + '\'' +
                 ", pais='" + pais + '\'' +
                 ", descripcion='" + descripcion + '\'' +
                 ", rol='" + rol + '\'' +

@@ -42,7 +42,7 @@ public class UsuarioController {
             usuarioExistente.setNombre(usuario.getNombre());
             usuarioExistente.setDescripcion(usuario.getDescripcion());
             usuarioExistente.setPais(usuario.getPais());
-            
+
             usuarioService.actualizarPerfil(usuarioExistente);
         } catch (Exception e) {
             model.put("error", "Error al completar el perfil");
