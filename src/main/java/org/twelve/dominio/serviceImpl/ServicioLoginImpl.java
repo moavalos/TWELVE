@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.twelve.dominio.RepositorioUsuario;
 import org.twelve.dominio.ServicioLogin;
 import org.twelve.dominio.entities.Usuario;
+import org.twelve.dominio.excepcion.ContrasenasNoCoinciden;
 import org.twelve.dominio.excepcion.UsuarioExistente;
 
 import javax.transaction.Transactional;
@@ -35,9 +36,13 @@ public class ServicioLoginImpl implements ServicioLogin {
 
     // busco solo por mail, comparo password encriptada de la bdd con la del usuario
     @Override
-    public void registrar(Usuario usuario) throws UsuarioExistente {
-        Usuario usuarioExistente = repositorioUsuario.buscarUsuarioPorEmail(usuario.getEmail());
-        if (usuarioExistente != null) {
+    public void registrar(Usuario usuario, String confirmPassword) throws UsuarioExistente {
+        if (!usuario.getPassword().equals(confirmPassword)) {
+            throw new ContrasenasNoCoinciden();
+        }
+
+        Usuario usuarioEncontrado = repositorioUsuario.buscarUsuario(usuario.getEmail(), usuario.getPassword());
+        if (usuarioEncontrado != null) {
             throw new UsuarioExistente();
         }
         // encripto contraselña antes de guardar

@@ -13,8 +13,14 @@ public class Usuario {
     private Long id;
     private String email;
     private String password;
+    private String nombre;
+    private String username;
+    private String pais;
+    private String descripcion;
     private String rol;
     private Boolean activo = false;
+
+
 
     public Long getId() {
         return id;
@@ -40,6 +46,39 @@ public class Usuario {
         this.password = password;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPais() {
+        return pais;
+    }
+
+    public void setPais(String pais) {
+        this.pais = pais;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
     public String getRol() {
         return rol;
     }
@@ -62,5 +101,19 @@ public class Usuario {
 
     public void activar() {
         activo = true;
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", pais='" + pais + '\'' +
+                ", descripcion='" + descripcion + '\'' +
+                ", rol='" + rol + '\'' +
+                ", activo=" + activo +
+                '}';
     }
 }

@@ -45,6 +45,7 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
         sessionFactory.getCurrentSession().update(usuario);
     }
 
+<<<<<<< HEAD
     /*
     * createCriteria establece el tipo de entidad a consultar
     * Restrictions.eq("email", email) añade restrinccion para filtrar por mail
@@ -54,6 +55,12 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
     public Usuario buscarUsuarioPorEmail(String email) {
         return (Usuario) sessionFactory.getCurrentSession().createCriteria(Usuario.class)
                 .add(Restrictions.eq("email", email))
+=======
+    @Override
+    public Usuario buscarPorId(Long id) {
+        return (Usuario) sessionFactory.getCurrentSession().createCriteria(Usuario.class)
+                .add(Restrictions.eq("id", id))
+>>>>>>> 442461a18572d2330fd0f97824b429321e93f987
                 .uniqueResult();
     }
 
