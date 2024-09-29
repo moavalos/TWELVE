@@ -49,7 +49,7 @@ public class MovieControllerTest {
     // Todo casos
 
     @Test
-    public void testGetAllMoviesViewWithTopRatedFilter() {
+    public void testObtenerVistaDeTodasLasPeliculasConFiltroDeMejorValoradas() {
         List<MovieDTO> topRatedMoviesMock = Arrays.asList(mock(MovieDTO.class), mock(MovieDTO.class));
         List<CategoriaDTO> categoriasMock = Arrays.asList(mock(CategoriaDTO.class));
 
@@ -65,7 +65,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testGetAllMoviesViewWithNewestFilter() {
+    public void testObtenerVistaDeTodasLasPeliculasConFiltroDeMasRecientes() {
         List<MovieDTO> newestMoviesMock = Arrays.asList(mock(MovieDTO.class), mock(MovieDTO.class));
         List<CategoriaDTO> categoriasMock = Arrays.asList(mock(CategoriaDTO.class));
 
@@ -81,7 +81,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testGetAllMoviesViewWithCategoryFilter() {
+    public void testObtenerVistaDeTodasLasPeliculasConFiltroDeCategoria() {
         List<MovieDTO> categoryMoviesMock = Arrays.asList(mock(MovieDTO.class));
         List<CategoriaDTO> categoriasMock = Arrays.asList(mock(CategoriaDTO.class));
 
@@ -97,7 +97,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testGetAllMoviesViewWithoutFilterAndWithoutCategory() {
+    public void testObtenerVistaDeTodasLasPeliculasSinFiltroYSinCategoria() {
         List<MovieDTO> moviesMock = Arrays.asList(mock(MovieDTO.class), mock(MovieDTO.class));
         List<CategoriaDTO> categoriasMock = Arrays.asList(mock(CategoriaDTO.class));
 
@@ -113,7 +113,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testGetAllMoviesViewWithoutCategoryAndWithoutFilter() {
+    public void testObtenerVistaDeTodasLasPeliculasSinCategoriaYSinFiltro() {
         List<MovieDTO> moviesMock = Arrays.asList(mock(MovieDTO.class), mock(MovieDTO.class));
         List<CategoriaDTO> categoriasMock = Arrays.asList(mock(CategoriaDTO.class));
 
@@ -128,7 +128,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testGetMoviesByCategory() {
+    public void testObtenerPelículasPorCategoria() {
         List<MovieDTO> moviesMock = Arrays.asList(mock(MovieDTO.class));
         when(movieService.getMoviesByCategory(1)).thenReturn(moviesMock);
 
@@ -140,7 +140,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testSearchMovies_MovieFound() {
+    public void testBuscarPeliculas_PeliculaEncontrada() {
         MovieDTO movieMock = mock(MovieDTO.class);
         when(movieService.searchByTitle("Coraline")).thenReturn(movieMock);
 
@@ -152,7 +152,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testSearchMovies_MovieNotFound() {
+    public void testBuscarPeliculas_PeliculaNoEncontrada() {
         when(movieService.searchByTitle("NonExistentMovie")).thenReturn(null);
 
         ResponseEntity<MovieDTO> response = movieController.searchMovies("NonExistentMovie");
@@ -162,7 +162,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testGetMostViewedMovies_MoviesFound() {
+    public void testObtenerPeliculasMasVistas_PeliculasEncontradas() {
         List<MovieDTO> moviesMock = Arrays.asList(mock(MovieDTO.class), mock(MovieDTO.class));
         when(movieService.getMovieMasVista()).thenReturn(moviesMock);
 
@@ -174,7 +174,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testGetMostViewedMovies_NoMoviesFound() {
+    public void testObtenerPeliculasMasVistas_NoSeEncontraronPeliculas() {
         List<MovieDTO> emptyMoviesList = new ArrayList<>();
         when(movieService.getMovieMasVista()).thenReturn(emptyMoviesList);
 
@@ -186,7 +186,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testGetMovieById_ValidId() {
+    public void testObtenerPeliculaPorId_IdValido() {
         MovieDTO movieMock = mock(MovieDTO.class);
         when(movieService.getById(1)).thenReturn(movieMock);
 
@@ -197,7 +197,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testGetMovieById_InvalidId() {
+    public void testObtenerPeliculaPorId_IdInvalido() {
         when(movieService.getById(99)).thenReturn(null);
 
         ResponseEntity<MovieDTO> response = movieController.getMovieById(99);
@@ -206,7 +206,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testAddMovie() {
+    public void testAgregarPelicula() {
         MovieDTO movieMock = mock(MovieDTO.class);
         when(movieService.create(any(MovieDTO.class))).thenReturn(movieMock);
 
@@ -217,7 +217,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testUpdateMovie_ValidId() {
+    public void testActualizarPelicula_IdValido() {
         MovieDTO movieMock = mock(MovieDTO.class);
         when(movieService.getById(1)).thenReturn(movieMock);
         when(movieService.create(any(MovieDTO.class))).thenReturn(movieMock);
@@ -229,7 +229,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testUpdateMovie_InvalidId() {
+    public void testActualizarPelicula_IdInvalido() {
         MovieDTO movieMock = mock(MovieDTO.class);
         when(movieService.getById(99)).thenReturn(null);
 
@@ -239,7 +239,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testGetMoviesByCategory_NoMoviesFound() {
+    public void testObtenerPeliculasPorCategoria_NoSeEncontraronPeliculas() {
         List<MovieDTO> emptyMoviesList = new ArrayList<>();
         when(movieService.getMoviesByCategory(1)).thenReturn(emptyMoviesList);
 
@@ -250,7 +250,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testGetMoviesByCategory_NullMoviesList() {
+    public void testObtenerPeliculasPorCategoria_ListaDePeliculasNula() {
         when(movieService.getMoviesByCategory(1)).thenReturn(null);
 
         ResponseEntity<List<MovieDTO>> response = movieController.getMoviesByCategory(1);
@@ -260,7 +260,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testGetThe4TopRatedMoviesInHomeView() {
+    public void testObtenerLas4PeliculasMejorValoradasEnVistaDeInicio() {
         //preparacion
         List<MovieDTO> topRatedMoviesMock = Arrays.asList(mock(MovieDTO.class), mock(MovieDTO.class), mock(MovieDTO.class), mock(MovieDTO.class));
         when(movieService.getMovieByValoracion()).thenReturn(topRatedMoviesMock);
