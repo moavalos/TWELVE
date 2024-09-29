@@ -77,7 +77,7 @@ public class ControladorLoginTest {
 		ModelAndView modelAndView = controladorLogin.registrarme(usuarioMock, confirmPassword);
 
 		// validacion
-		assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/login"));
+		assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/completarPerfil?id=0"));
 		verify(servicioLoginMock, times(1)).registrar(usuarioMock,confirmPassword);
 	}
 
