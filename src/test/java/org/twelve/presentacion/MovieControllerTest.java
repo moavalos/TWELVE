@@ -258,4 +258,22 @@ public class MovieControllerTest {
         assertEquals(404, response.getStatusCodeValue());
         assertNull(response.getBody());
     }
+
+    @Test
+    public void testGetThe4TopRatedMoviesInHomeView() {
+        //preparacion
+        List<MovieDTO> topRatedMoviesMock = Arrays.asList(mock(MovieDTO.class), mock(MovieDTO.class), mock(MovieDTO.class), mock(MovieDTO.class));
+        when(movieService.getMovieByValoracion()).thenReturn(topRatedMoviesMock);
+
+        //ejecucion
+        ModelAndView modelAndView = movieController.getTopRatedMovies();
+
+        //validacion
+
+        assertThat(modelAndView.getViewName(), is("home"));
+
+        assertThat(((List<MovieDTO>) modelAndView.getModel().get("movies")).size(), is(4));
+    }
+
+
 }
