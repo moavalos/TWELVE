@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>TWELVE</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+
+    <!-- Custom style -->
+    <link rel="stylesheet" th:href="@{/css/nuevousuario.css}"/>
+
+</head>
+
+<body>
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="col-md-6">
+        <div class="card p-4 shadow-lg">
+            <div class="card-body">
+                <h1 class="text-center mb-4 text-gray">Completá tu perfil</h1>
+                <form action="#" th:action="@{/completarPerfil}" method="POST" th:object="${usuario}">
+
+                    <input type="hidden" th:field="*{id}" />
+
+                    <div class="form-group mb-3">
+                        <label for="nombre" class="form-label text-gray">Nombre completo</label>
+                        <input th:field="*{nombre}"  id="nombre" type="text" class="form-control" required placeholder="Nombre completo"/>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="nombre" class="form-label text-gray">Nombre de usuario</label>
+                        <input th:field="*{username}"  id="username" type="text" class="form-control" required placeholder="Nombre de usuario"/>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="descripcion" class="form-label text-gray">Descripción</label>
+                        <textarea th:field="*{descripcion}" id="descripcion" class="form-control" required placeholder="Descripción"></textarea>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="pais" class="form-label text-gray">País</label>
+                        <select th:field="*{pais}" id="pais" class="form-control" required>
+                            <option value="" disabled selected>Seleccioná tu país</option>
+
+                            <option value="Argentina">Argentina</option>
+                            <option value="Uruguay">Uruguay</option>
+                            <option value="Chile">Chile</option>
+                            <option value="Brasil">Brasil</option>
+                            <option value="Bolivia">Bolivia</option>
+                            <option value="Paraguay">Paraguay</option>
+
+                        </select>
+                    </div>
+                    <p th:if="${error != null}" class="alert alert-danger" th:text="'Error: ' + ${error}"></p>
+
+                    <button class="btn btn-primary btn-block" type="submit">Guardar Datos</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap core JS -->
+<script type="text/javascript" th:src="@{/webjars/bootstrap/5.2.0/js/bootstrap.min.js}"></script>
+
+</body>
+</html>

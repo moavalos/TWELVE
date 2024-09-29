@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
 import org.twelve.dominio.ServicioLogin;
 import org.twelve.dominio.entities.Usuario;
+import org.twelve.dominio.excepcion.ContrasenasNoCoinciden;
 import org.twelve.dominio.excepcion.UsuarioExistente;
 
 import javax.servlet.http.HttpServletRequest;
@@ -71,21 +72,23 @@ public class ControladorLoginTest {
 	@Test
 	public void registrameSiUsuarioNoExisteDeberiaCrearUsuarioYVolverAlLogin() throws UsuarioExistente {
 
+		String confirmPassword = usuarioMock.getPassword();
 		// ejecucion
-		ModelAndView modelAndView = controladorLogin.registrarme(usuarioMock);
+		ModelAndView modelAndView = controladorLogin.registrarme(usuarioMock, confirmPassword);
 
 		// validacion
-		assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/login"));
-		verify(servicioLoginMock, times(1)).registrar(usuarioMock);
+		assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/completarPerfil?id=0"));
+		verify(servicioLoginMock, times(1)).registrar(usuarioMock,confirmPassword);
 	}
 
 	@Test
 	public void registrarmeSiUsuarioExisteDeberiaVolverAFormularioYMostrarError() throws UsuarioExistente {
 		// preparacion
-		doThrow(UsuarioExistente.class).when(servicioLoginMock).registrar(usuarioMock);
+		String confirmPassword = usuarioMock.getPassword();
+		doThrow(UsuarioExistente.class).when(servicioLoginMock).registrar(usuarioMock, confirmPassword);
 
 		// ejecucion
-		ModelAndView modelAndView = controladorLogin.registrarme(usuarioMock);
+		ModelAndView modelAndView = controladorLogin.registrarme(usuarioMock,confirmPassword);
 
 		// validacion
 		assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-usuario"));
@@ -95,13 +98,29 @@ public class ControladorLoginTest {
 	@Test
 	public void errorEnRegistrarmeDeberiaVolverAFormularioYMostrarError() throws UsuarioExistente {
 		// preparacion
-		doThrow(RuntimeException.class).when(servicioLoginMock).registrar(usuarioMock);
+		String confirmPassword = usuarioMock.getPassword();
+		doThrow(RuntimeException.class).when(servicioLoginMock).registrar(usuarioMock, confirmPassword);
 
 		// ejecucion
-		ModelAndView modelAndView = controladorLogin.registrarme(usuarioMock);
+		ModelAndView modelAndView = controladorLogin.registrarme(usuarioMock,confirmPassword);
 
 		// validacion
 		assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-usuario"));
 		assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Error al registrar el nuevo usuario"));
 	}
+
+	@Test
+	public void registrarmeSiLasContrasenasNoCoincidenDeberiaVolverAFormularioYMostrarError() throws UsuarioExistente {
+		// preparación
+		String confirmPassword = "otraContraseña";
+		doThrow(ContrasenasNoCoinciden.class).when(servicioLoginMock).registrar(usuarioMock, confirmPassword);
+
+		// ejecución
+		ModelAndView modelAndView = controladorLogin.registrarme(usuarioMock, confirmPassword);
+
+		// validación
+		assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-usuario"));
+		assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Las contraseñas no coinciden"));
+	}
+
 }
