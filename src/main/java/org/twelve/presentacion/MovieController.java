@@ -68,6 +68,17 @@ public class MovieController {
         return new ModelAndView("movies", modelo);
     }
 
+    @RequestMapping(path = "/detalle-pelicula", method = RequestMethod.GET)
+    public ModelAndView detallePelicula() {
+        return new ModelAndView("detalle-pelicula");
+    }
+
+
+
+
+
+
+
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<MovieDTO> getMovieById(@PathVariable Integer id) {
         MovieDTO movieDTO = movieService.getById(id);
