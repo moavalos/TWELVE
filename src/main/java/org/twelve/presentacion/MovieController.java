@@ -28,7 +28,6 @@ public class MovieController {
         this.categoriaService = categoriaService;
     }
 
-
     @RequestMapping(path = "/home", method = RequestMethod.GET)
     public ModelAndView getTopRatedMovies() {
         List<MovieDTO> topMovies = movieService.getMovieByValoracion().stream()
@@ -40,8 +39,6 @@ public class MovieController {
 
         return new ModelAndView("home", modelo);
     }
-
-
 
     @RequestMapping(path = "/movies", method = RequestMethod.GET)
     public ModelAndView getAllMoviesView(
@@ -84,12 +81,17 @@ public class MovieController {
     }
 
     @RequestMapping(path = "/search", method = RequestMethod.GET)
-    public ResponseEntity<MovieDTO> searchMovies(@RequestParam String title) {
-        MovieDTO movie = movieService.searchByTitle(title);
-        if (movie != null)
-            return ResponseEntity.ok(movie);
-        else
-            return ResponseEntity.notFound().build();
+    public ModelAndView searchMovies(@RequestParam("title") String title) {
+        List<MovieDTO> movies = movieService.searchByTitle(title);
+        ModelMap modelo = new ModelMap();
+
+        if (!movies.isEmpty()) {
+            modelo.addAttribute("movies", movies);
+        } else {
+            modelo.addAttribute("message", "No se encontraron películas con el título proporcionado.");
+        }
+
+        return new ModelAndView("search-results", modelo);
     }
 
     @RequestMapping(path = "/most-viewed", method = RequestMethod.GET)
