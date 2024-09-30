@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -141,24 +142,27 @@ public class MovieControllerTest {
 
     @Test
     public void testBuscarPeliculas_PeliculaEncontrada() {
-        MovieDTO movieMock = mock(MovieDTO.class);
-        when(movieService.searchByTitle("Coraline")).thenReturn(movieMock);
+        List<MovieDTO> movieListMock = Arrays.asList(mock(MovieDTO.class));
+        when(movieService.searchByTitle("Coraline")).thenReturn(movieListMock);
 
-        ResponseEntity<MovieDTO> response = movieController.searchMovies("Coraline");
+        ModelAndView modelAndView = movieController.searchMovies("Coraline");
 
-        assertEquals(200, response.getStatusCodeValue());
-        assertNotNull(response.getBody());
-        assertEquals(movieMock, response.getBody());
+        assertEquals("search-results", modelAndView.getViewName());
+
+        assertNotNull(modelAndView.getModel().get("movies"));
+        assertEquals(movieListMock, modelAndView.getModel().get("movies"));
     }
 
     @Test
     public void testBuscarPeliculas_PeliculaNoEncontrada() {
-        when(movieService.searchByTitle("NonExistentMovie")).thenReturn(null);
+        when(movieService.searchByTitle("NonExistentMovie")).thenReturn(Collections.emptyList());
 
-        ResponseEntity<MovieDTO> response = movieController.searchMovies("NonExistentMovie");
+        ModelAndView modelAndView = movieController.searchMovies("NonExistentMovie");
 
-        assertEquals(404, response.getStatusCodeValue());
-        assertNull(response.getBody());
+        assertEquals("search-results", modelAndView.getViewName());
+
+        assertNotNull(modelAndView.getModel().get("message"));
+        assertEquals("No se encontraron películas con el título proporcionado.", modelAndView.getModel().get("message"));
     }
 
     @Test

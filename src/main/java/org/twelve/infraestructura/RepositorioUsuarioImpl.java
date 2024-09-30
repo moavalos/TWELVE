@@ -1,5 +1,6 @@
 package org.twelve.infraestructura;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -52,8 +53,10 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
     */
     @Override
     public Usuario buscarUsuarioPorEmail(String email) {
-        return (Usuario) sessionFactory.getCurrentSession().createCriteria(Usuario.class)
-                .add(Restrictions.eq("email", email));
+        Session session = sessionFactory.getCurrentSession();
+        Criteria criteria = session.createCriteria(Usuario.class);
+        criteria.add(Restrictions.eq("email", email));
+        return (Usuario) criteria.uniqueResult(); // Devuelve un Usuario o null
     }
 
     @Override

@@ -53,7 +53,7 @@ public class ServicioLoginImpl implements ServicioLogin {
     }
 
     private void verificarUsuarioExistente(Usuario usuario) throws UsuarioExistente {
-        Usuario usuarioEncontrado = repositorioUsuario.buscarUsuario(usuario.getEmail(), usuario.getPassword());
+        Usuario usuarioEncontrado = repositorioUsuario.buscarUsuarioPorEmail(usuario.getEmail());
         if (usuarioEncontrado != null) {
             throw new UsuarioExistente();
         }
