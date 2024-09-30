@@ -14,7 +14,7 @@ public interface MovieService {
 
     //Movie update(Movie movie);
 
-    MovieDTO searchByTitle(String title);
+    List<MovieDTO> searchByTitle(String title);
 
     List<MovieDTO> getMovieMasVista();
 
