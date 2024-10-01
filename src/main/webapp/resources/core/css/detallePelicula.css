@@ -1,0 +1,74 @@
+
+.movie-image {
+    width: 100%;
+    max-width: 300px;
+}
+
+.sidebar-buttons {
+    margin-top: 20px;
+}
+
+.sidebar-buttons button {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.cast-list img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.similar-movies img {
+    width: 150px;
+    height: 200px;
+    background-color: #d8c078;
+}
+
+
+.pelisSimilares h4 {
+    padding-bottom: 30px;
+    text-align: center;
+}
+
+
+.similar-movies {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    /* Espacio entre las imágenes */
+}
+
+.similar-movies img {
+    width: 150px;
+    height: 200px;
+    background-color: #d8c078;
+}
+
+.review-section .card-body {
+    padding: 15px;
+}
+
+.review-section .fw-bold {
+    font-weight: bold;
+}
+
+.review-section img {
+    border-radius: 50%;
+}
+
+.review-section h6 {
+    margin-bottom: 5px;
+}
+
+.review-section p {
+    
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+.review-section .d-flex span {
+    font-size: 0.85rem;
+}
+
