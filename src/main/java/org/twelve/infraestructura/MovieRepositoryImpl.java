@@ -41,9 +41,9 @@ public class MovieRepositoryImpl implements MovieRepository {
     @Override
     public List<Movie> findByTitle(String title) {
         Session session = sessionFactory.getCurrentSession();
-        String hql = "from Movie where nombre like :title";
+        String hql = "from Movie where lower(nombre) like :title";
         return session.createQuery(hql, Movie.class)
-                .setParameter("title", "%" + title + "%")
+                .setParameter("title", "%" + title.toLowerCase() + "%")
                 .list();
     }
 

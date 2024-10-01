@@ -2,6 +2,7 @@ package org.twelve.presentacion.dto;
 
 public class MovieDTO {
 
+    private Integer id;
     private String nombre;
     private String descripcion;
     private String frase;
@@ -17,7 +18,8 @@ public class MovieDTO {
     public MovieDTO() {
     }
 
-    public MovieDTO(String nombre, String descripcion, String frase, Double duracion, String pais, Integer cantVistas, Integer idCategoria, String anioLanzamiento, String imagen, Integer likes, Double valoracion) {
+    public MovieDTO(Integer id, String nombre, String descripcion, String frase, Double duracion, String pais, Integer cantVistas, Integer idCategoria, String anioLanzamiento, String imagen, Integer likes, Double valoracion) {
+        this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.frase = frase;
@@ -118,4 +120,9 @@ public class MovieDTO {
     public void setValoracion(Double valoracion) {
         this.valoracion = valoracion;
     }
+
+    public Integer getId() {
+        return id;
+    }
+
 }

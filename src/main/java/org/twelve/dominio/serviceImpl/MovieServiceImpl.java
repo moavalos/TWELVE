@@ -42,9 +42,11 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieDTO searchByTitle(String title) {
+    public List<MovieDTO> searchByTitle(String title) {
         List<Movie> movies = movieRepository.findByTitle(title);
-        return movies.isEmpty() ? null : convertToDTO(movies.get(0)); // devuelvo la primera coincidencia
+        return movies.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -91,6 +93,7 @@ public class MovieServiceImpl implements MovieService {
     // entidad a DTO
     private MovieDTO convertToDTO(Movie movie) {
         return new MovieDTO(
+                movie.getId(),
                 movie.getNombre(),
                 movie.getDescripcion(),
                 movie.getFrase(),

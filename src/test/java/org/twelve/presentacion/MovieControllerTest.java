@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -49,7 +50,7 @@ public class MovieControllerTest {
     // Todo casos
 
     @Test
-    public void testGetAllMoviesViewWithTopRatedFilter() {
+    public void testObtenerVistaDeTodasLasPeliculasConFiltroDeMejorValoradas() {
         List<MovieDTO> topRatedMoviesMock = Arrays.asList(mock(MovieDTO.class), mock(MovieDTO.class));
         List<CategoriaDTO> categoriasMock = Arrays.asList(mock(CategoriaDTO.class));
 
@@ -65,7 +66,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testGetAllMoviesViewWithNewestFilter() {
+    public void testObtenerVistaDeTodasLasPeliculasConFiltroDeMasRecientes() {
         List<MovieDTO> newestMoviesMock = Arrays.asList(mock(MovieDTO.class), mock(MovieDTO.class));
         List<CategoriaDTO> categoriasMock = Arrays.asList(mock(CategoriaDTO.class));
 
@@ -81,7 +82,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testGetAllMoviesViewWithCategoryFilter() {
+    public void testObtenerVistaDeTodasLasPeliculasConFiltroDeCategoria() {
         List<MovieDTO> categoryMoviesMock = Arrays.asList(mock(MovieDTO.class));
         List<CategoriaDTO> categoriasMock = Arrays.asList(mock(CategoriaDTO.class));
 
@@ -97,7 +98,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testGetAllMoviesViewWithoutFilterAndWithoutCategory() {
+    public void testObtenerVistaDeTodasLasPeliculasSinFiltroYSinCategoria() {
         List<MovieDTO> moviesMock = Arrays.asList(mock(MovieDTO.class), mock(MovieDTO.class));
         List<CategoriaDTO> categoriasMock = Arrays.asList(mock(CategoriaDTO.class));
 
@@ -113,7 +114,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testGetAllMoviesViewWithoutCategoryAndWithoutFilter() {
+    public void testObtenerVistaDeTodasLasPeliculasSinCategoriaYSinFiltro() {
         List<MovieDTO> moviesMock = Arrays.asList(mock(MovieDTO.class), mock(MovieDTO.class));
         List<CategoriaDTO> categoriasMock = Arrays.asList(mock(CategoriaDTO.class));
 
@@ -128,7 +129,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testGetMoviesByCategory() {
+    public void testObtenerPelículasPorCategoria() {
         List<MovieDTO> moviesMock = Arrays.asList(mock(MovieDTO.class));
         when(movieService.getMoviesByCategory(1)).thenReturn(moviesMock);
 
@@ -140,29 +141,32 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testSearchMovies_MovieFound() {
-        MovieDTO movieMock = mock(MovieDTO.class);
-        when(movieService.searchByTitle("Coraline")).thenReturn(movieMock);
+    public void testBuscarPeliculas_PeliculaEncontrada() {
+        List<MovieDTO> movieListMock = Arrays.asList(mock(MovieDTO.class));
+        when(movieService.searchByTitle("Coraline")).thenReturn(movieListMock);
 
-        ResponseEntity<MovieDTO> response = movieController.searchMovies("Coraline");
+        ModelAndView modelAndView = movieController.searchMovies("Coraline");
 
-        assertEquals(200, response.getStatusCodeValue());
-        assertNotNull(response.getBody());
-        assertEquals(movieMock, response.getBody());
+        assertEquals("search-results", modelAndView.getViewName());
+
+        assertNotNull(modelAndView.getModel().get("movies"));
+        assertEquals(movieListMock, modelAndView.getModel().get("movies"));
     }
 
     @Test
-    public void testSearchMovies_MovieNotFound() {
-        when(movieService.searchByTitle("NonExistentMovie")).thenReturn(null);
+    public void testBuscarPeliculas_PeliculaNoEncontrada() {
+        when(movieService.searchByTitle("NonExistentMovie")).thenReturn(Collections.emptyList());
 
-        ResponseEntity<MovieDTO> response = movieController.searchMovies("NonExistentMovie");
+        ModelAndView modelAndView = movieController.searchMovies("NonExistentMovie");
 
-        assertEquals(404, response.getStatusCodeValue());
-        assertNull(response.getBody());
+        assertEquals("search-results", modelAndView.getViewName());
+
+        assertNotNull(modelAndView.getModel().get("message"));
+        assertEquals("No se encontraron películas con el título proporcionado.", modelAndView.getModel().get("message"));
     }
 
     @Test
-    public void testGetMostViewedMovies_MoviesFound() {
+    public void testObtenerPeliculasMasVistas_PeliculasEncontradas() {
         List<MovieDTO> moviesMock = Arrays.asList(mock(MovieDTO.class), mock(MovieDTO.class));
         when(movieService.getMovieMasVista()).thenReturn(moviesMock);
 
@@ -174,7 +178,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testGetMostViewedMovies_NoMoviesFound() {
+    public void testObtenerPeliculasMasVistas_NoSeEncontraronPeliculas() {
         List<MovieDTO> emptyMoviesList = new ArrayList<>();
         when(movieService.getMovieMasVista()).thenReturn(emptyMoviesList);
 
@@ -186,7 +190,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testGetMovieById_ValidId() {
+    public void testObtenerPeliculaPorId_IdValido() {
         MovieDTO movieMock = mock(MovieDTO.class);
         when(movieService.getById(1)).thenReturn(movieMock);
 
@@ -197,7 +201,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testGetMovieById_InvalidId() {
+    public void testObtenerPeliculaPorId_IdInvalido() {
         when(movieService.getById(99)).thenReturn(null);
 
         ResponseEntity<MovieDTO> response = movieController.getMovieById(99);
@@ -206,7 +210,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testAddMovie() {
+    public void testAgregarPelicula() {
         MovieDTO movieMock = mock(MovieDTO.class);
         when(movieService.create(any(MovieDTO.class))).thenReturn(movieMock);
 
@@ -217,7 +221,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testUpdateMovie_ValidId() {
+    public void testActualizarPelicula_IdValido() {
         MovieDTO movieMock = mock(MovieDTO.class);
         when(movieService.getById(1)).thenReturn(movieMock);
         when(movieService.create(any(MovieDTO.class))).thenReturn(movieMock);
@@ -229,7 +233,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testUpdateMovie_InvalidId() {
+    public void testActualizarPelicula_IdInvalido() {
         MovieDTO movieMock = mock(MovieDTO.class);
         when(movieService.getById(99)).thenReturn(null);
 
@@ -239,7 +243,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testGetMoviesByCategory_NoMoviesFound() {
+    public void testObtenerPeliculasPorCategoria_NoSeEncontraronPeliculas() {
         List<MovieDTO> emptyMoviesList = new ArrayList<>();
         when(movieService.getMoviesByCategory(1)).thenReturn(emptyMoviesList);
 
@@ -250,7 +254,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testGetMoviesByCategory_NullMoviesList() {
+    public void testObtenerPeliculasPorCategoria_ListaDePeliculasNula() {
         when(movieService.getMoviesByCategory(1)).thenReturn(null);
 
         ResponseEntity<List<MovieDTO>> response = movieController.getMoviesByCategory(1);
@@ -258,4 +262,22 @@ public class MovieControllerTest {
         assertEquals(404, response.getStatusCodeValue());
         assertNull(response.getBody());
     }
+
+    @Test
+    public void testObtenerLas4PeliculasMejorValoradasEnVistaDeInicio() {
+        //preparacion
+        List<MovieDTO> topRatedMoviesMock = Arrays.asList(mock(MovieDTO.class), mock(MovieDTO.class), mock(MovieDTO.class), mock(MovieDTO.class));
+        when(movieService.getMovieByValoracion()).thenReturn(topRatedMoviesMock);
+
+        //ejecucion
+        ModelAndView modelAndView = movieController.getTopRatedMovies();
+
+        //validacion
+
+        assertThat(modelAndView.getViewName(), is("home"));
+
+        assertThat(((List<MovieDTO>) modelAndView.getModel().get("movies")).size(), is(4));
+    }
+
+
 }

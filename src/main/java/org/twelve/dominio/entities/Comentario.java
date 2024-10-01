@@ -24,4 +24,6 @@ public class Comentario {
     private Integer idUsuario;
 
     private Integer likes;
+
+    //private Double valoracion;
 }
