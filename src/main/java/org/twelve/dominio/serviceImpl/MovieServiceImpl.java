@@ -93,6 +93,7 @@ public class MovieServiceImpl implements MovieService {
     // entidad a DTO
     private MovieDTO convertToDTO(Movie movie) {
         return new MovieDTO(
+                movie.getId(),
                 movie.getNombre(),
                 movie.getDescripcion(),
                 movie.getFrase(),

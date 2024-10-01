@@ -13,7 +13,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">TWELVE+</a>
+        <a class="navbar-brand" href="home.html">TWELVE+</a>
         <div class="mx-auto order-0 w-75">
             <form class="d-flex justify-content-center" role="search" th:action="@{/search}" method="get">
                 <input class="form-control me-2 w-75" type="search" name="title" placeholder="Buscar película" aria-label="Search">
@@ -51,7 +51,7 @@
                             <h5 class="card-title" th:text="${movie.nombre}"></h5>
                             <p class="card-text" th:text="${movie.descripcion}"></p>
                             <div class="mt-auto">
-                                <a href="#" class="btn btn-primary">Ver detalles</a> <!-- Botón opcional -->
+                                <a th:href="@{'/detalle-pelicula/' + ${movie.id}}" class="btn btn-primary">Ver detalles</a>
                             </div>
                         </div>
                     </div>
