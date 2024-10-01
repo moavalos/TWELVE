@@ -74,7 +74,7 @@ public class MovieServiceImplTest {
         when(movie1.getNombre()).thenReturn("Matrix");
         when(movie1.getDuracion()).thenReturn(136.8);
 
-        MovieDTO movieDTO = new MovieDTO("Matrix", "A hacker discovers...", "Welcome to the real world",
+        MovieDTO movieDTO = new MovieDTO(1, "Matrix", "A hacker discovers...", "Welcome to the real world",
                 136.8, "USA", 5000, 1, "1999", "matrix.jpg", 3000, 9.0);
 
         when(movieRepository.save(any(Movie.class))).thenReturn(movie1);
