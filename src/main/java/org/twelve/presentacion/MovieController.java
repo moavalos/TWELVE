@@ -77,14 +77,11 @@ public class MovieController {
 
     @RequestMapping(path = "/detalle-pelicula/{id}", method = RequestMethod.GET)
     public ModelAndView getMovieDetails(@PathVariable("id") Integer id) {
-        // Obtiene la película por su ID usando el servicio
         MovieDTO movie = movieService.getById(id);
 
-        // Crea un modelo para pasar los datos a la vista
         ModelMap modelo = new ModelMap();
-        modelo.put("movie", movie); // Añade los detalles de la película al modelo
+        modelo.put("movie", movie);
 
-        // Retorna la vista 'detalle-pelicula' junto con el modelo
         return new ModelAndView("detalle-pelicula", modelo);
     }
 
