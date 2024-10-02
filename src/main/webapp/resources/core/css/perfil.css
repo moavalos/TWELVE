@@ -4,19 +4,11 @@ body {
     padding: 0;
     background-color: #f4f4f4;
 }
-
-header {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    background-color: white;
-    border-bottom: 1px solid #ccc;
+h1, h2{
+    font-size:1.5rem !important;
+    margin-bottom: 5px !important;
 }
 
-.search-bar {
-    width: 200px;
-    padding: 5px;
-}
 
 .profile-info {
     display: flex;
@@ -81,6 +73,9 @@ header {
     margin-top: 5px;
 }
 
+.menu{
+    margin-top:20px;
+}
 
 .menu ul {
     list-style: none;
@@ -142,11 +137,11 @@ header {
     height: 220px;
     border: 2px dashed #ccc;
     border-radius: 18px;
-    font-size: 2rem;
     font-weight: bold;
     color: #333;
     cursor: pointer;
     text-align: center;
+    font-size: 1.5rem;
 }
 
 .add-more a {

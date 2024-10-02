@@ -5,16 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil de Usuario</title>
    <link rel="stylesheet" th:href="@{/css/perfil.css}"/>
-
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
 
 
 </head>
 <body>
-<header>
-    <a href="#" class="back">Volver</a>
-    <div class="logo">LOGO</div>
-    <input type="text" placeholder="Buscar..." class="search-bar">
-</header>
 
 <section class="profile">
     <div class="profile-info">
@@ -205,16 +200,7 @@
         <img th:src="@{/images/user/foto-perfil (6).jpg}" alt="User Avatar" style="margin:10px;">
     </div>
 </footer>
-
-<script>
-    function toggleDates(datesId) {
-        var dates = document.getElementById(datesId);
-        if (dates.style.display === "none" || dates.style.display === "") {
-            dates.style.display = "block";
-        } else {
-            dates.style.display = "none";
-        }
-    }
-</script>
+<div th:insert="fragments/footer :: footer"></div>
+<script th:src="@{/js/perfil.js}"></script>
 </body>
 </html>
