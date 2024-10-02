@@ -6,6 +6,8 @@
     <title>Perfil de Usuario</title>
    <link rel="stylesheet" th:href="@{/css/perfil.css}"/>
 
+
+
 </head>
 <body>
 <header>
@@ -18,11 +20,11 @@
     <div class="profile-info">
         <div class="profile-left">
         <div class="avatar">
-            <img th:src="@{/images/users/foto-perfil.jpg}" alt="User Avatar" class="rounded-circle me-3" width="50">
+            <img th:src="@{/images/user/foto-perfil.jpg}" alt="User Avatar">
         </div>
         <div class="info">
             <h1>Jose</h1>
-            <button class="edit-profile">Seguir</button>
+            <button class="edit-profile">Editar perfil</button>
             <p>Descripción del perfil por el usuario</p>
             <span class="location">Argentina</span>
             <p class="username">@Joseee123</p>
@@ -72,17 +74,17 @@
         <h2>Películas favoritas</h2>
         <div class="movies-grid">
             <div class="movie">
-                <img src="ruta/a/la/imagen1.jpg" alt="Película 1">
+                <img th:src="@{/images/el_origen.jpg}" alt="Película 1">
             </div>
             <div class="movie">
-                <img src="ruta/a/la/imagen2.jpg" alt="Película 2">
+                <img th:src="@{/images/tiempos_violentos.jpg}" alt="Película 2">
             </div>
             <div class="movie">
-                <img src="ruta/a/la/imagen3.jpg" alt="Película 3">
+                <img th:src="@{/images/matrix.jpg}" alt="Película 3">
             </div>
             <!-- Botón con símbolo "+" -->
             <div class="movie add-more">
-                <a href="url/a/la/nueva/pagina.html">+</a>
+                <a href="url/a/la/nueva/pagina.html">Ver todas</a>
             </div>
         </div>
     </div>
@@ -91,17 +93,15 @@
         <h2>Watchlist</h2>
         <div class="movies-grid watchlist-grid">
             <div class="movie">
-                <img src="ruta/a/la/imagen4.jpg" alt="Película 4">
+                <img th:src="@{/images/parasitos.jpg}" alt="Película 4">
             </div>
             <div class="movie">
-                <img src="ruta/a/la/imagen5.jpg" alt="Película 5">
+                <img th:src="@{/images/interestelar.jpg}" alt="Película 5">
             </div>
-            <div class="movie">
-                <img src="ruta/a/la/imagen6.jpg" alt="Película 6">
-            </div>
+
             <!-- Botón con símbolo "+" -->
             <div class="movie add-more">
-                <a href="url/a/la/nueva/pagina.html">+</a>
+                <a href="url/a/la/nueva/pagina.html">Ver todas</a>
             </div>
         </div>
     </div>
@@ -111,52 +111,110 @@
         <h2>Actividad reciente</h2>
 
         <div class="review">
-            <img src="./imagenes/venom.jpg" alt="Venom 2" class="review-image">
+            <img th:src="@{/images/venom.jpg}" alt="Venom 2" class="review-image">
             <div class="review-content">
                 <h3>Venom 2 (2021)</h3>
-                <p>Es muy mala peli, no me gustó porque la relación de Eddie y Venom no es como en los comics...</p>
+                <p>Es la mejor peli que vi en mi vida</p>
             </div>
         </div>
 
         <div class="review">
-            <img src="./imagenes/orgulloyprejuicio.jpg" alt="Orgullo y Prejuicio" class="review-image">
+            <img th:src="@{/images/orgulloyprejuicio.jpg}" alt="Orgullo y Prejuicio" class="review-image">
             <div class="review-content">
                 <h3>Orgullo y Prejuicio (2008)</h3>
-                <p>bla bla bla bla bla...</p>
+                <p>Muy buena la adaptacion</p>
             </div>
         </div>
 
         <div class="review">
-            <img src="./imagenes/nowyouseeme.jpg" alt="Now you see me" class="review-image">
+            <img th:src="@{/images/nowyouseeme.jpg}" alt="Now you see me" class="review-image">
             <div class="review-content">
                 <h3>Now you see me (2013)</h3>
-                <p>bla bla bla bla bla...</p>
+                <p>No me gusto mucho</p>
             </div>
         </div>
     </div>
 
 
     <div class="history">
-        <h2>Historial</h2>
+        <h2>Historial de peliculas vistas en el año</h2>
         <div class="months">
-            <div class="month">Abril</div>
-            <div class="month">Marzo</div>
+            <div class="month" onclick="toggleDates('enero-dates')">Enero</div>
+            <div class="dates" id="enero-dates">
+                <div>1 de enero - Mi pobre angelito (1990)</div>
+                <div>2 de enero</div>
+                <div>3 de enero - Los Vengadores (2012)</div>
+            </div>
+
+            <div class="month" onclick="toggleDates('febrero-dates')">Febrero</div>
+            <div class="dates" id="febrero-dates">
+                <div>3 de febrero - Parasite (2019)</div>
+            </div>
+
+            <div class="month" onclick="toggleDates('marzo-dates')">Marzo</div>
+            <div class="dates" id="marzo-dates">
+                No se ha cargado ninguna pelicula
+            </div>
+
+            <div class="month" onclick="toggleDates('abril-dates')">Abril</div>
+            <div class="dates" id="abril-dates">
+                <div>25 de abril - Iron Man (2008)</div>
+            </div>
+
+            <div class="month" onclick="toggleDates('mayo-dates')">Mayo</div>
+            <div class="dates" id="mayo-dates">
+                No se ha cargado ninguna pelicula
+            </div>
+
+            <div class="month" onclick="toggleDates('junio-dates')">Junio</div>
+            <div class="dates" id="junio-dates">
+                <div>1 de junio - Inception (2010)</div>
+            </div>
+
+            <div class="month" onclick="toggleDates('julio-dates')">Julio</div>
+            <div class="dates" id="julio-dates">
+                No se ha cargado ninguna pelicula
+            </div>
+
+            <div class="month" onclick="toggleDates('agosto-dates')">Agosto</div>
+            <div class="dates" id="agosto-dates">
+                No se ha cargado ninguna pelicula
+            </div>
+
+            <div class="month" onclick="toggleDates('septiembre-dates')">Septiembre</div>
+            <div class="dates" id="septiembre-dates">
+                No se ha cargado ninguna pelicula
+            </div>
+
+            <div class="month" onclick="toggleDates('octubre-dates')">Octubre</div>
+            <div class="dates" id="octubre-dates">
+                <div>1 de octubre - Venom 2 (2021)</div>
+            </div>
         </div>
     </div>
 </section>
 
 <footer>
     <h2>Siguiendo</h2>
-    <div class="followers">
-        <div class="follower"></div>
-        <div class="follower"></div>
-        <div class="follower"></div>
-        <div class="follower"></div>
-        <div class="follower"></div>
-        <div class="follower"></div>
+    <div class="avatar">
+        <img th:src="@{/images/user/foto-perfil (1).jpg}" alt="User Avatar" style="margin:10px;">
+        <img th:src="@{/images/user/foto-perfil (2).jpg}" alt="User Avatar" style="margin:10px;">
+        <img th:src="@{/images/user/foto-perfil (3).jpg}" alt="User Avatar" style="margin:10px;">
+        <img th:src="@{/images/user/foto-perfil (4).jpg}" alt="User Avatar" style="margin:10px;">
+        <img th:src="@{/images/user/foto-perfil (5).jpg}" alt="User Avatar" style="margin:10px;">
+        <img th:src="@{/images/user/foto-perfil (6).jpg}" alt="User Avatar" style="margin:10px;">
     </div>
 </footer>
 
-<script src="scripts.js"></script>
+<script>
+    function toggleDates(datesId) {
+        var dates = document.getElementById(datesId);
+        if (dates.style.display === "none" || dates.style.display === "") {
+            dates.style.display = "block";
+        } else {
+            dates.style.display = "none";
+        }
+    }
+</script>
 </body>
 </html>
