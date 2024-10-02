@@ -87,6 +87,10 @@ public class MovieServiceImpl implements MovieService {
         movie.setImagen(movieDTO.getImagen());
         movie.setLikes(movieDTO.getLikes());
         movie.setValoracion(movieDTO.getValoracion());
+        movie.setDirector(movieDTO.getDirector());
+        movie.setEscritor(movieDTO.getEscritor());
+        movie.setIdioma(movieDTO.getIdioma());
+        movie.setTambienConocidaComo(movieDTO.getTambienConocidaComo());
         return movie;
     }
 
@@ -104,7 +108,11 @@ public class MovieServiceImpl implements MovieService {
                 movie.getAñoLanzamiento(),
                 movie.getImagen(),
                 movie.getLikes(),
-                movie.getValoracion()
+                movie.getValoracion(),
+                movie.getDirector(),
+                movie.getEscritor(),
+                movie.getIdioma(),
+                movie.getTambienConocidaComo()
         );
     }
 }
