@@ -32,7 +32,7 @@ VALUES
                 -- CIENCIA_FICCION
                 '1985',
                 'volver_al_futuro.jpg',
-                null,
+                2,
                 50000,
                 9.0,
                 'Robert Zemeckis',
@@ -73,7 +73,7 @@ VALUES
                 -- ACCION
                 '1979',
                 'apocalypse_now.jpg',
-                null,
+                1,
                 42000,
                 8.4,
                 'Francis Ford Coppola',
@@ -114,7 +114,7 @@ VALUES
                 -- CRIMEN
                 '1966',
                 'el_bueno_el_malo_y_el_feo.jpg',
-                null,
+                2,
                 51000,
                 7.9,
                 'Sergio Leone',
@@ -155,7 +155,7 @@ VALUES
                 -- DRAMA
                 '2001',
                 'el_viaje_de_chihiro.jpg',
-                null,
+                1,
                 48000,
                 8.6,
                 'Hayao Miyazaki',
@@ -237,7 +237,7 @@ VALUES
                 -- DRAMA
                 '2022',
                 'sin_novedades_en_el_frente.jpg',
-                null,
+                1,
                 35000,
                 8.3,
                 'Edward Berger',
@@ -367,129 +367,6 @@ VALUES
                 'Lana Wachowski, Lilly Wachowski',
                 'Inglés',
                 'The Matrix, Matrix (España)'
-        );
-
--- Interestelar
-INSERT INTO
-        Movie (
-                nombre,
-                descripcion,
-                frase,
-                duracion,
-                pais,
-                cantVistas,
-                idCategoria,
-                añoLanzamiento,
-                imagen,
-                idComentario,
-                likes,
-                valoracion,
-                director,
-                escritor,
-                idioma,
-                tambienConocidaComo
-        )
-VALUES
-        (
-                'Interestelar',
-                'Un equipo de exploradores viaja a través de un agujero de gusano en el espacio para asegurar la supervivencia de la humanidad.',
-                'La humanidad nació en la Tierra. Nunca estuvo destinada a morir aquí.',
-                169.0,
-                'EE.UU.',
-                5500000,
-                3,
-                -- CIENCIA_FICCION
-                '2014',
-                'interestelar.jpg',
-                null,
-                42000,
-                8.6,
-                'Christopher Nolan',
-                'Jonathan Nolan, Christopher Nolan',
-                'Inglés',
-                'Interstellar, Interestelar (España)'
-        );
-
--- Parásitos
-INSERT INTO
-        Movie (
-                nombre,
-                descripcion,
-                frase,
-                duracion,
-                pais,
-                cantVistas,
-                idCategoria,
-                añoLanzamiento,
-                imagen,
-                idComentario,
-                likes,
-                valoracion,
-                director,
-                escritor,
-                idioma,
-                tambienConocidaComo
-        )
-VALUES
-        (
-                'Parásitos',
-                'La codicia y la discriminación de clases amenazan la relación simbiótica entre la rica familia Park y el empobrecido clan Kim.',
-                'Actúa como si fueras dueño del lugar.',
-                132.0,
-                'Corea del Sur',
-                4500000,
-                4,
-                -- DRAMA
-                '2019',
-                'parasitos.jpg',
-                null,
-                40000,
-                8.6,
-                'Bong Joon-ho',
-                'Bong Joon-ho, Han Jin-won',
-                'Coreano',
-                'Parasite, Parásitos (España)'
-        );
-
--- Tiempos Violentos
-INSERT INTO
-        Movie (
-                nombre,
-                descripcion,
-                frase,
-                duracion,
-                pais,
-                cantVistas,
-                idCategoria,
-                añoLanzamiento,
-                imagen,
-                idComentario,
-                likes,
-                valoracion,
-                director,
-                escritor,
-                idioma,
-                tambienConocidaComo
-        )
-VALUES
-        (
-                'Tiempos Violentos',
-                'Las vidas de dos sicarios, un boxeador, un gánster y su esposa se entrelazan en cuatro historias de violencia y redención.',
-                'Inglés, hijo de p***, ¿lo hablas?',
-                154.0,
-                'EE.UU.',
-                6000000,
-                5,
-                -- CRIMEN
-                '1994',
-                'tiempos_violentos.jpg',
-                null,
-                50000,
-                8.9,
-                'Quentin Tarantino',
-                'Quentin Tarantino',
-                'Inglés',
-                'Pulp Fiction, Tiempos Violentos (España)'
         );
 
 INSERT INTO
