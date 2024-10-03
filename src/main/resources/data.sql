@@ -54,7 +54,7 @@ VALUES ('Interestelar',
         3, -- CIENCIA_FICCION
         '2014-11-07',
         'interestelar.jpg',
-        null, -- Cambié a null porque no se especifica
+        2, -- Cambié a null porque no se especifica
         42000,
         8.6);
 
@@ -68,7 +68,7 @@ VALUES ('Parásitos',
         4, -- DRAMA
         '2019-05-30',
         'parasitos.jpg',
-        null,
+        2,
         40000,
         8.6);
 
@@ -82,7 +82,7 @@ VALUES ('Tiempos Violentos',
         5, -- CRIMEN
         '1994-10-14',
         'tiempos_violentos.jpg',
-        null,
+        1,
         50000,
         8.9);
 
