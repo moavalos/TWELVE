@@ -41,7 +41,6 @@ public class Movie {
 
     //private Director director;
 
-    @Column(nullable = false)
     private Integer idComentario;
 
     private Integer likes;
