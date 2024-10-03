@@ -15,7 +15,7 @@ public class Movie {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     private String nombre;
 
@@ -35,14 +35,19 @@ public class Movie {
 
     private String imagen;
 
-    //private Cast cast;
-
-    //private Director director;
-
     private Integer idComentario;
 
     private Integer likes;
 
-    //@Size(min=2, max=)
+    @Column(length = 5)
     private Double valoracion;
+
+    // Nuevos campos agregados
+    private String director;
+
+    private String escritor;
+
+    private String idioma;
+
+    private String tambienConocidaComo;
 }

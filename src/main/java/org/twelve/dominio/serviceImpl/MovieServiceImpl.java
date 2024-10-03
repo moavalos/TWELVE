@@ -42,9 +42,11 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieDTO searchByTitle(String title) {
+    public List<MovieDTO> searchByTitle(String title) {
         List<Movie> movies = movieRepository.findByTitle(title);
-        return movies.isEmpty() ? null : convertToDTO(movies.get(0)); // devuelvo la primera coincidencia
+        return movies.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -85,12 +87,17 @@ public class MovieServiceImpl implements MovieService {
         movie.setImagen(movieDTO.getImagen());
         movie.setLikes(movieDTO.getLikes());
         movie.setValoracion(movieDTO.getValoracion());
+        movie.setDirector(movieDTO.getDirector());
+        movie.setEscritor(movieDTO.getEscritor());
+        movie.setIdioma(movieDTO.getIdioma());
+        movie.setTambienConocidaComo(movieDTO.getTambienConocidaComo());
         return movie;
     }
 
     // entidad a DTO
     private MovieDTO convertToDTO(Movie movie) {
         return new MovieDTO(
+                movie.getId(),
                 movie.getNombre(),
                 movie.getDescripcion(),
                 movie.getFrase(),
@@ -101,7 +108,11 @@ public class MovieServiceImpl implements MovieService {
                 movie.getAñoLanzamiento(),
                 movie.getImagen(),
                 movie.getLikes(),
-                movie.getValoracion()
+                movie.getValoracion(),
+                movie.getDirector(),
+                movie.getEscritor(),
+                movie.getIdioma(),
+                movie.getTambienConocidaComo()
         );
     }
 }

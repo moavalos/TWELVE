@@ -2,6 +2,7 @@ package org.twelve.presentacion.dto;
 
 public class MovieDTO {
 
+    private Integer id;
     private String nombre;
     private String descripcion;
     private String frase;
@@ -13,11 +14,16 @@ public class MovieDTO {
     private String imagen;
     private Integer likes;
     private Double valoracion;
+    private String director;
+    private String escritor;
+    private String idioma;
+    private String tambienConocidaComo;
 
     public MovieDTO() {
     }
 
-    public MovieDTO(String nombre, String descripcion, String frase, Double duracion, String pais, Integer cantVistas, Integer idCategoria, String anioLanzamiento, String imagen, Integer likes, Double valoracion) {
+    public MovieDTO(Integer id, String nombre, String descripcion, String frase, Double duracion, String pais, Integer cantVistas, Integer idCategoria, String anioLanzamiento, String imagen, Integer likes, Double valoracion, String director, String escritor, String idioma, String tambienConocidaComo) {
+        this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.frase = frase;
@@ -29,6 +35,10 @@ public class MovieDTO {
         this.imagen = imagen;
         this.likes = likes;
         this.valoracion = valoracion;
+        this.director = director;
+        this.escritor = escritor;
+        this.idioma = idioma;
+        this.tambienConocidaComo = tambienConocidaComo;
     }
 
     public String getNombre() {
@@ -118,4 +128,42 @@ public class MovieDTO {
     public void setValoracion(Double valoracion) {
         this.valoracion = valoracion;
     }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setDirector(String director) {
+        this.director = director;
+    }
+
+    public String getDirector() {
+        return director;
+    }
+
+    public void setEscritor(String escritor) {
+        this.escritor = escritor;
+    }
+
+    public String getEscritor() {
+        return escritor;
+    }
+
+    public void setIdioma(String idioma) {
+        this.idioma = idioma;
+    }
+
+    public String getIdioma() {
+        return idioma;
+    }
+
+    public void setTambienConocidaComo(String tambienConocidaComo) {
+        this.tambienConocidaComo = tambienConocidaComo;
+    }
+
+    public String getTambienConocidaComo() {
+        return tambienConocidaComo;
+    }
+
+
 }
