@@ -48,4 +48,13 @@ public class Movie {
 
     @Column(length = 5)
     private Double valoracion;
+
+    // Nuevos campos agregados
+    private String director;
+
+    private String escritor;
+
+    private String idioma;
+
+    private String tambienConocidaComo;
 }

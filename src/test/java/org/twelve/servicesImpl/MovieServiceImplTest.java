@@ -69,13 +69,30 @@ public class MovieServiceImplTest {
         verify(movieRepository, times(1)).findById(1);
     }
 
+
     @Test
     public void testCreate_CuandoSeCreaPelicula_DeberiaRetornarMovieDTO() {
         when(movie1.getNombre()).thenReturn("Matrix");
         when(movie1.getDuracion()).thenReturn(136.8);
 
-        MovieDTO movieDTO = new MovieDTO(1, "Matrix", "A hacker discovers...", "Welcome to the real world",
-                136.8, "USA", 5000, 1, "1999", "matrix.jpg", 3000, 9.0);
+        MovieDTO movieDTO = new MovieDTO(
+                1,
+                "Matrix",
+                "A hacker discovers...",
+                "Welcome to the real world",
+                136.8,
+                "USA",
+                5000,
+                1,
+                "1999",
+                "matrix.jpg",
+                3000,
+                9.0,
+                "Lana Wachowski, Lilly Wachowski", // director
+                "Lana Wachowski, Lilly Wachowski", // escritor
+                "Inglés",                         // idioma
+                "The Matrix, Matrix"              // también conocida como
+        );
 
         when(movieRepository.save(any(Movie.class))).thenReturn(movie1);
 
@@ -87,6 +104,7 @@ public class MovieServiceImplTest {
 
         verify(movieRepository, times(1)).save(any(Movie.class));
     }
+
 
     @Test
     public void testSearchByTitle_CuandoTituloExiste_DeberiaRetornarListaDeMovieDTO() {
