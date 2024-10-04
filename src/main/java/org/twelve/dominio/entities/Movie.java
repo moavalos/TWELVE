@@ -15,6 +15,7 @@ public class Movie {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, unique = true)
     private Integer id;
 
     private String nombre;
@@ -29,11 +30,16 @@ public class Movie {
 
     private Integer cantVistas;
 
+    @Column(nullable = false)
     private Integer idCategoria;
 
     private String añoLanzamiento;
 
     private String imagen;
+
+    //private Cast cast;
+
+    //private Director director;
 
     private Integer idComentario;
 
