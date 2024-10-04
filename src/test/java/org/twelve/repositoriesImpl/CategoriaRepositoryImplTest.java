@@ -5,63 +5,66 @@ import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.twelve.dominio.entities.Categoria;
 import org.twelve.infraestructura.CategoriaRepositoryImpl;
 import org.twelve.integracion.config.HibernateTestConfig;
 
-import java.util.Arrays;
+import javax.transaction.Transactional;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {HibernateTestConfig.class})
 public class CategoriaRepositoryImplTest {
 
-    private Categoria categoria1;
-    private Categoria categoria2;
+    @Autowired
     private SessionFactory sessionFactory;
-    private Session session;
+
     private CategoriaRepositoryImpl categoriaRepository;
 
     @BeforeEach
-    public void setUp() {
-        categoria1 = mock(Categoria.class);
-        categoria2 = mock(Categoria.class);
-        sessionFactory = mock(SessionFactory.class);
-        session = mock(Session.class);
-        categoriaRepository = new CategoriaRepositoryImpl(sessionFactory);
-
-        when(sessionFactory.getCurrentSession()).thenReturn(session);
-        when(categoria1.getId()).thenReturn(1);
-        when(categoria2.getId()).thenReturn(2);
-        when(categoria1.getNombre()).thenReturn("ROMANCE");
-        when(categoria2.getNombre()).thenReturn("TERROR");
+    public void init() {
+        this.categoriaRepository = new CategoriaRepositoryImpl(sessionFactory);
     }
 
     @Test
-    public void testFindAll() {
+    @Rollback
+    @Transactional
+    void testBuscarTodasLasCategoriasYQueEncuentreDos() {
+        Session session = sessionFactory.getCurrentSession();
 
-        List<Categoria> categorias = Arrays.asList(categoria1, categoria2);
+        Categoria categoria1 = new Categoria();
+        categoria1.setNombre("ROMANCE");
 
-        // simulacion del objeto query
-        org.hibernate.query.Query<Categoria> queryMock = mock(org.hibernate.query.Query.class);
+        Categoria categoria2 = new Categoria();
+        categoria2.setNombre("TERROR");
 
-        when(session.createQuery("from Categoria", Categoria.class)).thenReturn(queryMock);
-        when(queryMock.list()).thenReturn(categorias);
+        session.save(categoria1);
+        session.save(categoria2);
+        session.flush();
 
-        List<Categoria> result = categoriaRepository.findAll();
+        List<Categoria> categorias = categoriaRepository.findAll();
 
-        assertEquals(2, result.size());
-        assertEquals("ROMANCE", result.get(0).getNombre());
-        assertEquals("TERROR", result.get(1).getNombre());
+        assertNotNull(categorias);
+        assertEquals(2, categorias.size());
 
-        verify(session, times(1)).createQuery("from Categoria", Categoria.class);
-        verify(sessionFactory).getCurrentSession();
-        verify(queryMock).list();
+        assertTrue(categorias.stream().anyMatch(c -> c.getNombre().equals("ROMANCE")));
+        assertTrue(categorias.stream().anyMatch(c -> c.getNombre().equals("TERROR")));
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testBuscarTodasCategoriasPeroLaListaEstaVacia() {
+        List<Categoria> categorias = categoriaRepository.findAll();
+
+        assertNotNull(categorias);
+        assertTrue(categorias.isEmpty(), "La lista debería estar vacía cuando no hay categorías en la base de datos");
     }
 
 }
