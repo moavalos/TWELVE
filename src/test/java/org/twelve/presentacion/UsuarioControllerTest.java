@@ -3,6 +3,7 @@ package org.twelve.presentacion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
+import org.twelve.dominio.PaisRepository;
 import org.twelve.dominio.UsuarioService;
 import org.twelve.dominio.entities.Usuario;
 
@@ -17,12 +18,14 @@ public class UsuarioControllerTest {
     private UsuarioController usuarioController;
     private UsuarioService usuarioServiceMock;
     private Usuario usuarioMock;
+    private PaisRepository paisRepositoryMock;
 
     @BeforeEach
     public void setUp() {
         usuarioServiceMock = mock(UsuarioService.class);
         usuarioMock = mock(Usuario.class);
-        usuarioController = new UsuarioController(usuarioServiceMock);
+        paisRepositoryMock = mock(PaisRepository.class);
+        usuarioController = new UsuarioController(usuarioServiceMock, paisRepositoryMock);
     }
 
     @Test

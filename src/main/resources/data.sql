@@ -465,3 +465,14 @@ INSERT INTO
 VALUES
         (null, 1, 'horrible pelicula', 1, 1),
         (null, 1, 'muy buena', 2, 9);
+
+
+INSERT INTO
+    Pais (id, nombre)
+VALUES
+    (1, 'Argentina'),
+    (2, 'EE.UU.'),
+    (3, 'Corea del Sur'),
+    (4, 'Alemania'),
+    (5, 'Japón'),
+    (6, 'Italia');
