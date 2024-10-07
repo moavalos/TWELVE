@@ -7,7 +7,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class PerfilController {
 
-    @GetMapping("/perfil")
+    @GetMapping("/perfil/{id}")
     public ModelAndView mostrarPerfil() {
         return new ModelAndView("perfil");
     }

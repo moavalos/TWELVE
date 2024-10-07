@@ -25,7 +25,8 @@
                             <h5 class="card-title" th:text="${movie.nombre}"></h5>
                             <p class="card-text" th:text="${movie.descripcion}"></p>
                             <div class="mt-auto">
-                                <a href="#" class="btn btn-primary">Ver detalles</a>
+                                <a th:href="@{'/detalle-pelicula/' + ${movie.id}}" class="btn btn-primary">Ver
+                                    detalles</a>
                             </div>
                         </div>
                     </div>

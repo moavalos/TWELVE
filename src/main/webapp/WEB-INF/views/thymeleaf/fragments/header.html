@@ -1,24 +1,33 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark" th:fragment="header">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">TWELVE+</a>
-    <div class="mx-auto order-0 w-75">
-      <form class="d-flex justify-content-center" role="search" th:action="@{/search}" method="get">
-        <input class="form-control me-2 w-75" type="search" name="title" placeholder="Buscar película" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Buscar</button>
-      </form>
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/home}">TWELVE+</a>
+
+        <div class="mx-auto order-0 w-75">
+            <form class="d-flex justify-content-center" role="search" th:action="@{/search}" method="get">
+                <input class="form-control me-2 w-75" type="search" name="title" placeholder="Buscar película"
+                       aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Buscar</button>
+            </form>
+        </div>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item" th:if="${session.usuario == null}">
+                    <a class="nav-link" th:href="@{/login}">Iniciar sesión</a>
+                </li>
+                <li class="nav-item" th:if="${session.usuario == null}">
+                    <a class="nav-link" th:href="@{/nuevo-usuario}">Crear cuenta</a>
+                </li>
+                <li class="nav-item" th:if="${session.usuario != null}">
+                    <a class="nav-link" th:href="@{/perfil/{id}(id=${session.usuario.id})}">Perfil</a>
+                </li>
+                <li class="nav-item" th:if="${session.usuario != null}">
+                    <a class="nav-link" th:href="@{/salir}">Salir</a>
+                </li>
+                <!-- Botón de panel de admin solo visible para usuarios con rol de admin -->
+                <li class="nav-item" th:if="${session.usuario != null and session.usuario.rol == 'ADMIN'}">
+                    <a class="nav-link" th:href="@{/admin/panel}">Panel de Admin</a>
+                </li>
+            </ul>
+        </div>
     </div>
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" href="login.html">Iniciar sesión</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="nuevo-usuario.html">Crear cuenta</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="perfil.html">Perfil</a>
-        </li>
-      </ul>
-    </div>
-  </div>
 </nav>
