@@ -69,7 +69,7 @@ public class RepositorioUsuarioImplTest {
     @Test
     @Transactional
     @Rollback
-    public void testBuscarUsuarioPorEmailDevuelveCorrectamente2() {
+    public void testBuscarUsuarioSoloPorEmailDevuelveCorrectamente() {
         Usuario usuario = new Usuario();
         usuario.setEmail("test@test.com");
         usuario.setPassword("12345");
@@ -118,7 +118,7 @@ public class RepositorioUsuarioImplTest {
     @Test
     @Transactional
     @Rollback
-    public void testBuscarUsuarioPorEmailDevuelveCorrectamente() {
+    public void testBuscarUsuarioPorEmailSeteandoContrasenaDevuelveCorrectamente() {
         Usuario usuario = new Usuario();
         usuario.setEmail("email@correo.com");
         usuario.setPassword("contraseña");

@@ -108,7 +108,7 @@ public class MovieRepositoryImplTest {
     @Test
     @Transactional
     @Rollback
-    public void testBuscarPeliculasMasVistas() {
+    public void testBuscarPeliculasMasVistasEntreDosTitulos() {
         Movie movie1 = new Movie();
         movie1.setNombre("Coraline");
         movie1.setCantVistas(100);
@@ -129,7 +129,7 @@ public class MovieRepositoryImplTest {
     @Test
     @Transactional
     @Rollback
-    public void testBuscarPeliculasMejorValoradas() {
+    public void testBuscarPeliculasMejorValoradasEntreDosTitulos() {
         Movie movie1 = new Movie();
         movie1.setId(1);
         movie1.setNombre("Coraline");
@@ -167,7 +167,7 @@ public class MovieRepositoryImplTest {
     @Test
     @Transactional
     @Rollback
-    public void testBuscarPeliculasMasNuevas() {
+    public void testBuscarPeliculasMasNuevasEntreDosTitulos() {
         Movie movie1 = new Movie();
         movie1.setNombre("pelicula vieja");
         movie1.setAñoLanzamiento("1980");
