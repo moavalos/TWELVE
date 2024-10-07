@@ -22,11 +22,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class MovieControllerTest {
-
 
     private MovieController movieController;
     private Movie movie;
@@ -34,7 +34,6 @@ public class MovieControllerTest {
     private HttpSession sessionMock;
     private MovieService movieService;
     private CategoriaService categoriaService;
-
 
     @BeforeEach
     public void init() {
@@ -46,8 +45,6 @@ public class MovieControllerTest {
         categoriaService = mock(CategoriaService.class);
         movieController = new MovieController(movieService, categoriaService);
     }
-
-    // Todo casos
 
     @Test
     public void testObtenerVistaDeTodasLasPeliculasConFiltroDeMejorValoradas() {
@@ -277,6 +274,28 @@ public class MovieControllerTest {
         assertThat(modelAndView.getViewName(), is("home"));
 
         assertThat(((List<MovieDTO>) modelAndView.getModel().get("movies")).size(), is(4));
+    }
+
+    @Test
+    public void testTraerDetalleDePeliculasYSeEncontro() {
+        MovieDTO movieMock = mock(MovieDTO.class);
+        when(movieMock.getNombre()).thenReturn("Coraline");
+        when(movieService.getById(anyInt())).thenReturn(movieMock);
+
+        ModelAndView modelAndView = movieController.getMovieDetails(1);
+
+        assertThat(modelAndView.getViewName(), is("detalle-pelicula"));
+        assertNotNull(modelAndView.getModel().get("movie"));
+        assertThat(((MovieDTO) modelAndView.getModel().get("movie")).getNombre(), is("Coraline"));
+    }
+
+    @Test
+    public void testTraerDetalleDePeliculasPeroNoSeEncontro() {
+        when(movieService.getById(anyInt())).thenReturn(null);
+
+        ModelAndView modelAndView = movieController.getMovieDetails(99);
+
+        assertThat(modelAndView.getViewName(), is("detalle-pelicula"));
     }
 
 

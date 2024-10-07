@@ -1,109 +1,132 @@
 package org.twelve.repositoriesImpl;
 
-import org.hibernate.Criteria;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Criterion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.twelve.dominio.entities.Usuario;
 import org.twelve.infraestructura.RepositorioUsuarioImpl;
 import org.twelve.integracion.config.HibernateTestConfig;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.*;
+import javax.persistence.Query;
+import javax.transaction.Transactional;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {HibernateTestConfig.class})
 public class RepositorioUsuarioImplTest {
 
-    private Usuario usuario;
+    @Autowired
     private SessionFactory sessionFactory;
-    private Session session;
-    private Criteria criteria;
+
     private RepositorioUsuarioImpl repositorioUsuario;
 
     @BeforeEach
     public void setUp() {
-        usuario = mock(Usuario.class);
-        sessionFactory = mock(SessionFactory.class);
-        session = mock(Session.class);
-        criteria = mock(Criteria.class);
-        repositorioUsuario = new RepositorioUsuarioImpl(sessionFactory);
-
-        when(sessionFactory.getCurrentSession()).thenReturn(session);
-        when(session.createCriteria(Usuario.class)).thenReturn(criteria);
+        this.repositorioUsuario = new RepositorioUsuarioImpl(sessionFactory);
     }
 
     @Test
-    public void testBuscarUsuario() {
-        when(criteria.add(any(Criterion.class))).thenReturn(criteria);
-        when(criteria.uniqueResult()).thenReturn(usuario);
+    @Transactional
+    @Rollback
+    public void testGuardarUsuarioGuardaCorrectamente() {
+        Usuario usuario = new Usuario();
+        usuario.setEmail("test@test.com");
+        usuario.setPassword("12345");
 
-        Usuario result = repositorioUsuario.buscarUsuario("test@unlam.com", "password123");
-
-        assertNotNull(result);
-        verify(criteria, times(2)).add(any(Criterion.class));
-        verify(criteria).uniqueResult();
-    }
-
-    @Test
-    public void testGuardar() {
         repositorioUsuario.guardar(usuario);
 
-        verify(sessionFactory).getCurrentSession();
-        verify(session).save(usuario);
+        String hql = "FROM Usuario WHERE email = :email";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("email", "test@test.com");
+
+        Usuario foundUsuario = (Usuario) query.getSingleResult();
+        assertNotNull(foundUsuario);
+        assertEquals("test@test.com", foundUsuario.getEmail());
     }
 
     @Test
-    public void testBuscar() {
-        when(criteria.add(any(Criterion.class))).thenReturn(criteria);
-        when(criteria.uniqueResult()).thenReturn(usuario);
+    @Transactional
+    @Rollback
+    public void testBuscarUsuarioPorEmailYPasswordDevuelveCorrectamente() {
+        Usuario usuario = new Usuario();
+        usuario.setEmail("test@test.com");
+        usuario.setPassword("12345");
+        repositorioUsuario.guardar(usuario);
 
-        Usuario result = repositorioUsuario.buscar("test@unlam.com");
-
-        assertNotNull(result);
-        verify(sessionFactory).getCurrentSession();
-        verify(session).createCriteria(Usuario.class);
-        verify(criteria).add(any(Criterion.class));
-        verify(criteria).uniqueResult();
+        Usuario foundUsuario = repositorioUsuario.buscarUsuario("test@test.com", "12345");
+        assertNotNull(foundUsuario);
+        assertEquals("test@test.com", foundUsuario.getEmail());
     }
 
     @Test
-    public void testModificar() {
+    @Transactional
+    @Rollback
+    public void testBuscarUsuarioPorEmailDevuelveCorrectamente2() {
+        Usuario usuario = new Usuario();
+        usuario.setEmail("test@test.com");
+        usuario.setPassword("12345");
+        repositorioUsuario.guardar(usuario);
+
+        Usuario foundUsuario = repositorioUsuario.buscar("test@test.com");
+        assertNotNull(foundUsuario);
+        assertEquals("test@test.com", foundUsuario.getEmail());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testModificarUsuarioModificaCorrectamente() {
+        Usuario usuario = new Usuario();
+        usuario.setEmail("test@test.com");
+        usuario.setPassword("12345");
+        repositorioUsuario.guardar(usuario);
+
+        usuario.setPassword("newpassword");
         repositorioUsuario.modificar(usuario);
 
-        verify(sessionFactory).getCurrentSession();
-        verify(session).update(usuario);
+        String hql = "FROM Usuario WHERE email = :email";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("email", "test@test.com");
+
+        Usuario modifiedUsuario = (Usuario) query.getSingleResult();
+        assertEquals("newpassword", modifiedUsuario.getPassword());
     }
 
     @Test
-    public void testBuscarUsuarioPorEmail() {
-        when(criteria.uniqueResult()).thenReturn(usuario);
+    @Transactional
+    @Rollback
+    public void testBuscarUsuarioPorIdDevuelveCorrectamente() {
+        Usuario usuario = new Usuario();
+        usuario.setEmail("test@test.com");
+        usuario.setPassword("12345");
+        repositorioUsuario.guardar(usuario);
 
-        Usuario result = repositorioUsuario.buscarUsuarioPorEmail("test@unlam.com");
-
-        assertNotNull(result);
-        verify(sessionFactory).getCurrentSession();
-        verify(criteria).add(any(Criterion.class));
-        verify(criteria).uniqueResult();
+        Usuario foundUsuario = repositorioUsuario.buscarPorId(usuario.getId());
+        assertNotNull(foundUsuario);
+        assertEquals(usuario.getId(), foundUsuario.getId());
+        assertEquals("test@test.com", foundUsuario.getEmail());
     }
 
     @Test
-    public void testBuscarPorId() {
-        when(criteria.add(any(Criterion.class))).thenReturn(criteria);
-        when(criteria.uniqueResult()).thenReturn(usuario);
+    @Transactional
+    @Rollback
+    public void testBuscarUsuarioPorEmailDevuelveCorrectamente() {
+        Usuario usuario = new Usuario();
+        usuario.setEmail("email@correo.com");
+        usuario.setPassword("contraseña");
+        repositorioUsuario.guardar(usuario);
 
-        Usuario result = repositorioUsuario.buscarPorId(1L);
-
-        assertNotNull(result);
-        verify(sessionFactory).getCurrentSession();
-        verify(session).createCriteria(Usuario.class);
-        verify(criteria).add(any(Criterion.class));
-        verify(criteria).uniqueResult();
+        Usuario foundUsuario = repositorioUsuario.buscarUsuarioPorEmail("email@correo.com");
+        assertNotNull(foundUsuario);
+        assertEquals("email@correo.com", foundUsuario.getEmail());
     }
 
 }
