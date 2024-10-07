@@ -9,61 +9,57 @@ import org.springframework.stereotype.Repository;
 import org.twelve.dominio.RepositorioUsuario;
 import org.twelve.dominio.entities.Usuario;
 
-@Repository("repositorioUsuario")
+
+
+import org.twelve.dominio.entities.Usuario;
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Repository
 public class RepositorioUsuarioImpl implements RepositorioUsuario {
+    private final List<Usuario> usuarios = new ArrayList<>();
+    private Long idCounter = 1L;
 
-    private SessionFactory sessionFactory;
-
-    @Autowired
-    public RepositorioUsuarioImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    @Override
+    public void save(Usuario usuario) {
+        if (usuario.getId() == null) {
+            usuario.setId(idCounter++);
+            usuarios.add(usuario);
+        } else {
+            // Actualizar usuario existente
+            int index = usuarios.indexOf(findById(usuario.getId()));
+            if (index >= 0) {
+                usuarios.set(index, usuario);
+            }
+        }
     }
 
     @Override
-    public Usuario buscarUsuario(String email, String password) {
+    public Usuario findById(Long id) {
+        return usuarios.stream().filter(u -> u.getId().equals(id)).findFirst().orElse(null);
+    }
 
-        final Session session = sessionFactory.getCurrentSession();
-        return (Usuario) session.createCriteria(Usuario.class)
-                .add(Restrictions.eq("email", email))
-                .add(Restrictions.eq("password", password))
-                .uniqueResult();
+    @Override
+    public Usuario findByUsername(String username) {
+        return usuarios.stream().filter(u -> u.getUsername().equals(username)).findFirst().orElse(null);
+    }
+
+    @Override
+    public List<Usuario> findAll() {
+        return new ArrayList<>(usuarios);
     }
 
     @Override
     public void guardar(Usuario usuario) {
-        sessionFactory.getCurrentSession().save(usuario);
+
     }
 
-    @Override
-    public Usuario buscar(String email) {
-        return (Usuario) sessionFactory.getCurrentSession().createCriteria(Usuario.class)
-                .add(Restrictions.eq("email", email))
-                .uniqueResult();
-    }
-
-    @Override
-    public void modificar(Usuario usuario) {
-        sessionFactory.getCurrentSession().update(usuario);
-    }
-
-    /*
-    * createCriteria establece el tipo de entidad a consultar
-    * Restrictions.eq("email", email) añade restrinccion para filtrar por mail
-    * uniqueResult() devuelve el resultado o null
-    */
     @Override
     public Usuario buscarUsuarioPorEmail(String email) {
-        Session session = sessionFactory.getCurrentSession();
-        Criteria criteria = session.createCriteria(Usuario.class);
-        criteria.add(Restrictions.eq("email", email));
-        return (Usuario) criteria.uniqueResult(); // Devuelve un Usuario o null
+        return null;
     }
 
-    @Override
-    public Usuario buscarPorId(Long id) {
-        return (Usuario) sessionFactory.getCurrentSession().createCriteria(Usuario.class)
-                .add(Restrictions.eq("id", id))
-                .uniqueResult();
-    }
 
 }

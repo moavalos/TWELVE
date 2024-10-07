@@ -1,13 +1,23 @@
 package org.twelve.dominio;
 
 
-import org.springframework.stereotype.Service;
 import org.twelve.dominio.entities.Usuario;
 
-@Service
-public interface UsuarioService {
+import org.springframework.stereotype.Service;
 
-    void actualizarPerfil(Usuario usuario);
+
+import org.twelve.dominio.entities.Usuario;
+
+import java.util.List;
+
+public interface UsuarioService {
+    
+    Usuario findByUsername(String username);
+    List<Usuario> findAll();
 
     Usuario buscarPorId(Long id);
+
+    void actualizarPerfil(Usuario usuarioExistente);
+
+    Usuario getCurrentUser();
 }
