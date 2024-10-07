@@ -1,12 +1,12 @@
 package org.twelve.infraestructura;
 
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.twelve.dominio.CategoriaRepository;
 import org.twelve.dominio.entities.Categoria;
 
+import javax.persistence.Query;
 import java.util.List;
 
 @Repository("categoriaRepository")
@@ -21,7 +21,8 @@ public class CategoriaRepositoryImpl implements CategoriaRepository {
 
     @Override
     public List<Categoria> findAll() {
-        Session session = sessionFactory.getCurrentSession();
-        return session.createQuery("from Categoria", Categoria.class).list();
+        String hql = "FROM Categoria";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        return query.getResultList();
     }
 }

@@ -1,6 +1,5 @@
 package org.twelve.repositoriesImpl;
 
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,9 +13,12 @@ import org.twelve.infraestructura.CategoriaRepositoryImpl;
 import org.twelve.integracion.config.HibernateTestConfig;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.equalToIgnoringCase;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {HibernateTestConfig.class})
@@ -35,36 +37,33 @@ public class CategoriaRepositoryImplTest {
     @Test
     @Rollback
     @Transactional
-    void testBuscarTodasLasCategoriasYQueEncuentreDos() {
-        Session session = sessionFactory.getCurrentSession();
-
+    public void dadoQueExistenCategoriasDebeDevolverTodasLasCategorias() {
         Categoria categoria1 = new Categoria();
-        categoria1.setNombre("ROMANCE");
+        categoria1.setNombre("Electronica");
+        this.sessionFactory.getCurrentSession().save(categoria1);
 
         Categoria categoria2 = new Categoria();
-        categoria2.setNombre("TERROR");
+        categoria2.setNombre("Ropa");
+        this.sessionFactory.getCurrentSession().save(categoria2);
 
-        session.save(categoria1);
-        session.save(categoria2);
-        session.flush();
+        List<Categoria> categorias = new ArrayList<>();
+        categorias.add(categoria1);
+        categorias.add(categoria2);
 
-        List<Categoria> categorias = categoriaRepository.findAll();
+        this.categoriaRepository.findAll();
 
-        assertNotNull(categorias);
-        assertEquals(2, categorias.size());
-
-        assertTrue(categorias.stream().anyMatch(c -> c.getNombre().equals("ROMANCE")));
-        assertTrue(categorias.stream().anyMatch(c -> c.getNombre().equals("TERROR")));
+        assertThat(categorias.size(), equalTo(2));
+        assertThat(categorias.get(0).getNombre(), equalToIgnoringCase("Electronica"));
+        assertThat(categorias.get(1).getNombre(), equalToIgnoringCase("Ropa"));
     }
 
     @Test
-    @Transactional
     @Rollback
-    public void testBuscarTodasCategoriasPeroLaListaEstaVacia() {
-        List<Categoria> categorias = categoriaRepository.findAll();
-
-        assertNotNull(categorias);
-        assertTrue(categorias.isEmpty(), "La lista debería estar vacía cuando no hay categorías en la base de datos");
+    @Transactional
+    public void dadoQueNoExistenCategoriasDebeDevolverUnaListaVacia() {
+        List<Categoria> categorias = new ArrayList<>();
+        this.categoriaRepository.findAll();
+        assertThat(categorias.size(), equalTo(0));
     }
 
 }

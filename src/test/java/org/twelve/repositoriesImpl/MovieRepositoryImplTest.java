@@ -1,6 +1,5 @@
 package org.twelve.repositoriesImpl;
 
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,11 +12,12 @@ import org.twelve.dominio.entities.Movie;
 import org.twelve.infraestructura.MovieRepositoryImpl;
 import org.twelve.integracion.config.HibernateTestConfig;
 
+import javax.persistence.Query;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {HibernateTestConfig.class})
@@ -35,131 +35,154 @@ public class MovieRepositoryImplTest {
     @Test
     @Transactional
     @Rollback
-    public void testFindAllDevuelveTodasLasPeliculas() {
-        Session session = sessionFactory.getCurrentSession();
-        Movie movie1 = new Movie(1, "Coraline", "", "", 213.5, "", 5000, 1, "2020", "", 1, 500, 4.5, "", "", "", "");
-        Movie movie2 = new Movie(2, "Avatar", "", "", 213.5, "", 5000, 1, "2020", "", 1, 500, 4.5, "", "", "", "");
+    public void testGuardarPeliculaGuardaCorrectamente() {
+        Movie movie = new Movie();
+        movie.setNombre("The Matrix");
+        movie.setAñoLanzamiento("1999");
+        movie.setIdCategoria(4);
 
-        session.save(movie1);
-        session.save(movie2);
-        session.flush();
+        movieRepository.save(movie);
 
-        List<Movie> movies = movieRepository.findAll();
+        String hql = "FROM Movie WHERE nombre = :nombre";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("nombre", "The Matrix");
 
-        assertNotNull(movies);
-        assertEquals(2, movies.size());
+        Movie foundMovie = (Movie) query.getSingleResult();
+        assertNotNull(foundMovie);
+        assertEquals("The Matrix", foundMovie.getNombre());
     }
 
     @Test
     @Transactional
     @Rollback
-    public void testFindByIdDevuelvePeliculaCorrecta() {
-        Session session = sessionFactory.getCurrentSession();
-        Movie movie = new Movie(1, "Coraline", "", "", 213.5, "", 5000, 1, "2020", "", 1, 500, 4.5, "", "", "", "");
-        session.save(movie);
-        session.flush();
+    public void testBuscarPeliculaPorIdDevuelveCorrectamente() {
+        Movie movie = new Movie();
+        movie.setNombre("Inception");
+        movie.setAñoLanzamiento("2010");
+        movie.setIdCategoria(4);
+
+        movieRepository.save(movie);
 
         Movie foundMovie = movieRepository.findById(movie.getId());
 
         assertNotNull(foundMovie);
         assertEquals(movie.getId(), foundMovie.getId());
-        assertEquals(movie.getNombre(), foundMovie.getNombre());
+        assertEquals("Inception", foundMovie.getNombre());
     }
 
     @Test
     @Transactional
     @Rollback
-    public void testGuardarPeliculaGuardaCorrectamente() {
-        Movie movie = new Movie(1, "Coraline", "", "", 213.5, "", 5000, 1, "2020", "", 1, 500, 4.5, "", "", "", "");
-
+    public void testBuscarPeliculaPorTituloDevuelveCorrectamente() {
+        Movie movie = new Movie();
+        movie.setIdCategoria(9);
+        movie.setNombre("Avatar");
         movieRepository.save(movie);
 
-        Movie foundMovie = sessionFactory.getCurrentSession().get(Movie.class, movie.getId());
-        assertNotNull(foundMovie);
-        assertEquals("Coraline", foundMovie.getNombre());
+        List<Movie> foundMovies = movieRepository.findByTitle("Avatar");
+        assertFalse(foundMovies.isEmpty());
+        assertEquals("Avatar", foundMovies.get(0).getNombre());
     }
 
     @Test
     @Transactional
     @Rollback
-    public void testFindByTitleDevuelvePeliculasCorrectas() {
-        Session session = sessionFactory.getCurrentSession();
+    public void testModificarPeliculaModificaCorrectamente() {
+        Movie movie = new Movie();
+        movie.setNombre("Titanic");
+        movie.setAñoLanzamiento("1997");
+        movie.setIdCategoria(4);
+        movieRepository.save(movie);
 
-        Movie movie1 = new Movie(1, "El Señor de los Anillos", "", "", 213.5, "", 5000, 1, "2020", "", 1, 500, 4.5, "", "", "", "");
-        Movie movie2 = new Movie(2, "El Hobbit", "", "", 213.5, "", 5000, 1, "2020", "", 1, 500, 4.5, "", "", "", "");
+        movie.setAñoLanzamiento("1998");
+        movieRepository.save(movie);
 
-        session.save(movie1);
-        session.save(movie2);
-        session.flush();
+        String hql = "FROM Movie WHERE nombre = :nombre";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("nombre", "Titanic");
 
-        List<Movie> foundMovies = movieRepository.findByTitle("señor");
-
-        assertNotNull(foundMovies);
-        assertEquals(1, foundMovies.size());
-        assertEquals("El Señor de los Anillos", foundMovies.get(0).getNombre());
+        Movie modifiedMovie = (Movie) query.getSingleResult();
+        assertEquals("1998", modifiedMovie.getAñoLanzamiento());
     }
 
     @Test
     @Transactional
     @Rollback
-    public void testFindMostViewedDevuelvePeliculasMasVistas() {
-        Session session = sessionFactory.getCurrentSession();
-        Movie movie1 = new Movie(1, "El Señor de los Anillos", "", "", 213.5, "", 5000, 1, "2000", "", 1, 500, 4.5, "", "", "", "");
-        Movie movie2 = new Movie(2, "Coraline", "", "", 111.1, "", 5, 2, "2020", "", 0, 100, 6.5, "", "", "", "");
-        Movie movie3 = new Movie(3, "Avatar", "", "", 212.1, "", 8080, 4, "2021", "", 6, 5600, 1.5, "", "", "", "");
+    public void testBuscarPeliculasMasVistas() {
+        Movie movie1 = new Movie();
+        movie1.setNombre("Coraline");
+        movie1.setCantVistas(100);
+        movie1.setIdCategoria(2);
+        movieRepository.save(movie1);
 
-        session.save(movie1);
-        session.save(movie2);
-        session.save(movie3);
-        session.flush();
+        Movie movie2 = new Movie();
+        movie2.setNombre("Avatar");
+        movie2.setCantVistas(200);
+        movie2.setIdCategoria(3);
+        movieRepository.save(movie2);
 
         List<Movie> mostViewedMovies = movieRepository.findMostViewed();
-
-        assertNotNull(mostViewedMovies);
-        assertEquals(3, mostViewedMovies.size());
+        assertFalse(mostViewedMovies.isEmpty());
         assertEquals("Avatar", mostViewedMovies.get(0).getNombre());
     }
 
     @Test
     @Transactional
     @Rollback
-    public void testFindTopRatedDevuelvePeliculasMejorValoradas() {
-        Session session = sessionFactory.getCurrentSession();
-        Movie movie1 = new Movie(1, "El Señor de los Anillos", "", "", 213.5, "", 5000, 1, "2000", "", 1, 500, 4.5, "", "", "", "");
-        Movie movie2 = new Movie(2, "Coraline", "", "", 111.1, "", 5, 2, "2020", "", 0, 100, 6.5, "", "", "", "");
-        Movie movie3 = new Movie(3, "Avatar", "", "", 212.1, "", 8080, 4, "2021", "", 6, 5600, 1.5, "", "", "", "");
+    public void testBuscarPeliculasMejorValoradas() {
+        Movie movie1 = new Movie();
+        movie1.setId(1);
+        movie1.setNombre("Coraline");
+        movie1.setValoracion(4.5);
+        movie1.setIdCategoria(3);
 
-        session.save(movie1);
-        session.save(movie2);
-        session.save(movie3);
-        session.flush();
+        movieRepository.save(movie1);
+
+        Movie movie2 = new Movie();
+        movie2.setId(2);
+        movie2.setNombre("Avatar");
+        movie2.setValoracion(4.8);
+        movie2.setIdCategoria(5);
+        movieRepository.save(movie2);
 
         List<Movie> topRatedMovies = movieRepository.findTopRated();
-
-        assertNotNull(topRatedMovies);
-        assertEquals(3, topRatedMovies.size());
-        assertEquals("Coraline", topRatedMovies.get(0).getNombre());
+        assertFalse(topRatedMovies.isEmpty());
+        assertEquals("Avatar", topRatedMovies.get(0).getNombre());
     }
 
     @Test
     @Transactional
     @Rollback
-    public void testFindByCategoriaIdDevuelvePeliculasCorrectas() {
-        Session session = sessionFactory.getCurrentSession();
-        Movie movie1 = new Movie(1, "El Señor de los Anillos", "", "", 213.5, "", 5000, 1, "2000", "", 1, 500, 4.5, "", "", "", "");
+    public void testBuscarPeliculasPorCategoria() {
+        Movie movie = new Movie();
+        movie.setNombre("Joker");
+        movie.setIdCategoria(1);
+        movieRepository.save(movie);
+
+        List<Movie> foundMovies = movieRepository.findByCategoriaId(1);
+        assertFalse(foundMovies.isEmpty());
+        assertEquals(1, foundMovies.get(0).getIdCategoria());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testBuscarPeliculasMasNuevas() {
+        Movie movie1 = new Movie();
+        movie1.setNombre("pelicula vieja");
+        movie1.setAñoLanzamiento("1980");
         movie1.setIdCategoria(1);
-        Movie movie2 = new Movie(2, "Coraline", "", "", 111.1, "", 5, 2, "2020", "", 0, 100, 6.5, "", "", "", "");
+        movieRepository.save(movie1);
+
+        Movie movie2 = new Movie();
+        movie2.setNombre("pelicula nueva");
+        movie2.setAñoLanzamiento("2020");
         movie2.setIdCategoria(2);
+        movieRepository.save(movie2);
 
-        session.save(movie1);
-        session.save(movie2);
-        session.flush();
-
-        List<Movie> categoryMovies = movieRepository.findByCategoriaId(1);
-
-        assertNotNull(categoryMovies);
-        assertEquals(1, categoryMovies.size());
-        assertEquals(1, categoryMovies.get(0).getIdCategoria().intValue());
+        List<Movie> newestMovies = movieRepository.findNewestMovie();
+        assertFalse(newestMovies.isEmpty());
+        assertEquals("pelicula nueva", newestMovies.get(0).getNombre());
     }
 
 
