@@ -63,7 +63,7 @@ public class ControladorLogin {
         } catch (UsuarioExistente e) {
             model.put("error", "El usuario ya existe");
             return new ModelAndView("nuevo-usuario", model);
-        } catch (ContrasenasNoCoinciden e) {
+        }  catch (ContrasenasNoCoinciden e) {
             model.put("error", "Las contraseñas no coinciden");
             return new ModelAndView("nuevo-usuario", model);
         } catch (Exception e) {

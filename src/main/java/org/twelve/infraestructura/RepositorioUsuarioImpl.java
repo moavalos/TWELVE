@@ -7,6 +7,7 @@ import org.twelve.dominio.RepositorioUsuario;
 import org.twelve.dominio.entities.Usuario;
 
 import javax.persistence.Query;
+import java.util.List;
 
 @Repository("repositorioUsuario")
 public class RepositorioUsuarioImpl implements RepositorioUsuario {
@@ -58,7 +59,12 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setParameter("email", email);
 
-        return (Usuario) query.getSingleResult();
+        List<Usuario> usuarios = query.getResultList();
+        if (usuarios.isEmpty()) {
+            return null;  // Si no se encuentra el usuario, devuelve null
+        }
+
+        return usuarios.get(0);  // Devuelve el primer (y único) resultado
     }
 
     @Override
