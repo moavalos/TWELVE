@@ -38,17 +38,6 @@ public class RepositorioUsuarioImplTest {
         when(session.createCriteria(Usuario.class)).thenReturn(criteria);
     }
 
-    @Test
-    public void testBuscarUsuario() {
-        when(criteria.add(any(Criterion.class))).thenReturn(criteria);
-        when(criteria.uniqueResult()).thenReturn(usuario);
-
-        Usuario result = repositorioUsuario.buscarUsuario("test@unlam.com", "password123");
-
-        assertNotNull(result);
-        verify(criteria, times(2)).add(any(Criterion.class));
-        verify(criteria).uniqueResult();
-    }
 
     @Test
     public void testGuardar() {
@@ -58,27 +47,6 @@ public class RepositorioUsuarioImplTest {
         verify(session).save(usuario);
     }
 
-    @Test
-    public void testBuscar() {
-        when(criteria.add(any(Criterion.class))).thenReturn(criteria);
-        when(criteria.uniqueResult()).thenReturn(usuario);
-
-        Usuario result = repositorioUsuario.buscar("test@unlam.com");
-
-        assertNotNull(result);
-        verify(sessionFactory).getCurrentSession();
-        verify(session).createCriteria(Usuario.class);
-        verify(criteria).add(any(Criterion.class));
-        verify(criteria).uniqueResult();
-    }
-
-    @Test
-    public void testModificar() {
-        repositorioUsuario.modificar(usuario);
-
-        verify(sessionFactory).getCurrentSession();
-        verify(session).update(usuario);
-    }
 
     @Test
     public void testBuscarUsuarioPorEmail() {

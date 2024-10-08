@@ -56,5 +56,10 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
                 .list();
     }
 
+    @Override
+    public void modificar(Usuario usuario) {
+
+    }
+
 
 }

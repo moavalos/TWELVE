@@ -16,4 +16,6 @@ public interface RepositorioUsuario {
     List<Usuario> buscarPorUsername(String username);
 
     Usuario buscarUsuarioPorEmail(String email);
+
+    void modificar(Usuario usuario);
 }
