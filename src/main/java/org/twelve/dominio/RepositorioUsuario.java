@@ -1,21 +1,20 @@
 package org.twelve.dominio;
 
-
 import org.twelve.dominio.entities.Usuario;
-
-import java.util.List;
 
 public interface RepositorioUsuario {
 
-    List<Usuario> encontrarTodos();
+    Usuario buscarUsuario(String email, String password);
+
+    void guardar(Usuario usuario);
+
+    Usuario buscar(String email);
+
+    void modificar(Usuario usuario);
+
+    Usuario buscarUsuarioPorEmail(String mail);
 
     Usuario buscarPorId(Long id);
 
-    Usuario guardar(Usuario Usuario);
-
-    List<Usuario> buscarPorUsername(String username);
-
-    Usuario buscarUsuarioPorEmail(String email);
-
-    void modificar(Usuario usuario);
 }
+
