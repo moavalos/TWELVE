@@ -2,9 +2,18 @@ package org.twelve.presentacion.dto;
 
 public class CategoriaDTO {
 
+
+    public CategoriaDTO(Integer id, String nombre) {
+        this.id = id; // Asegúrate de asignar los valores
+        this.nombre = nombre;
+    }
+
+    public CategoriaDTO() {}
+
     private Integer id;
 
     private String nombre;
+
 
     public Integer getId() {
         return id;

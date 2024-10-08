@@ -3,14 +3,17 @@ package org.twelve.dominio.entities;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = "movies")
 @Entity
 @EqualsAndHashCode
 @Table(name = "Categoria")
+
 
 public class Categoria {
 
@@ -20,4 +23,7 @@ public class Categoria {
     private Integer id;
 
     private String nombre;
+
+    @ManyToMany(mappedBy = "categorias", fetch = FetchType.LAZY)
+    private Set<Movie> movies = new HashSet<>();
 }

@@ -4,11 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.twelve.dominio.MovieRepository;
 import org.twelve.dominio.MovieService;
+import org.twelve.dominio.entities.Categoria;
 import org.twelve.dominio.entities.Movie;
+import org.twelve.presentacion.dto.CategoriaDTO;
 import org.twelve.presentacion.dto.MovieDTO;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service("movieService")
@@ -76,13 +81,13 @@ public class MovieServiceImpl implements MovieService {
     // dto a entidad en
     private Movie convertToEntity(MovieDTO movieDTO) {
         Movie movie = new Movie();
+        movie.setId(movieDTO.getId()); // Asegúrate de establecer el ID si está presente
         movie.setNombre(movieDTO.getNombre());
         movie.setDescripcion(movieDTO.getDescripcion());
         movie.setFrase(movieDTO.getFrase());
         movie.setDuracion(movieDTO.getDuracion());
         movie.setPais(movieDTO.getPais());
         movie.setCantVistas(movieDTO.getCantVistas());
-        movie.setIdCategoria(movieDTO.getIdCategoria());
         movie.setAñoLanzamiento(movieDTO.getAnioLanzamiento());
         movie.setImagen(movieDTO.getImagen());
         movie.setLikes(movieDTO.getLikes());
@@ -91,11 +96,72 @@ public class MovieServiceImpl implements MovieService {
         movie.setEscritor(movieDTO.getEscritor());
         movie.setIdioma(movieDTO.getIdioma());
         movie.setTambienConocidaComo(movieDTO.getTambienConocidaComo());
+
+        // Conversión de Categorías
+        if (movieDTO.getCategorias() != null) {
+            Set<Categoria> categorias = new HashSet<>();
+            for (CategoriaDTO categoriaDTO : movieDTO.getCategorias()) {
+                Categoria categoria = new Categoria();
+                categoria.setId(categoriaDTO.getId()); // Asegúrate de que ID esté definido
+                categoria.setNombre(categoriaDTO.getNombre()); // Establece el nombre
+                categorias.add(categoria);
+            }
+            movie.setCategorias(categorias);
+        }
+
         return movie;
     }
 
+//    private Movie convertToEntity(MovieDTO movieDTO) {
+//        Movie movie = new Movie();
+//        movie.setNombre(movieDTO.getNombre());
+//        movie.setDescripcion(movieDTO.getDescripcion());
+//        movie.setFrase(movieDTO.getFrase());
+//        movie.setDuracion(movieDTO.getDuracion());
+//        movie.setPais(movieDTO.getPais());
+//        movie.setCantVistas(movieDTO.getCantVistas());
+//        movie.setIdCategoria(movieDTO.getIdCategoria());
+//        movie.setAñoLanzamiento(movieDTO.getAnioLanzamiento());
+//        movie.setImagen(movieDTO.getImagen());
+//        movie.setLikes(movieDTO.getLikes());
+//        movie.setValoracion(movieDTO.getValoracion());
+//        movie.setDirector(movieDTO.getDirector());
+//        movie.setEscritor(movieDTO.getEscritor());
+//        movie.setIdioma(movieDTO.getIdioma());
+//        movie.setTambienConocidaComo(movieDTO.getTambienConocidaComo());
+//        return movie;
+//    }
+
     // entidad a DTO
+//    private MovieDTO convertToDTO(Movie movie) {
+//        return new MovieDTO(
+//                movie.getId(),
+//                movie.getNombre(),
+//                movie.getDescripcion(),
+//                movie.getFrase(),
+//                movie.getDuracion(),
+//                movie.getPais(),
+//                movie.getCantVistas(),
+//                movie.getIdCategoria(),
+//                movie.getAñoLanzamiento(),
+//                movie.getImagen(),
+//                movie.getLikes(),
+//                movie.getValoracion(),
+//                movie.getDirector(),
+//                movie.getEscritor(),
+//                movie.getIdioma(),
+//                movie.getTambienConocidaComo()
+//        );
+//    }
     private MovieDTO convertToDTO(Movie movie) {
+        List<CategoriaDTO> categoriasDTOs = new ArrayList<>();
+        for (Categoria categoria : movie.getCategorias()) {
+            CategoriaDTO categoriaDTO = new CategoriaDTO();
+            categoriaDTO.setId(categoria.getId()); // Asumiendo que CategoriaDTO tiene un id
+            categoriaDTO.setNombre(categoria.getNombre()); // Si existe un nombre en Categoria
+            categoriasDTOs.add(categoriaDTO);
+        }
+
         return new MovieDTO(
                 movie.getId(),
                 movie.getNombre(),
@@ -104,7 +170,7 @@ public class MovieServiceImpl implements MovieService {
                 movie.getDuracion(),
                 movie.getPais(),
                 movie.getCantVistas(),
-                movie.getIdCategoria(),
+                categoriasDTOs, // Lista de categorías
                 movie.getAñoLanzamiento(),
                 movie.getImagen(),
                 movie.getLikes(),
@@ -115,5 +181,6 @@ public class MovieServiceImpl implements MovieService {
                 movie.getTambienConocidaComo()
         );
     }
+
 }
 

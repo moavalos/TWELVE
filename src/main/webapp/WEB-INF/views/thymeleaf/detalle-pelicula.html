@@ -35,7 +35,8 @@
                     th:text="${movie.valoracion}"></span>/10 |
                 &nbsp;Duracion:
                 <span th:text="${movie.duracion}"></span> &nbsp; | &nbsp;
-                Categoria: <span th:text="${movie.idCategoria}"></span> &nbsp; | &nbsp; <span
+                <span th:each="categoria : ${movie.categorias}" th:text="${categoria.nombre}" th:unless="${#iterStat.last}">, </span>
+<!--                Categoria: <span th:text="${movie.idCategoria}"></span> &nbsp; | &nbsp; <span-->
                         th:text="${movie.anioLanzamiento}"></span></p>
             <hr>
             <!-- Sección de detalles -->

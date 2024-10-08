@@ -60,15 +60,25 @@ public class MovieRepositoryImpl implements MovieRepository {
         String hql = "from Movie order by valoracion desc";
         return session.createQuery(hql, Movie.class).setMaxResults(10).list();
     }
+//
+//    @Override
+//    public List<Movie> findByCategoriaId(Integer idCategoria) {
+//        Session session = sessionFactory.getCurrentSession();
+//        String hql = "from Movie where idCategoria = :idCategoria";
+//        return session.createQuery(hql, Movie.class)
+//                .setParameter("idCategoria", idCategoria)
+//                .list();
+//    }
 
     @Override
     public List<Movie> findByCategoriaId(Integer idCategoria) {
         Session session = sessionFactory.getCurrentSession();
-        String hql = "from Movie where idCategoria = :idCategoria";
+        String hql = "SELECT m FROM Movie m JOIN FETCH m.categorias c WHERE c.id = :idCategoria";
         return session.createQuery(hql, Movie.class)
                 .setParameter("idCategoria", idCategoria)
                 .list();
     }
+
 
     @Override
     public List<Movie> findNewestMovie() {

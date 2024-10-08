@@ -3,11 +3,15 @@ package org.twelve.dominio.entities;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = "categorias")
 @Entity
 @EqualsAndHashCode
 @Table(name = "Movie")
@@ -29,9 +33,17 @@ public class Movie {
     private String pais;
 
     private Integer cantVistas;
+//
+//    @Column(nullable = false)
+//    private Integer idCategoria;
 
-    @Column(nullable = false)
-    private Integer idCategoria;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "movie_categoria",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "categoria_id")
+    )
+    private Set<Categoria> categorias = new HashSet<>();
 
     private String añoLanzamiento;
 
