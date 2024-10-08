@@ -30,7 +30,14 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
     }
 
     @Override
-    public void guardar(Usuario usuario) {
+    public void guardar(Usuario usuario) throws Exception {
+        Query query = sessionFactory.getCurrentSession().createQuery("FROM Usuario WHERE email = :email");
+        query.setParameter("email", usuario.getEmail());
+
+        if (!query.getResultList().isEmpty()) {
+            throw new Exception("El email ya está en uso");
+        }
+
         sessionFactory.getCurrentSession().save(usuario);
     }
 

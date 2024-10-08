@@ -63,11 +63,11 @@ public class MovieRepositoryImplTest {
 
         movieRepository.save(movie);
 
-        Movie foundMovie = movieRepository.findById(movie.getId());
+        Movie peliculaEncontrada = movieRepository.findById(movie.getId());
 
-        assertNotNull(foundMovie);
-        assertEquals(movie.getId(), foundMovie.getId());
-        assertEquals("Inception", foundMovie.getNombre());
+        assertNotNull(peliculaEncontrada);
+        assertEquals(movie.getId(), peliculaEncontrada.getId());
+        assertEquals("Inception", peliculaEncontrada.getNombre());
     }
 
     @Test
@@ -79,9 +79,9 @@ public class MovieRepositoryImplTest {
         movie.setNombre("Avatar");
         movieRepository.save(movie);
 
-        List<Movie> foundMovies = movieRepository.findByTitle("Avatar");
-        assertFalse(foundMovies.isEmpty());
-        assertEquals("Avatar", foundMovies.get(0).getNombre());
+        List<Movie> peliculasEncontradas = movieRepository.findByTitle("Avatar");
+        assertFalse(peliculasEncontradas.isEmpty());
+        assertEquals("Avatar", peliculasEncontradas.get(0).getNombre());
     }
 
     @Test
@@ -101,8 +101,8 @@ public class MovieRepositoryImplTest {
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setParameter("nombre", "Titanic");
 
-        Movie modifiedMovie = (Movie) query.getSingleResult();
-        assertEquals("1998", modifiedMovie.getAñoLanzamiento());
+        Movie peliculaModificada = (Movie) query.getSingleResult();
+        assertEquals("1998", peliculaModificada.getAñoLanzamiento());
     }
 
     @Test
@@ -121,9 +121,9 @@ public class MovieRepositoryImplTest {
         movie2.setIdCategoria(3);
         movieRepository.save(movie2);
 
-        List<Movie> mostViewedMovies = movieRepository.findMostViewed();
-        assertFalse(mostViewedMovies.isEmpty());
-        assertEquals("Avatar", mostViewedMovies.get(0).getNombre());
+        List<Movie> peliculasMasVistas = movieRepository.findMostViewed();
+        assertFalse(peliculasMasVistas.isEmpty());
+        assertEquals("Avatar", peliculasMasVistas.get(0).getNombre());
     }
 
     @Test
@@ -159,9 +159,9 @@ public class MovieRepositoryImplTest {
         movie.setIdCategoria(1);
         movieRepository.save(movie);
 
-        List<Movie> foundMovies = movieRepository.findByCategoriaId(1);
-        assertFalse(foundMovies.isEmpty());
-        assertEquals(1, foundMovies.get(0).getIdCategoria());
+        List<Movie> peliculasEncontradas = movieRepository.findByCategoriaId(1);
+        assertFalse(peliculasEncontradas.isEmpty());
+        assertEquals(1, peliculasEncontradas.get(0).getIdCategoria());
     }
 
     @Test
@@ -185,5 +185,71 @@ public class MovieRepositoryImplTest {
         assertEquals("pelicula nueva", newestMovies.get(0).getNombre());
     }
 
+    @Test
+    @Transactional
+    @Rollback
+    public void testBuscarPeliculasPorAñoLanzamiento() {
+        Movie movie1 = new Movie();
+        movie1.setNombre("Matrix");
+        movie1.setAñoLanzamiento("1999");
+        movie1.setIdCategoria(2);
+        movieRepository.save(movie1);
+
+        Movie movie2 = new Movie();
+        movie2.setNombre("Toy Story");
+        movie2.setAñoLanzamiento("1999");
+        movie2.setIdCategoria(4);
+        movieRepository.save(movie2);
+
+        String hql = "FROM Movie WHERE añoLanzamiento = :año";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("año", "1999");
+
+        List<Movie> movies = query.getResultList();
+        assertEquals(2, movies.size());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testBuscarPeliculasPorTituloSinResultados() {
+        List<Movie> foundMovies = movieRepository.findByTitle("PeliculaNoExistente");
+        assertTrue(foundMovies.isEmpty());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testEliminarPeliculaGuardaYEliminaCorrectamente() {
+        Movie movie = new Movie();
+        movie.setNombre("The Godfather");
+        movie.setAñoLanzamiento("1972");
+        movie.setIdCategoria(5);
+        movieRepository.save(movie);
+
+        sessionFactory.getCurrentSession().delete(movie);
+        sessionFactory.getCurrentSession().flush();
+
+        String hql = "FROM Movie WHERE nombre = :nombre";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("nombre", "The Godfather");
+
+        List<Movie> foundMovies = query.getResultList();
+        assertTrue(foundMovies.isEmpty());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testActualizarPeliculaInexistenteDebeFallar() {
+        Movie movie = new Movie();
+        movie.setId(9999);
+        movie.setNombre("Pelicula Fantasma");
+
+        assertThrows(Exception.class, () -> {
+            movieRepository.save(movie);
+            sessionFactory.getCurrentSession().flush();
+        });
+    }
 
 }
