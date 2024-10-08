@@ -7,6 +7,7 @@ import org.twelve.dominio.UsuarioService;
 import org.twelve.dominio.entities.Usuario;
 import org.twelve.presentacion.dto.PerfilDTO;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,31 +24,53 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public List<PerfilDTO> getAll() {
-        List<Usuario> usuarios = usuarioRepository.findAll();
+    public List<PerfilDTO> encontrarTodos() {
+        List<Usuario> usuarios = usuarioRepository.encontrarTodos();
         return usuarios.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
-    public PerfilDTO getById(Long id) {
-        Usuario usuario = usuarioRepository.findById(Math.toIntExact(id));
+    public PerfilDTO buscarPorId(Long id) {
+        Usuario usuario = usuarioRepository.buscarPorId(id);
         return convertToDTO(usuario);
     }
 
     @Override
-    public PerfilDTO create(PerfilDTO perfilDTO) {
+    public PerfilDTO crear(PerfilDTO perfilDTO) {
         Usuario usuario = convertToEntity(perfilDTO);
-        Usuario savedUsuario = usuarioRepository.save(usuario);
+        Usuario savedUsuario = usuarioRepository.guardar(usuario);
         return convertToDTO(savedUsuario);
     }
 
     @Override
-    public List<PerfilDTO> findByUserName(String username) {
-        List<Usuario> usuarios = usuarioRepository.findByUserName(username);
+    public List<PerfilDTO> buscarPorUsername(String username) {
+        List<Usuario> usuarios = usuarioRepository.buscarPorUsername(username);
         return usuarios.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void actualizarPerfil(PerfilDTO perfilDTO) {
+        // Busca el usuario existente en la base de datos
+        Usuario usuarioExistente = usuarioRepository.buscarPorId(perfilDTO.getId());
+
+        if (usuarioExistente == null) {
+            throw new EntityNotFoundException("Usuario no encontrado");
+        }
+
+        // Actualiza los campos del usuario existente con los datos del perfilDTO
+        usuarioExistente.setNombre(perfilDTO.getNombre());
+        usuarioExistente.setEmail(perfilDTO.getEmail());
+        usuarioExistente.setUsername(perfilDTO.getUsername());
+        usuarioExistente.setDescripcion(perfilDTO.getDescripcion());
+        usuarioExistente.setPais(perfilDTO.getPais());
+
+        // Guarda los cambios en la base de datos
+        usuarioRepository.guardar(usuarioExistente);
+    }
+
+
 
 
     // dto a entidad en

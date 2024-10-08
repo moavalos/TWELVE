@@ -7,12 +7,13 @@ import java.util.List;
 
 public interface RepositorioUsuario {
 
-    List<Usuario> findAll();
+    List<Usuario> encontrarTodos();
 
-    Usuario findById(Integer id);
+    Usuario buscarPorId(Long id);
 
-    Usuario save(Usuario Usuario);
+    Usuario guardar(Usuario Usuario);
 
-    List<Usuario> findByUserName(String username);
+    List<Usuario> buscarPorUsername(String username);
 
+    Usuario buscarUsuarioPorEmail(String email);
 }

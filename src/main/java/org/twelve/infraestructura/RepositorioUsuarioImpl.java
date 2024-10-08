@@ -20,26 +20,26 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
     }
 
     @Override
-    public List<Usuario> findAll() {
+    public List<Usuario> encontrarTodos() {
         Session session = sessionFactory.getCurrentSession();
         return session.createQuery("from Usuario", Usuario.class).list();
     }
 
     @Override
-    public Usuario findById(Integer id) {
+    public Usuario buscarPorId(Long id) {
         Session session = sessionFactory.getCurrentSession();
         return session.get(Usuario.class, id);
     }
 
     @Override
-    public Usuario save(Usuario Usuario) {
+    public Usuario guardar(Usuario Usuario) {
         Session session = sessionFactory.getCurrentSession();
         session.save(Usuario);
         return Usuario;
     }
 
     @Override
-    public List<Usuario> findByUserName(String username) {
+    public List<Usuario> buscarPorUsername(String username) {
         Session session = sessionFactory.getCurrentSession();
         String hql = "from Usuario where lower(username) like :username";
         return session.createQuery(hql, Usuario.class)
@@ -47,10 +47,14 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
                 .list();
     }
 
-
-
-
-
+    @Override
+    public Usuario buscarUsuarioPorEmail(String email) {
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "from Usuario where lower(email) like :email";
+        return (Usuario) session.createQuery(hql, Usuario.class)
+                .setParameter("email", "%" + email.toLowerCase() + "%")
+                .list();
+    }
 
 
 }

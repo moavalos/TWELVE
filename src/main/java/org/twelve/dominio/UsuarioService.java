@@ -6,13 +6,14 @@ import java.util.List;
 
 public interface UsuarioService {
 
-    List<PerfilDTO> getAll();
+    List<PerfilDTO> encontrarTodos();
 
-    PerfilDTO getById(Long id);
+    PerfilDTO buscarPorId(Long id);
 
-    PerfilDTO create(PerfilDTO usuario);
+    PerfilDTO crear(PerfilDTO usuario);
 
-    List<PerfilDTO> findByUserName(String username);
+    List<PerfilDTO> buscarPorUsername(String username);
 
 
+    void actualizarPerfil(PerfilDTO usuarioExistente);
 }

@@ -474,3 +474,6 @@ INSERT INTO usuario (activo, descripcion, email, id, nombre, pais, password, rol
 (true, 'Crítico de cine, especializado en dramas', 'ana@example.com', 4, 'Ana', 'Colombia', 'hashed_password_4', 'usuario', '@AnaCritica'),
 (true, 'Entusiasta de las películas de ciencia ficción', 'carla@example.com', 5, 'Carla', 'Chile', 'hashed_password_5', 'usuario', '@CarlaSciFi'),
 (true, 'Adicto a las series y películas de fantasía', 'pablo@example.com', 6, 'Pablo', 'Perú', 'hashed_password_6', 'usuario', '@PabloFantasia');
+
+INSERT INTO usuario (activo, descripcion, email, id, nombre, pais, password, rol, username) VALUES
+                                                                                                (true, 'Amante del cine de acción y aventura', 'test@unlam.edu.ar', 7, 'Jose', 'Argentina', 'hashed_password_7', 'usuario', '@test');
