@@ -71,7 +71,7 @@ public class ControladorLoginTest {
     }
 
     @Test
-    public void registrameSiUsuarioNoExisteDeberiaCrearUsuarioYVolverAlLogin() throws UsuarioExistente {
+    public void registrameSiUsuarioNoExisteDeberiaCrearUsuarioYVolverAlLogin() throws Exception {
 
         String confirmPassword = usuarioMock.getPassword();
         // ejecucion
@@ -83,7 +83,7 @@ public class ControladorLoginTest {
     }
 
     @Test
-    public void registrarmeSiUsuarioExisteDeberiaVolverAFormularioYMostrarError() throws UsuarioExistente {
+    public void registrarmeSiUsuarioExisteDeberiaVolverAFormularioYMostrarError() throws Exception {
         // preparacion
         String confirmPassword = usuarioMock.getPassword();
         doThrow(UsuarioExistente.class).when(servicioLoginMock).registrar(usuarioMock, confirmPassword);
@@ -97,7 +97,7 @@ public class ControladorLoginTest {
     }
 
     @Test
-    public void errorEnRegistrarmeDeberiaVolverAFormularioYMostrarError() throws UsuarioExistente {
+    public void errorEnRegistrarmeDeberiaVolverAFormularioYMostrarError() throws Exception {
         // preparacion
         String confirmPassword = usuarioMock.getPassword();
         doThrow(RuntimeException.class).when(servicioLoginMock).registrar(usuarioMock, confirmPassword);
@@ -111,7 +111,7 @@ public class ControladorLoginTest {
     }
 
     @Test
-    public void registrarmeSiLasContrasenasNoCoincidenDeberiaVolverAFormularioYMostrarError() throws UsuarioExistente {
+    public void registrarmeSiLasContrasenasNoCoincidenDeberiaVolverAFormularioYMostrarError() throws Exception {
         // preparación
         String confirmPassword = "otraContraseña";
         doThrow(ContrasenasNoCoinciden.class).when(servicioLoginMock).registrar(usuarioMock, confirmPassword);

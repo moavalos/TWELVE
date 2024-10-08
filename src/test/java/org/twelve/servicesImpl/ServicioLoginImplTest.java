@@ -36,7 +36,7 @@ public class ServicioLoginImplTest {
     }
 
     @Test
-    public void testRegistrarUsuarioNuevo() throws UsuarioExistente {
+    public void testRegistrarUsuarioNuevo() throws Exception {
         String email = "test@unlam.com";
         String password = "password";
         String confirmPassword = "password";
