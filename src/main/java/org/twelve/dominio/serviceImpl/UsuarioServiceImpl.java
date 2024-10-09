@@ -44,7 +44,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public List<PerfilDTO> buscarPorUsername(String username) {
-        List<Usuario> usuarios = usuarioRepository.buscarPorUsername(username);
+        List<Usuario> usuarios = (List<Usuario>) usuarioRepository.buscarPorUsername(username);
         return usuarios.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
