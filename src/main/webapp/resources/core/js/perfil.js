@@ -1,3 +1,5 @@
+//Historial calendario
+
 function toggleDates(datesId) {
     var dates = document.getElementById(datesId);
     if (dates.style.display === "none" || dates.style.display === "") {
@@ -6,3 +8,5 @@ function toggleDates(datesId) {
         dates.style.display = "none";
     }
 }
+
+//////////////////////////////////////

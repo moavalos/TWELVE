@@ -1,13 +1,18 @@
 package org.twelve.dominio;
 
+import org.twelve.presentacion.dto.PerfilDTO;
 
-import org.springframework.stereotype.Service;
-import org.twelve.dominio.entities.Usuario;
+import java.util.List;
 
-@Service
 public interface UsuarioService {
 
-    void actualizarPerfil(Usuario usuario);
+    List<PerfilDTO> encontrarTodos();
 
-    Usuario buscarPorId(Long id);
+    PerfilDTO buscarPorId(Long id);
+
+    PerfilDTO crear(PerfilDTO usuario);
+
+    List<PerfilDTO> buscarPorUsername(String username);
+
+    void actualizarPerfil(PerfilDTO usuarioExistente);
 }

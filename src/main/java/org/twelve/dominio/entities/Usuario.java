@@ -33,4 +33,6 @@ public class Usuario {
     private String rol;
 
     private Boolean activo = false;
+
+
 }
