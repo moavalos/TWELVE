@@ -34,10 +34,12 @@
             <p><i class="bi bi-eye"></i>Vitas: <span th:text="${movie.cantVistas}"></span> | &nbsp; Score: <span
                     th:text="${movie.valoracion}"></span>/10 |
                 &nbsp;Duracion:
-                <span th:text="${movie.duracion}"></span> &nbsp; | &nbsp;
-                <span th:each="categoria : ${movie.categorias}" th:text="${categoria.nombre}" th:unless="${#iterStat.last}">, </span>
-<!--                Categoria: <span th:text="${movie.idCategoria}"></span> &nbsp; | &nbsp; <span-->
-                        th:text="${movie.anioLanzamiento}"></span></p>
+                <span th:text="${movie.duracion}"></span> &nbsp; |
+                Categorias: <span th:each="categoria, iterStat : ${movie.categorias}"
+                                  th:text="${categoria.nombre} + (iterStat.last ? ' · ' : ' ')">
+    </span>
+                <!--                Categoria: <span th:text="${movie.idCategoria}"></span> &nbsp; | &nbsp; <span-->
+            | <span th:text="${movie.anioLanzamiento}"></span></p>
             <hr>
             <!-- Sección de detalles -->
             <div class="row">

@@ -373,7 +373,6 @@ VALUES ('Tiempos Violentos',
         154.0,
         'EE.UU.',
         6000000,
-
         '1994',
         'tiempos_violentos.jpg',
         null,
@@ -392,12 +391,10 @@ VALUES (1, 'SUSPENSO'),
        (5, 'CRIMEN'),
        (6, 'COMEDIA'),
        (7, 'GUERRA'),
-       (8, 'ANIMACIÓN'),
-       (9, 'THRILLER');
+       (8, 'ANIMACIÓN');
 
 INSERT INTO Comentario (id, idMovie, descripcion, idUsuario, likes)
-VALUES (null, 1, 'horrible pelicula', 1, 1),
-       (null, 1, 'muy buena', 2, 9);
+VALUES (null, 1, 'horrible pelicula', 1, 1), (null, 1, 'muy buena', 2, 9);
 
 
 INSERT INTO Pais (id, nombre)
@@ -410,17 +407,17 @@ VALUES (1, 'Argentina'),
 
 -- tabla de relacion entre peliculas y categorias
 INSERT INTO movie_categoria (movie_id, categoria_id)
-VALUES (1, 6),--COMEDIA
-       (1, 3),--CIENCIA FICCION
-       (2, 2),--ACCION
-       (2, 7),--GUERRA
-       (3, 5),--CRIMEN
-       (4, 8),--animacion
-       (4, 4),--drama
+VALUES (1, 6),
+       (1, 3),
+       (2, 2),
+       (2, 7),
+       (3, 5),
+       (4, 8),
+       (4, 4),
        (5, 2),
        (5, 4),
        (5, 7),
-       (6, 1),--suspenso
+       (6, 1),
        (6, 3),
        (7, 2),
        (7, 5),
@@ -429,5 +426,7 @@ VALUES (1, 6),--COMEDIA
        (9, 4),
        (9, 1),
        (10, 5),
-       (10,1);
+       (10, 1),
+       (11, 1),
+       (11, 5);
 

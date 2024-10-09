@@ -6,12 +6,12 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+//@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = "movies")
+//@ToString(exclude = "movies")
 @Entity
-@EqualsAndHashCode
+//@EqualsAndHashCode
 @Table(name = "Categoria")
 
 
@@ -26,4 +26,20 @@ public class Categoria {
 
     @ManyToMany(mappedBy = "categorias", fetch = FetchType.LAZY)
     private Set<Movie> movies = new HashSet<>();
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 }

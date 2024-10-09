@@ -81,7 +81,7 @@ public class MovieServiceImpl implements MovieService {
     // dto a entidad en
     private Movie convertToEntity(MovieDTO movieDTO) {
         Movie movie = new Movie();
-        movie.setId(movieDTO.getId()); // Asegúrate de establecer el ID si está presente
+        movie.setId(movieDTO.getId());
         movie.setNombre(movieDTO.getNombre());
         movie.setDescripcion(movieDTO.getDescripcion());
         movie.setFrase(movieDTO.getFrase());
@@ -97,13 +97,13 @@ public class MovieServiceImpl implements MovieService {
         movie.setIdioma(movieDTO.getIdioma());
         movie.setTambienConocidaComo(movieDTO.getTambienConocidaComo());
 
-        // Conversión de Categorías
+
         if (movieDTO.getCategorias() != null) {
             Set<Categoria> categorias = new HashSet<>();
             for (CategoriaDTO categoriaDTO : movieDTO.getCategorias()) {
                 Categoria categoria = new Categoria();
-                categoria.setId(categoriaDTO.getId()); // Asegúrate de que ID esté definido
-                categoria.setNombre(categoriaDTO.getNombre()); // Establece el nombre
+                categoria.setId(categoriaDTO.getId());
+                categoria.setNombre(categoriaDTO.getNombre());
                 categorias.add(categoria);
             }
             movie.setCategorias(categorias);
@@ -157,8 +157,8 @@ public class MovieServiceImpl implements MovieService {
         List<CategoriaDTO> categoriasDTOs = new ArrayList<>();
         for (Categoria categoria : movie.getCategorias()) {
             CategoriaDTO categoriaDTO = new CategoriaDTO();
-            categoriaDTO.setId(categoria.getId()); // Asumiendo que CategoriaDTO tiene un id
-            categoriaDTO.setNombre(categoria.getNombre()); // Si existe un nombre en Categoria
+            categoriaDTO.setId(categoria.getId());
+            categoriaDTO.setNombre(categoria.getNombre());
             categoriasDTOs.add(categoriaDTO);
         }
 
@@ -170,7 +170,7 @@ public class MovieServiceImpl implements MovieService {
                 movie.getDuracion(),
                 movie.getPais(),
                 movie.getCantVistas(),
-                categoriasDTOs, // Lista de categorías
+                categoriasDTOs,
                 movie.getAñoLanzamiento(),
                 movie.getImagen(),
                 movie.getLikes(),
