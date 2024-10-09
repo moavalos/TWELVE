@@ -14,6 +14,5 @@ public interface UsuarioService {
 
     List<PerfilDTO> buscarPorUsername(String username);
 
-
     void actualizarPerfil(PerfilDTO usuarioExistente);
 }

@@ -51,25 +51,23 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public void actualizarPerfil(PerfilDTO perfilDTO) {
-        // Busca el usuario existente en la base de datos
-        Usuario usuarioExistente = usuarioRepository.buscarPorId(perfilDTO.getId());
-
+    public void actualizarPerfil(PerfilDTO usuario) {
+        Usuario usuarioExistente = usuarioRepository.buscarPorId(usuario.getId());
         if (usuarioExistente == null) {
             throw new EntityNotFoundException("Usuario no encontrado");
         }
 
         // Actualiza los campos del usuario existente con los datos del perfilDTO
-        usuarioExistente.setNombre(perfilDTO.getNombre());
-        usuarioExistente.setEmail(perfilDTO.getEmail());
-        usuarioExistente.setUsername(perfilDTO.getUsername());
-        usuarioExistente.setDescripcion(perfilDTO.getDescripcion());
-        usuarioExistente.setPais(perfilDTO.getPais());
+        usuarioExistente.setNombre(usuario.getNombre());
+        usuarioExistente.setEmail(usuario.getEmail());
+        usuarioExistente.setUsername(usuario.getUsername());
+        usuarioExistente.setDescripcion(usuario.getDescripcion());
+        usuarioExistente.setPais(usuario.getPais());
 
         // Guarda los cambios en la base de datos
         usuarioRepository.guardar(usuarioExistente);
-    }
 
+    }
 
 
 
