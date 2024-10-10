@@ -1,5 +1,6 @@
 package org.twelve.presentacion;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -12,8 +13,9 @@ import org.twelve.presentacion.dto.PerfilDTO;
 @Controller
 public class UsuarioController {
 
-    private final UsuarioService usuarioService;
+    private UsuarioService usuarioService;
 
+    @Autowired
     public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
@@ -52,7 +54,7 @@ public class UsuarioController {
         return new ModelAndView("redirect:/login");
     }
 
-    @PutMapping("/perfil/{id}")
+    @RequestMapping(path = "/editar/{id}", method = RequestMethod.PUT)
     public ResponseEntity<PerfilDTO> actualizarPerfil(@PathVariable Long id, @RequestBody PerfilDTO perfilDTO) {
         try {
             PerfilDTO usuario = usuarioService.buscarPorId(id);
@@ -72,20 +74,17 @@ public class UsuarioController {
         }
     }
 
-    @GetMapping("/perfil/{id}")
-    public ResponseEntity<PerfilDTO> buscarPorId(@PathVariable Long id) {
+    @RequestMapping(path = "/perfil/{id}", method = RequestMethod.GET)
+    public ModelAndView buscarPorId(@PathVariable Long id) {
+        ModelMap model = new ModelMap();
         PerfilDTO usuario = usuarioService.buscarPorId(id);
         if (usuario == null) {
-            return ResponseEntity.notFound().build();
+            model.put("error", "Usuario no encontrado");
+            return new ModelAndView("usuario", model);
         }
-        // Suponiendo que tienes un método para convertir de Usuario a PerfilDTO
-        PerfilDTO perfilDTO = new PerfilDTO();
-        perfilDTO.setNombre(usuario.getNombre());
-        perfilDTO.setUsername(usuario.getUsername());
-        perfilDTO.setDescripcion(usuario.getDescripcion());
-        perfilDTO.setPais(usuario.getPais());
 
-        return ResponseEntity.ok(perfilDTO);
+        model.put("usuario", usuario);
+        return new ModelAndView("usuario", model);
     }
 }
 

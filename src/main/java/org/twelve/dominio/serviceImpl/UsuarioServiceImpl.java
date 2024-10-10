@@ -32,6 +32,11 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public PerfilDTO buscarPorId(Long id) {
         Usuario usuario = usuarioRepository.buscarPorId(id);
+
+        if (usuario == null) {
+            throw new EntityNotFoundException("Usuario no encontrado");
+        }
+
         return convertToDTO(usuario);
     }
 
@@ -51,25 +56,16 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public void actualizarPerfil(PerfilDTO usuario) {
-        Usuario usuarioExistente = usuarioRepository.buscarPorId(usuario.getId());
+    public void actualizarPerfil(PerfilDTO usuarioDTO) {
+        Usuario usuarioExistente = usuarioRepository.buscarPorId(usuarioDTO.getId());
         if (usuarioExistente == null) {
             throw new EntityNotFoundException("Usuario no encontrado");
         }
 
-        // Actualiza los campos del usuario existente con los datos del perfilDTO
-        usuarioExistente.setNombre(usuario.getNombre());
-        usuarioExistente.setEmail(usuario.getEmail());
-        usuarioExistente.setUsername(usuario.getUsername());
-        usuarioExistente.setDescripcion(usuario.getDescripcion());
-        usuarioExistente.setPais(usuario.getPais());
+        Usuario usuarioActualizado = convertToEntity(usuarioDTO);
 
-        // Guarda los cambios en la base de datos
-        usuarioRepository.guardar(usuarioExistente);
-
+        usuarioRepository.guardar(usuarioActualizado);
     }
-
-
 
     // dto a entidad en
     private Usuario convertToEntity(PerfilDTO perfilDTO) {

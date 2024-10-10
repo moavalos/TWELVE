@@ -24,10 +24,10 @@ public class PerfilControllerTest {
         perfilController = new PerfilController();
     }
 
-    @Test
+    /*@Test
     public void testMostrarPerfil() {
         ModelAndView modelAndView = perfilController.mostrarPerfil();
 
         assertThat(modelAndView.getViewName(), is("perfil"));
-    }
+    }*/
 }

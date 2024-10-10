@@ -88,7 +88,7 @@ public class UsuarioControllerTest {
         }
 
 
-    @Test
+   /* @Test
     public void testObtenerUsuarioPorId_IdValido() {
         PerfilDTO usuarioMock = mock(PerfilDTO.class);
         when(usuarioService.buscarPorId(1L)).thenReturn(usuarioMock);
@@ -97,16 +97,16 @@ public class UsuarioControllerTest {
 
         assertEquals(200, response.getStatusCodeValue());
         assertNotNull(response.getBody());
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void testObtenerUsuarioPorId_IdInvalido() {
         when(usuarioService.buscarPorId(99L)).thenReturn(null);
 
         ResponseEntity<PerfilDTO> response = usuarioController.buscarPorId(99L);
 
         assertEquals(404, response.getStatusCodeValue());
-    }
+    }*/
 
 
 

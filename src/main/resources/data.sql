@@ -344,7 +344,7 @@ VALUES
         (null, 1, 'muy buena', 2, 9);
 
 
-INSERT INTO usuario (activo, descripcion, email, id, nombre, pais, password, rol, username) VALUES
+INSERT INTO Usuario (activo, descripcion, email, id, nombre, pais, password, rol, username) VALUES
 (true, 'Amante del cine de acción y aventura', 'jose@example.com', 1, 'Jose', 'Argentina', 'hashed_password_1', 'usuario', '@Joseee123'),
 (true, 'Fan de las películas de terror y suspenso', 'maria@example.com', 2, 'Maria', 'España', 'hashed_password_2', 'usuario', '@Maria456'),
 (true, 'Cineasta en formación, adicto a las comedias', 'luis@example.com', 3, 'Luis', 'México', 'hashed_password_3', 'usuario', '@LuisCine'),
