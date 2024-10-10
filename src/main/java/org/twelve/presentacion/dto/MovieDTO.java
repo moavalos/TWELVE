@@ -92,13 +92,6 @@ public class MovieDTO {
         this.cantVistas = cantVistas;
     }
 
-//    public Integer getIdCategoria() {
-//        return idCategoria;
-//    }
-//
-//    public void setIdCategoria(Integer idCategoria) {
-//        this.idCategoria = idCategoria;
-//    }
 
     public List<CategoriaDTO> getCategorias() {
         return categorias;

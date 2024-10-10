@@ -4,7 +4,7 @@ public class CategoriaDTO {
 
 
     public CategoriaDTO(Integer id, String nombre) {
-        this.id = id; // Asegúrate de asignar los valores
+        this.id = id;
         this.nombre = nombre;
     }
 

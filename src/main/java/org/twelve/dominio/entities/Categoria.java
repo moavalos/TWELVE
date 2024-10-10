@@ -27,6 +27,11 @@ public class Categoria {
     @ManyToMany(mappedBy = "categorias", fetch = FetchType.LAZY)
     private Set<Movie> movies = new HashSet<>();
 
+    public Categoria(Integer id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
+
     public Integer getId() {
         return id;
     }
