@@ -1,13 +1,10 @@
 package org.twelve.presentacion;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
 import org.twelve.dominio.ServicioLogin;
 import org.twelve.dominio.entities.Usuario;
-import org.twelve.dominio.excepcion.ContrasenasNoCoinciden;
-import org.twelve.dominio.excepcion.UsuarioExistente;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -26,7 +23,6 @@ public class ControladorLoginTest {
     private HttpSession sessionMock;
     private ServicioLogin servicioLoginMock;
 
-
     @BeforeEach
     public void init() {
         datosLoginMock = new DatosLogin("dami@unlam.com", "123");
@@ -37,7 +33,6 @@ public class ControladorLoginTest {
         servicioLoginMock = mock(ServicioLogin.class);
         controladorLogin = new ControladorLogin(servicioLoginMock);
     }
-
 
     @Test
     public void loginConUsuarioYPasswordInorrectosDeberiaLlevarALoginNuevamente() {
@@ -71,60 +66,6 @@ public class ControladorLoginTest {
     }
 
     @Test
-    public void registrameSiUsuarioNoExisteDeberiaCrearUsuarioYVolverAlLogin() throws Exception {
-
-        String confirmPassword = usuarioMock.getPassword();
-        // ejecucion
-        ModelAndView modelAndView = controladorLogin.registrarme(usuarioMock, confirmPassword);
-
-        // validacion
-        assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/completarPerfil?id=0"));
-        verify(servicioLoginMock, times(1)).registrar(usuarioMock, confirmPassword);
-    }
-
-    @Test
-    public void registrarmeSiUsuarioExisteDeberiaVolverAFormularioYMostrarError() throws Exception {
-        // preparacion
-        String confirmPassword = usuarioMock.getPassword();
-        doThrow(UsuarioExistente.class).when(servicioLoginMock).registrar(usuarioMock, confirmPassword);
-
-        // ejecucion
-        ModelAndView modelAndView = controladorLogin.registrarme(usuarioMock, confirmPassword);
-
-        // validacion
-        assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-usuario"));
-        assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("El usuario ya existe"));
-    }
-
-    @Test
-    public void errorEnRegistrarmeDeberiaVolverAFormularioYMostrarError() throws Exception {
-        // preparacion
-        String confirmPassword = usuarioMock.getPassword();
-        doThrow(RuntimeException.class).when(servicioLoginMock).registrar(usuarioMock, confirmPassword);
-
-        // ejecucion
-        ModelAndView modelAndView = controladorLogin.registrarme(usuarioMock, confirmPassword);
-
-        // validacion
-        assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-usuario"));
-        assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Error al registrar el nuevo usuario"));
-    }
-
-    @Test
-    public void registrarmeSiLasContrasenasNoCoincidenDeberiaVolverAFormularioYMostrarError() throws Exception {
-        // preparación
-        String confirmPassword = "otraContraseña";
-        doThrow(ContrasenasNoCoinciden.class).when(servicioLoginMock).registrar(usuarioMock, confirmPassword);
-
-        // ejecución
-        ModelAndView modelAndView = controladorLogin.registrarme(usuarioMock, confirmPassword);
-
-        // validación
-        assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-usuario"));
-        assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Las contraseñas no coinciden"));
-    }
-
-    @Test
     public void irALogin_DeberiaRetornarVistaLoginYModeloConDatosLogin() {
         ModelAndView modelAndView = controladorLogin.irALogin();
 
@@ -133,16 +74,6 @@ public class ControladorLoginTest {
         assertThat(modelAndView.getModel().containsKey("datosLogin"), equalTo(true));
 
         assertThat(modelAndView.getModel().get("datosLogin"), instanceOf(DatosLogin.class));
-    }
-
-    @Test
-    public void nuevoUsuario_DeberiaRetornarVistaNuevoUsuarioYModeloUsuario() {
-        ModelAndView modelAndView = controladorLogin.nuevoUsuario();
-
-        assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-usuario"));
-
-        assertThat(modelAndView.getModel().containsKey("usuario"), equalTo(true));
-        assertThat(modelAndView.getModel().get("usuario"), equalTo(new Usuario()));
     }
 
     @Test

@@ -54,42 +54,12 @@ public class ControladorLogin {
         return new ModelAndView("redirect:/home");
     }
 
-    @RequestMapping(path = "/registrarme", method = RequestMethod.POST)
-    public ModelAndView registrarme(@ModelAttribute("usuario") Usuario usuario,
-                                    @RequestParam("confirmPassword") String confirmPassword) {
-        ModelMap model = new ModelMap();
-        try {
-            servicioLogin.registrar(usuario, confirmPassword);
-        } catch (UsuarioExistente e) {
-            model.put("error", "El usuario ya existe");
-            return new ModelAndView("nuevo-usuario", model);
-        }  catch (ContrasenasNoCoinciden e) {
-            model.put("error", "Las contraseñas no coinciden");
-            return new ModelAndView("nuevo-usuario", model);
-        } catch (Exception e) {
-            model.put("error", "Error al registrar el nuevo usuario");
-            return new ModelAndView("nuevo-usuario", model);
-        }
-
-        Long idUsuario = usuario.getId();
-
-        return new ModelAndView("redirect:/completarPerfil?id=" + idUsuario);
-    }
-
     @RequestMapping(path = "/nuevo-usuario", method = RequestMethod.GET)
     public ModelAndView nuevoUsuario() {
         ModelMap model = new ModelMap();
         model.put("usuario", new Usuario());
-        return new ModelAndView("nuevo-usuario", model);
+        return new ModelAndView("usuario-datos", model);
     }
-
-    /*
-    @RequestMapping(path = "/home", method = RequestMethod.GET)
-    public ModelAndView irAHome() {
-        return new ModelAndView("home");
-    }
-
-     */
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public ModelAndView inicio() {
