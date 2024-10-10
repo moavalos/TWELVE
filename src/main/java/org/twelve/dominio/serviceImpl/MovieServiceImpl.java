@@ -73,6 +73,30 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    public List<MovieDTO> getMoviesByCategory(Integer idCategoria, String filter) {
+        List<Movie> movies;
+
+        if (filter != null) {
+            switch (filter) {
+                case "topRated":
+                    movies = movieRepository.findByCategoriaIdTopRated(idCategoria);
+                    break;
+                case "newest":
+                    movies = movieRepository.findByCategoriaIdNewest(idCategoria);
+                    break;
+                default:
+                    movies = movieRepository.findByCategoriaId(idCategoria);
+                    break;
+            }
+        } else {
+            movies = movieRepository.findByCategoriaId(idCategoria);
+        }
+
+        return movies.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+
+    @Override
     public List<MovieDTO> getMovieByAnio() {
         List<Movie> newestMovies = movieRepository.findNewestMovie();
         return newestMovies.stream().map(this::convertToDTO).collect(Collectors.toList());
@@ -112,47 +136,6 @@ public class MovieServiceImpl implements MovieService {
         return movie;
     }
 
-//    private Movie convertToEntity(MovieDTO movieDTO) {
-//        Movie movie = new Movie();
-//        movie.setNombre(movieDTO.getNombre());
-//        movie.setDescripcion(movieDTO.getDescripcion());
-//        movie.setFrase(movieDTO.getFrase());
-//        movie.setDuracion(movieDTO.getDuracion());
-//        movie.setPais(movieDTO.getPais());
-//        movie.setCantVistas(movieDTO.getCantVistas());
-//        movie.setIdCategoria(movieDTO.getIdCategoria());
-//        movie.setAñoLanzamiento(movieDTO.getAnioLanzamiento());
-//        movie.setImagen(movieDTO.getImagen());
-//        movie.setLikes(movieDTO.getLikes());
-//        movie.setValoracion(movieDTO.getValoracion());
-//        movie.setDirector(movieDTO.getDirector());
-//        movie.setEscritor(movieDTO.getEscritor());
-//        movie.setIdioma(movieDTO.getIdioma());
-//        movie.setTambienConocidaComo(movieDTO.getTambienConocidaComo());
-//        return movie;
-//    }
-
-    // entidad a DTO
-//    private MovieDTO convertToDTO(Movie movie) {
-//        return new MovieDTO(
-//                movie.getId(),
-//                movie.getNombre(),
-//                movie.getDescripcion(),
-//                movie.getFrase(),
-//                movie.getDuracion(),
-//                movie.getPais(),
-//                movie.getCantVistas(),
-//                movie.getIdCategoria(),
-//                movie.getAñoLanzamiento(),
-//                movie.getImagen(),
-//                movie.getLikes(),
-//                movie.getValoracion(),
-//                movie.getDirector(),
-//                movie.getEscritor(),
-//                movie.getIdioma(),
-//                movie.getTambienConocidaComo()
-//        );
-//    }
     private MovieDTO convertToDTO(Movie movie) {
         List<CategoriaDTO> categoriasDTOs = new ArrayList<>();
         for (Categoria categoria : movie.getCategorias()) {

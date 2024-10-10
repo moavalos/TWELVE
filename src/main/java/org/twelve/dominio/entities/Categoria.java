@@ -6,12 +6,9 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-//@Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@ToString(exclude = "movies")
 @Entity
-//@EqualsAndHashCode
 @Table(name = "Categoria")
 
 

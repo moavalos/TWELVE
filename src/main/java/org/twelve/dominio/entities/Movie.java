@@ -8,12 +8,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-//@Data
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@ToString(exclude = "categorias")
 @Entity
-//@EqualsAndHashCode
+@EqualsAndHashCode
 @Table(name = "Movie")
 public class Movie {
 
@@ -33,10 +32,9 @@ public class Movie {
     private String pais;
 
     private Integer cantVistas;
-//
-//    @Column(nullable = false)
-//    private Integer idCategoria;
-@ManyToMany(cascade = {
+
+
+    @ManyToMany(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE
     })
@@ -70,139 +68,4 @@ public class Movie {
 
     private String tambienConocidaComo;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getFrase() {
-        return frase;
-    }
-
-    public void setFrase(String frase) {
-        this.frase = frase;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public Double getDuracion() {
-        return duracion;
-    }
-
-    public void setDuracion(Double duracion) {
-        this.duracion = duracion;
-    }
-
-    public String getPais() {
-        return pais;
-    }
-
-    public void setPais(String pais) {
-        this.pais = pais;
-    }
-
-    public Integer getCantVistas() {
-        return cantVistas;
-    }
-
-    public void setCantVistas(Integer cantVistas) {
-        this.cantVistas = cantVistas;
-    }
-
-    public Set<Categoria> getCategorias() {
-        return categorias;
-    }
-
-    public void setCategorias(Set<Categoria> categorias) {
-        this.categorias = categorias;
-    }
-
-    public String getAñoLanzamiento() {
-        return añoLanzamiento;
-    }
-
-    public void setAñoLanzamiento(String añoLanzamiento) {
-        this.añoLanzamiento = añoLanzamiento;
-    }
-
-    public String getImagen() {
-        return imagen;
-    }
-
-    public void setImagen(String imagen) {
-        this.imagen = imagen;
-    }
-
-    public Integer getIdComentario() {
-        return idComentario;
-    }
-
-    public void setIdComentario(Integer idComentario) {
-        this.idComentario = idComentario;
-    }
-
-    public Integer getLikes() {
-        return likes;
-    }
-
-    public void setLikes(Integer likes) {
-        this.likes = likes;
-    }
-
-    public Double getValoracion() {
-        return valoracion;
-    }
-
-    public void setValoracion(Double valoracion) {
-        this.valoracion = valoracion;
-    }
-
-    public String getDirector() {
-        return director;
-    }
-
-    public void setDirector(String director) {
-        this.director = director;
-    }
-
-    public String getEscritor() {
-        return escritor;
-    }
-
-    public void setEscritor(String escritor) {
-        this.escritor = escritor;
-    }
-
-    public String getIdioma() {
-        return idioma;
-    }
-
-    public void setIdioma(String idioma) {
-        this.idioma = idioma;
-    }
-
-    public String getTambienConocidaComo() {
-        return tambienConocidaComo;
-    }
-
-    public void setTambienConocidaComo(String tambienConocidaComo) {
-        this.tambienConocidaComo = tambienConocidaComo;
-    }
 }
