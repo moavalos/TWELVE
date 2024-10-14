@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.twelve.dominio.RepositorioUsuario;
 import org.twelve.dominio.UsuarioService;
 import org.twelve.dominio.entities.Usuario;
+import org.twelve.dominio.excepcion.ContrasenasNoCoinciden;
+import org.twelve.dominio.excepcion.UsuarioExistente;
 import org.twelve.presentacion.dto.PerfilDTO;
 
 import javax.persistence.EntityNotFoundException;
@@ -12,26 +14,26 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service("usuarioService")
-@Transactional
+@Service
 public class UsuarioServiceImpl implements UsuarioService {
 
-    private final RepositorioUsuario usuarioRepository;
+    private RepositorioUsuario repositorioUsuario;
 
     @Autowired
-    public UsuarioServiceImpl(RepositorioUsuario usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
+    public UsuarioServiceImpl(RepositorioUsuario repositorioUsuario) {
+        this.repositorioUsuario = repositorioUsuario;
     }
 
     @Override
     public List<PerfilDTO> encontrarTodos() {
-        List<Usuario> usuarios = usuarioRepository.encontrarTodos();
+        List<Usuario> usuarios = repositorioUsuario.encontrarTodos();
         return usuarios.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
-    public PerfilDTO buscarPorId(Long id) {
-        Usuario usuario = usuarioRepository.buscarPorId(id);
+    @Transactional
+    public PerfilDTO buscarPorId(Integer id) {
+        Usuario usuario = repositorioUsuario.buscarPorId(id);
 
         if (usuario == null) {
             throw new EntityNotFoundException("Usuario no encontrado");
@@ -43,32 +45,20 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public PerfilDTO crear(PerfilDTO perfilDTO) {
         Usuario usuario = convertToEntity(perfilDTO);
-        Usuario savedUsuario = usuarioRepository.guardar(usuario);
+        Usuario savedUsuario = repositorioUsuario.guardar(usuario);
         return convertToDTO(savedUsuario);
     }
 
     @Override
     public List<PerfilDTO> buscarPorUsername(String username) {
-        List<Usuario> usuarios = (List<Usuario>) usuarioRepository.buscarPorUsername(username);
+        List<Usuario> usuarios = (List<Usuario>) repositorioUsuario.buscarPorUsername(username);
         return usuarios.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public void actualizarPerfil(PerfilDTO usuarioDTO) {
-        Usuario usuarioExistente = usuarioRepository.buscarPorId(usuarioDTO.getId());
-        if (usuarioExistente == null) {
-            throw new EntityNotFoundException("Usuario no encontrado");
-        }
-
-        Usuario usuarioActualizado = convertToEntity(usuarioDTO);
-
-        usuarioRepository.guardar(usuarioActualizado);
-    }
-
     // dto a entidad en
-    private Usuario convertToEntity(PerfilDTO perfilDTO) {
+    public Usuario convertToEntity(PerfilDTO perfilDTO) {
         Usuario usuario = new Usuario();
         usuario.setNombre(perfilDTO.getNombre());
         usuario.setDescripcion(perfilDTO.getDescripcion());
@@ -83,19 +73,18 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     // entidad a DTO
-    private PerfilDTO convertToDTO(Usuario usuario) {
-        return new PerfilDTO(
-                usuario.getId(),
-                usuario.getNombre(),
-                usuario.getEmail(),
-                usuario.getDescripcion(),
-                usuario.getPassword(),
-                usuario.getUsername(),
-                usuario.getPais(),
-                usuario.getRol(),
-                usuario.getActivo()
-
-        );
+    public PerfilDTO convertToDTO(Usuario usuario) {
+        PerfilDTO perfilDTO = new PerfilDTO();
+        perfilDTO.setId(usuario.getId());
+        perfilDTO.setNombre(usuario.getNombre());
+        perfilDTO.setDescripcion(usuario.getDescripcion());
+        perfilDTO.setPais(usuario.getPais());
+        perfilDTO.setEmail(usuario.getEmail());
+        perfilDTO.setActivo(usuario.getActivo());
+        perfilDTO.setRol(usuario.getRol());
+        perfilDTO.setPassword(usuario.getPassword());
+        perfilDTO.setUsername(usuario.getUsername());
+        return perfilDTO;
     }
 }
 

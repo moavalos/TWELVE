@@ -1,7 +1,7 @@
 package org.twelve.presentacion.dto;
 
 public class PerfilDTO {
-    private Long id;
+    private Integer id;
     private String nombre;
     private String email;
     private String descripcion;
@@ -16,7 +16,7 @@ public class PerfilDTO {
 
     }
 
-    public PerfilDTO(Long id, String nombre, String email, String descripcion, String password, String username, String pais, String rol, Boolean activo) {
+    public PerfilDTO(Integer id, String nombre, String email, String descripcion, String password, String username, String pais, String rol, Boolean activo) {
         this.id = id;
         this.nombre = nombre;
         this.email = email;
@@ -69,11 +69,11 @@ public class PerfilDTO {
     }
 
     // Getters y Setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
