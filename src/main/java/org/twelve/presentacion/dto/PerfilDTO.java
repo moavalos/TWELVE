@@ -1,42 +1,27 @@
 package org.twelve.presentacion.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class PerfilDTO {
-    private Integer id;
+    // Getters y Setters
+    private Long id;
     private String nombre;
     private String email;
-    private String descripcion; // Otros campos que necesites
+    private String descripcion;
+    private String username;
 
-    // Getters y Setters
-    public Integer getId() {
-        return id;
-    }
 
-    public void setId(Integer id) {
+    public PerfilDTO(Long id, String username) {
         this.id = id;
+        this.username = username;
+
     }
 
-    public String getNombre() {
-        return nombre;
-    }
+    public PerfilDTO() { //constructor vacio
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
     }
 
 

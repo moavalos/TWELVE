@@ -10,13 +10,13 @@ import java.util.List;
 public class PerfilService {
 
     private List<PerfilDTO> perfiles = new ArrayList<>();
-    private int nextId = 1; // Simulación de ID autoincrementable
+    private long nextId = 1; // Simulación de ID autoincrementable
 
     public List<PerfilDTO> getAll() {
         return perfiles;
     }
 
-    public PerfilDTO getById(Integer id) {
+    public PerfilDTO getById(Long id) {
         return perfiles.stream()
                 .filter(perfil -> perfil.getId().equals(id))
                 .findFirst()
@@ -30,9 +30,9 @@ public class PerfilService {
     }
 
     public PerfilDTO update(PerfilDTO perfil) {
-        int index = perfiles.indexOf(getById(perfil.getId()));
+        long index = perfiles.indexOf(getById(perfil.getId()));
         if (index >= 0) {
-            perfiles.set(index, perfil);
+            perfiles.set((int) index, perfil);
             return perfil;
         }
         return null;
