@@ -6,12 +6,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.twelve.dominio.ServicioLogin;
 import org.twelve.dominio.entities.Usuario;
-import org.twelve.dominio.excepcion.ContrasenasNoCoinciden;
-import org.twelve.dominio.excepcion.UsuarioExistente;
 
 import javax.servlet.http.HttpServletRequest;
 
