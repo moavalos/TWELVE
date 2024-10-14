@@ -16,8 +16,6 @@ import org.twelve.integracion.config.HibernateTestConfig;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)

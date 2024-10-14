@@ -12,7 +12,6 @@ import org.twelve.presentacion.dto.MovieDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

@@ -2,7 +2,6 @@ package org.twelve.repositoriesImpl;
 
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,18 +10,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.twelve.dominio.entities.Movie;
 import org.twelve.dominio.entities.Usuario;
-import org.twelve.dominio.entities.UsuarioMovie;
 import org.twelve.infraestructura.UsuarioMovieRepositoryImpl;
 import org.twelve.integracion.config.HibernateTestConfig;
 
 import javax.transaction.Transactional;
-
-import java.time.LocalDate;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {HibernateTestConfig.class})

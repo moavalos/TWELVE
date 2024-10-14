@@ -1,18 +1,12 @@
 package org.twelve.presentacion;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-import org.springframework.web.servlet.ModelAndView;
 import org.twelve.dominio.ServicioLogin;
 import org.twelve.dominio.UsuarioService;
 import org.twelve.dominio.entities.Usuario;
 import org.twelve.presentacion.dto.PerfilDTO;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.equalToIgnoringCase;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 
 public class UsuarioControllerTest {
 
