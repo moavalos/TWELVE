@@ -22,6 +22,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -277,7 +278,20 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testTraerDetalleDePeliculasYSeEncontro() {
+    public void testGetMovieCategoryPageDevuelveVistaDeCategoria() {
+        Integer categoriaId = 1;
+        String filtro = null;
+        List<MovieDTO> mockMovies = Arrays.asList(mock(MovieDTO.class), mock(MovieDTO.class));
+
+        when(movieService.getMoviesByCategory(categoriaId, filtro)).thenReturn(mockMovies);
+
+        ModelAndView modelAndView = movieController.getMovieCategoryPage(categoriaId, filtro);
+
+        assertThat(modelAndView.getViewName(), is("movies-categoria"));
+        }
+
+@Test
+public void testTraerDetalleDePeliculasYSeEncontro() {
         MovieDTO movieMock = mock(MovieDTO.class);
         when(movieMock.getNombre()).thenReturn("Coraline");
         when(movieService.getById(anyInt())).thenReturn(movieMock);

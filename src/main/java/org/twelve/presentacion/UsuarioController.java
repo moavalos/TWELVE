@@ -6,20 +6,29 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.twelve.dominio.PaisRepository;
 import org.twelve.dominio.UsuarioService;
+import org.twelve.dominio.entities.Pais;
 import org.twelve.dominio.entities.Usuario;
 import org.twelve.presentacion.dto.PerfilDTO;
+
+import javax.transaction.Transactional;
+import java.util.List;
 
 @Controller
 public class UsuarioController {
 
     private UsuarioService usuarioService;
 
-    @Autowired
-    public UsuarioController(UsuarioService usuarioService) {
+    private final UsuarioService usuarioService;
+    private final PaisRepository paisRepository;
+
+    public UsuarioController(UsuarioService usuarioService, PaisRepository paisRepository) {
         this.usuarioService = usuarioService;
+        this.paisRepository = paisRepository;
     }
 
+    @Transactional
     @RequestMapping(path = "/completarPerfil", method = RequestMethod.GET)
     public ModelAndView mostrarCompletarPerfil(@RequestParam("id") Long id) {
         ModelMap model = new ModelMap();
@@ -29,8 +38,15 @@ public class UsuarioController {
             return new ModelAndView("usuario-datos", model);
         }
         model.put("usuario", usuario);
+
+        List<Pais> paises = paisRepository.findAll();
+        model.put("usuario", usuario);
+        model.put("paises", paises);
+
+
         return new ModelAndView("usuario-datos", model);
     }
+
 
     @RequestMapping(path = "/completarPerfil", method = RequestMethod.POST)
     public ModelAndView completarPerfil(@ModelAttribute("usuario") Usuario usuario) {

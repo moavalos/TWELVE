@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.ModelAndView;
+import org.twelve.dominio.PaisRepository;
 import org.twelve.dominio.CategoriaService;
 import org.twelve.dominio.MovieService;
 import org.twelve.dominio.UsuarioService;
@@ -34,8 +35,21 @@ import static org.mockito.Mockito.when;
 
 public class UsuarioControllerTest {
 
+  // mirama
+//    private UsuarioService usuarioServiceMock;
+//     private Usuario usuarioMock;
+//     private PaisRepository paisRepositoryMock;
+
+//     @BeforeEach
+//     public void setUp() {
+//         usuarioServiceMock = mock(UsuarioService.class);
+//         usuarioMock = mock(Usuario.class);
+//         paisRepositoryMock = mock(PaisRepository.class);
+//         usuarioController = new UsuarioController(usuarioServiceMock, paisRepositoryMock);
+//     }
 
     private UsuarioController usuarioController;
+
     private Usuario usuario;
     private HttpServletRequest requestMock;
     private HttpSession sessionMock;

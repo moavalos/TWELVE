@@ -63,14 +63,48 @@ public class MovieRepositoryImpl implements MovieRepository {
         query.setMaxResults(10);
         return query.getResultList();
     }
+//
+//    @Override
+//    public List<Movie> findByCategoriaId(Integer idCategoria) {
+//        Session session = sessionFactory.getCurrentSession();
+//        String hql = "from Movie where idCategoria = :idCategoria";
+//        return session.createQuery(hql, Movie.class)
+//                .setParameter("idCategoria", idCategoria)
+//                .list();
+//    }
 
     @Override
     public List<Movie> findByCategoriaId(Integer idCategoria) {
+//         Session session = sessionFactory.getCurrentSession();
+//         String hql = "SELECT m FROM Movie m JOIN FETCH m.categorias c WHERE c.id = :idCategoria ";
+//         return session.createQuery(hql, Movie.class)
+//                 .setParameter("idCategoria", idCategoria)
+//                 .list();
         String hql = "FROM Movie WHERE idCategoria = :idCategoria";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setParameter("idCategoria", idCategoria);
         return query.getResultList();
     }
+
+    @Override
+    public List<Movie> findByCategoriaIdTopRated(Integer idCategoria) {
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "SELECT m FROM Movie m JOIN FETCH m.categorias c WHERE c.id = :idCategoria ORDER BY m.valoracion DESC";
+        return session.createQuery(hql, Movie.class)
+                .setParameter("idCategoria", idCategoria)
+                .list();
+    }
+
+    @Override
+    public List<Movie> findByCategoriaIdNewest(Integer idCategoria) {
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "SELECT m FROM Movie m JOIN FETCH m.categorias c WHERE c.id = :idCategoria ORDER BY m.añoLanzamiento DESC";
+        return session.createQuery(hql, Movie.class)
+                .setParameter("idCategoria", idCategoria)
+                .list();
+    }
+
+
 
     @Override
     public List<Movie> findNewestMovie() {
