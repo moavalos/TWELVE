@@ -82,7 +82,7 @@ public class MovieServiceImplTest {
 
         when(movie1.getNombre()).thenReturn("Matrix");
         when(movie1.getDuracion()).thenReturn(136.8);
-        when(movie1.getCategorias()).thenReturn(categoriasSet); // Devolvemos un Set de entidades Categoria
+        when(movie1.getCategorias()).thenReturn(categoriasSet);
 
         List<CategoriaDTO> categoriaDTOList = Arrays.asList(
                 new CategoriaDTO(1, "Acción"),
@@ -119,7 +119,6 @@ public class MovieServiceImplTest {
 
         verify(movieRepository, times(1)).save(any(Movie.class));
     }
-
 
 
     @Test
@@ -206,4 +205,57 @@ public class MovieServiceImplTest {
 
         verify(movieRepository, times(1)).findNewestMovie();
     }
+
+    @Test
+    public void testGetMoviesByCategory_SinFiltro_DeberiaRetornarPeliculasPorCategoria() {
+        Integer idCategoria = 1;
+
+        when(movieRepository.findByCategoriaId(idCategoria)).thenReturn(Arrays.asList(movie1, movie2));
+
+        List<MovieDTO> result = movieServiceImpl.getMoviesByCategory(idCategoria, null);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+
+        verify(movieRepository, times(1)).findByCategoriaId(idCategoria);
+    }
+
+    @Test
+    public void testGetMoviesByCategory_ConFilterTopRatedLlamaAlMetodoTopRated() {
+
+        Integer idCategoria = 1;
+        String filter = "topRated";
+
+        movieServiceImpl.getMoviesByCategory(idCategoria, filter);
+
+        verify(movieRepository).findByCategoriaIdTopRated(idCategoria);
+        verify(movieRepository, never()).findByCategoriaIdNewest(idCategoria);
+        verify(movieRepository, never()).findByCategoriaId(idCategoria);
+    }
+
+    @Test
+    public void testGetMoviesByCategory_ConFilterNewestLlamaAlMetodoCorrecto() {
+        Integer idCategoria = 1;
+        String filter = "newest";
+
+        movieServiceImpl.getMoviesByCategory(idCategoria, filter);
+
+        verify(movieRepository).findByCategoriaIdNewest(idCategoria);
+        verify(movieRepository, never()).findByCategoriaIdTopRated(idCategoria);
+        verify(movieRepository, never()).findByCategoriaId(idCategoria);
+    }
+
+    @Test
+    public void testGetMoviesByCategory_SinFiltroLlamaAlMetodoCorrecto() {
+        Integer idCategoria = 1;
+        String filter = null;
+
+        movieServiceImpl.getMoviesByCategory(idCategoria, filter);
+
+        verify(movieRepository).findByCategoriaId(idCategoria);
+        verify(movieRepository, never()).findByCategoriaIdTopRated(idCategoria);
+        verify(movieRepository, never()).findByCategoriaIdNewest(idCategoria);
+    }
+
+
 }

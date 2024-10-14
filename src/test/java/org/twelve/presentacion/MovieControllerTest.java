@@ -22,8 +22,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class MovieControllerTest {
 
@@ -277,6 +276,20 @@ public class MovieControllerTest {
         assertThat(modelAndView.getViewName(), is("home"));
 
         assertThat(((List<MovieDTO>) modelAndView.getModel().get("movies")).size(), is(4));
+    }
+
+    @Test
+    public void testGetMovieCategoryPageDevuelveVistaDeCategoria() {
+        Integer categoriaId = 1;
+        String filtro = null;
+        List<MovieDTO> mockMovies = Arrays.asList(mock(MovieDTO.class), mock(MovieDTO.class));
+
+        when(movieService.getMoviesByCategory(categoriaId, filtro)).thenReturn(mockMovies);
+
+        ModelAndView modelAndView = movieController.getMovieCategoryPage(categoriaId, filtro);
+
+        assertThat(modelAndView.getViewName(), is("movies-categoria"));
+
     }
 
 
