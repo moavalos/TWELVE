@@ -4,44 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil de Usuario</title>
-   <link rel="stylesheet" th:href="@{/css/perfil.css}"/>
+    <link rel="stylesheet" th:href="@{/css/perfil.css}"/>
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
-
-
 </head>
 <body>
 
 <div th:insert="fragments/header :: header"></div>
 
-<section class="profile">
-    <div class="profile-info">
-        <div class="profile-left">
-        <div class="avatar">
-           <img th:src="@{/images/user/foto-perfil.jpg}" alt="User Avatar">
-<!--            <img th:src="@{'/images/user/' + ${usuario.foto}}" alt="User Avatar" class="img-fluid">-->
+<section class="profile container mt-5">
+    <div class="profile-info row">
+        <div class="profile-left col-md-8 d-flex">
+            <div class="avatar">
+                <img th:src="@{/images/user/foto-perfil.jpg}" alt="User Avatar">
+            </div>
+            <div class="info ms-4">
+                <h1 th:text="${usuario.nombre}">Nombre del Usuario</h1>
+                <p class="mt-3" th:text="${usuario.descripcion}">Descripción del perfil</p>
+                <p>Ubicación: <span th:text="${usuario.pais}">Ubicación</span></p>
+                <p>Username: <span th:text="${usuario.username}">@username</span></p>
+            </div>
         </div>
-        <div class="info">
-<!--            <h1>Jose</h1>-->
-<!--            <button class="edit-profile">Editar perfil</button>-->
-<!--            <p>Descripción del perfil por el usuario</p>-->
-<!--            <span class="location">Argentina</span>-->
-<!--            <p class="username">@Joseee123</p>-->
-            <h1 th:text="${usuario.nombre}">Nombre del Usuario</h1>
-            <button class="edit-profile">Seguir</button>
-            <p th:text="${usuario.descripcion}">Descripción del perfil</p>
-            <p>Ubicación: <span th:text="${usuario.pais}">Ubicación</span></p>
-            <p>Username: <span th:text="${usuario.username}">@username</span></p>
-
-        </div>
-        </div>
-        <div class="stats">
+        <div class="stats col-md-4 d-flex justify-content-around">
             <div class="stat-item">
                 <p class="stat-title">Películas</p>
-                <p class="stat-number">205</p>
+                <p class="stat-number" th:text="${cantidadPeliculasVistas}"></p>
             </div>
             <div class="stat-item">
                 <p class="stat-title">Vistas este año</p>
-                <p class="stat-number">58</p>
+                <p class="stat-number" th:text="${cantidadPeliculasVistasEsteAno}">58</p>
             </div>
             <div class="stat-item">
                 <p class="stat-title">Seguidores</p>
@@ -52,30 +42,30 @@
                 <p class="stat-number">78</p>
             </div>
         </div>
-
     </div>
-    <nav class="menu">
-        <ul>
-            <li><a href="#perfil">Perfil</a></li>
-            <li><a href="#actividad">Actividad</a></li>
-            <li><a href="#peliculas">Películas</a></li>
-            <li><a href="#historial">Historial</a></li>
-            <li><a href="#reseñas">Reseñas</a></li>
-            <li><a href="#watchlist">Watchlist</a></li>
-            <li><a href="#listas">Listas</a></li>
-            <li><a href="#favoritos">Favoritos</a></li>
-            <li><a href="#tags">Tags</a></li>
-            <li><a href="#amigos">Amigos</a></li>
-            <li><a href="#invitaciones">Invitaciones</a></li>
+
+    <nav class="menu mt-5">
+        <ul class="nav justify-content-center">
+            <li class="nav-item"><a href="#perfil" class="nav-link">Perfil</a></li>
+            <li class="nav-item"><a href="#actividad" class="nav-link">Actividad</a></li>
+            <li class="nav-item"><a href="#peliculas" class="nav-link">Películas</a></li>
+            <li class="nav-item"><a href="#historial" class="nav-link">Historial</a></li>
+            <li class="nav-item"><a href="#reseñas" class="nav-link">Reseñas</a></li>
+            <li class="nav-item"><a href="#watchlist" class="nav-link">Watchlist</a></li>
+            <li class="nav-item"><a href="#listas" class="nav-link">Listas</a></li>
+            <li class="nav-item"><a href="#favoritos" class="nav-link">Favoritos</a></li>
+            <li class="nav-item"><a href="#tags" class="nav-link">Tags</a></li>
+            <li class="nav-item"><a href="#amigos" class="nav-link">Amigos</a></li>
+            <li class="nav-item"><a href="#invitaciones" class="nav-link">Invitaciones</a></li>
         </ul>
     </nav>
-
 </section>
 
-<section class="content">
-    <div class="favorite-movies">
-        <h2>Películas favoritas</h2>
-        <div class="movies-grid">
+<section class="content container my-5">
+    <!-- Sección de Películas Favoritas -->
+    <div class="favorite-movies mb-5">
+        <h2 class="text-center">Películas favoritas</h2>
+        <div class="movies-grid d-flex justify-content-between">
             <div class="movie">
                 <img th:src="@{/images/el_origen.jpg}" alt="Película 1">
             </div>
@@ -85,130 +75,57 @@
             <div class="movie">
                 <img th:src="@{/images/matrix.jpg}" alt="Película 3">
             </div>
-            <!-- Botón con símbolo "+" -->
             <div class="movie add-more">
                 <a href="url/a/la/nueva/pagina.html">Ver todas</a>
             </div>
         </div>
     </div>
 
-    <div class="watchlist">
-        <h2>Watchlist</h2>
-        <div class="movies-grid watchlist-grid">
+    <!-- Watchlist -->
+    <div class="watchlist mb-5">
+        <h2 class="text-center">Watchlist</h2>
+        <div class="movies-grid d-flex justify-content-between">
             <div class="movie">
                 <img th:src="@{/images/parasitos.jpg}" alt="Película 4">
             </div>
             <div class="movie">
                 <img th:src="@{/images/interestelar.jpg}" alt="Película 5">
             </div>
-
-            <!-- Botón con símbolo "+" -->
             <div class="movie add-more">
                 <a href="url/a/la/nueva/pagina.html">Ver todas</a>
             </div>
         </div>
     </div>
 
-
-    <div class="recent-activity">
-        <h2>Actividad reciente</h2>
-
-        <div class="review">
+    <!-- Actividad Reciente -->
+    <div class="recent-activity mb-5">
+        <h2 class="text-center">Actividad reciente</h2>
+        <div class="review d-flex mb-3">
             <img th:src="@{/images/venom.jpg}" alt="Venom 2" class="review-image">
-            <div class="review-content">
+            <div class="review-content ms-3">
                 <h3>Venom 2 (2021)</h3>
                 <p>Es la mejor peli que vi en mi vida</p>
             </div>
         </div>
-
-        <div class="review">
+        <div class="review d-flex mb-3">
             <img th:src="@{/images/orgulloyprejuicio.jpg}" alt="Orgullo y Prejuicio" class="review-image">
-            <div class="review-content">
+            <div class="review-content ms-3">
                 <h3>Orgullo y Prejuicio (2008)</h3>
-                <p>Muy buena la adaptacion</p>
+                <p>Muy buena la adaptación</p>
             </div>
         </div>
-
-        <div class="review">
+        <div class="review d-flex mb-3">
             <img th:src="@{/images/nowyouseeme.jpg}" alt="Now you see me" class="review-image">
-            <div class="review-content">
+            <div class="review-content ms-3">
                 <h3>Now you see me (2013)</h3>
-                <p>No me gusto mucho</p>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="history">
-        <h2>Historial de peliculas vistas en el año</h2>
-        <div class="months">
-            <div class="month" onclick="toggleDates('enero-dates')">Enero</div>
-            <div class="dates" id="enero-dates">
-                <div>1 de enero - Mi pobre angelito (1990)</div>
-                <div>2 de enero</div>
-                <div>3 de enero - Los Vengadores (2012)</div>
-            </div>
-
-            <div class="month" onclick="toggleDates('febrero-dates')">Febrero</div>
-            <div class="dates" id="febrero-dates">
-                <div>3 de febrero - Parasite (2019)</div>
-            </div>
-
-            <div class="month" onclick="toggleDates('marzo-dates')">Marzo</div>
-            <div class="dates" id="marzo-dates">
-                No se ha cargado ninguna pelicula
-            </div>
-
-            <div class="month" onclick="toggleDates('abril-dates')">Abril</div>
-            <div class="dates" id="abril-dates">
-                <div>25 de abril - Iron Man (2008)</div>
-            </div>
-
-            <div class="month" onclick="toggleDates('mayo-dates')">Mayo</div>
-            <div class="dates" id="mayo-dates">
-                No se ha cargado ninguna pelicula
-            </div>
-
-            <div class="month" onclick="toggleDates('junio-dates')">Junio</div>
-            <div class="dates" id="junio-dates">
-                <div>1 de junio - Inception (2010)</div>
-            </div>
-
-            <div class="month" onclick="toggleDates('julio-dates')">Julio</div>
-            <div class="dates" id="julio-dates">
-                No se ha cargado ninguna pelicula
-            </div>
-
-            <div class="month" onclick="toggleDates('agosto-dates')">Agosto</div>
-            <div class="dates" id="agosto-dates">
-                No se ha cargado ninguna pelicula
-            </div>
-
-            <div class="month" onclick="toggleDates('septiembre-dates')">Septiembre</div>
-            <div class="dates" id="septiembre-dates">
-                No se ha cargado ninguna pelicula
-            </div>
-
-            <div class="month" onclick="toggleDates('octubre-dates')">Octubre</div>
-            <div class="dates" id="octubre-dates">
-                <div>1 de octubre - Venom 2 (2021)</div>
+                <p>No me gustó mucho</p>
             </div>
         </div>
     </div>
 </section>
 
-<footer>
-    <h2>Siguiendo</h2>
-    <div class="avatar">
-        <img th:src="@{/images/user/foto-perfil (1).jpg}" alt="User Avatar" style="margin:10px;">
-        <img th:src="@{/images/user/foto-perfil (2).jpg}" alt="User Avatar" style="margin:10px;">
-        <img th:src="@{/images/user/foto-perfil (3).jpg}" alt="User Avatar" style="margin:10px;">
-        <img th:src="@{/images/user/foto-perfil (4).jpg}" alt="User Avatar" style="margin:10px;">
-        <img th:src="@{/images/user/foto-perfil (5).jpg}" alt="User Avatar" style="margin:10px;">
-        <img th:src="@{/images/user/foto-perfil (6).jpg}" alt="User Avatar" style="margin:10px;">
-    </div>
-</footer>
 <div th:insert="fragments/footer :: footer"></div>
+
 <script th:src="@{/js/perfil.js}"></script>
 </body>
 </html>
