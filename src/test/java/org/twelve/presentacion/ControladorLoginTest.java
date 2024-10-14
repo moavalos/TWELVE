@@ -94,5 +94,26 @@ public class ControladorLoginTest {
         verify(sessionMock).invalidate();
     }
 
+    @Test
+    public void nuevoUsuario_DeberiaRetornarVistaUsuarioDatosConModeloConUsuario() {
+        ModelAndView modelAndView = controladorLogin.nuevoUsuario();
+
+        assertThat(modelAndView.getViewName(), equalTo("usuario-datos"));
+
+        assertThat(modelAndView.getModel().containsKey("usuario"), equalTo(true));
+
+        assertThat(modelAndView.getModel().get("usuario"), instanceOf(Usuario.class));
+    }
+
+    @Test
+    public void nuevoUsuarioConUsuarioExistente_DeberiaMostrarError() {
+        usuarioMock.setEmail("dami@unlam.com");
+        when(servicioLoginMock.consultarUsuario(anyString(), anyString())).thenReturn(usuarioMock);
+
+        ModelAndView modelAndView = controladorLogin.nuevoUsuario();
+
+        assertThat(modelAndView.getViewName(), equalTo("usuario-datos"));
+        assertThat(modelAndView.getModel().containsKey("error"), equalTo(false));
+    }
 
 }
