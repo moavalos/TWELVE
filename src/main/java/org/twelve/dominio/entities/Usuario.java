@@ -3,6 +3,7 @@ package org.twelve.dominio.entities;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -34,5 +35,7 @@ public class Usuario {
 
     private Boolean activo = false;
 
+    @OneToMany(mappedBy = "usuario")
+    private List<UsuarioMovie> peliculasVistas;
 
 }

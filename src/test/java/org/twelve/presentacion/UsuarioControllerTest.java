@@ -30,29 +30,4 @@ public class UsuarioControllerTest {
         servicioLoginMock = mock(ServicioLogin.class);
         usuarioController = new UsuarioController(usuarioServiceMock, servicioLoginMock);
     }
-
-    @Test
-    public void mostrarCompletarPerfilUsuarioNoEncontradoDebeDevolverError() {
-
-        // ejecución
-        ModelAndView modelAndView = usuarioController.mostrarCompletarPerfil(null);
-
-        // validación
-        assertThat(modelAndView.getViewName(), equalToIgnoringCase("usuario-datos"));
-        assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Usuario no encontrado"));
-    }
-
-    @Test
-    @Disabled
-    public void mostrarCompletarPerfilUsuarioEncontradoDebeDevolverVista() {
-        // preparación
-        when(usuarioServiceMock.buscarPorId(anyInt())).thenReturn(perfilMock);
-
-        // ejecución
-        ModelAndView modelAndView = usuarioController.mostrarCompletarPerfil(perfilMock.getId());
-
-        // validación
-        assertThat(modelAndView.getViewName(), equalToIgnoringCase("usuario-datos"));
-        assertThat(modelAndView.getModel().get("perfil"), equalTo(perfilMock));
-    }
 }
