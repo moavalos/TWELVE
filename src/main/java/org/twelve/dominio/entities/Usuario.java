@@ -3,7 +3,6 @@ package org.twelve.dominio.entities;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -17,7 +16,7 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
-    private Long id;
+    private Integer id;
 
     private String email;
 
@@ -35,6 +34,5 @@ public class Usuario {
 
     private Boolean activo = false;
 
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Comentario> comentarios;
+
 }

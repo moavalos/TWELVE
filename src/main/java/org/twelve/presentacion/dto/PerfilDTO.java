@@ -1,27 +1,104 @@
 package org.twelve.presentacion.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Setter
-@Getter
 public class PerfilDTO {
-    // Getters y Setters
-    private Long id;
+    private Integer id;
     private String nombre;
     private String email;
     private String descripcion;
+    private String password;
     private String username;
+    private String pais;
+    private String rol;
+    private Boolean activo;
 
 
-    public PerfilDTO(Long id, String username) {
-        this.id = id;
-        this.username = username;
+    public PerfilDTO() {
 
     }
 
-    public PerfilDTO() { //constructor vacio
+    public PerfilDTO(Integer id, String nombre, String email, String descripcion, String password, String username, String pais, String rol, Boolean activo) {
+        this.id = id;
+        this.nombre = nombre;
+        this.email = email;
+        this.descripcion = descripcion;
+        this.password = password;
+        this.username = username;
+        this.pais = pais;
+        this.rol = rol;
+        this.activo = activo;
+    }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPais() {
+        return pais;
+    }
+
+    public void setPais(String pais) {
+        this.pais = pais;
+    }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
+
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
+
+    // Getters y Setters
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
 

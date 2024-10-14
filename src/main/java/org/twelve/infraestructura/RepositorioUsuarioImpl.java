@@ -7,6 +7,7 @@ import org.twelve.dominio.RepositorioUsuario;
 import org.twelve.dominio.entities.Usuario;
 
 import javax.persistence.Query;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository("repositorioUsuario")
@@ -20,39 +21,10 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
     }
 
     @Override
-    public Usuario buscarUsuario(String email, String password) {
-        String hql = "FROM Usuario WHERE email = :email AND password = :password";
-        Query query = sessionFactory.getCurrentSession().createQuery(hql);
-        query.setParameter("email", email);
-        query.setParameter("password", password);
-
-        return (Usuario) query.getSingleResult();
-    }
-
-    @Override
-    public void guardar(Usuario usuario) throws Exception {
-        Query query = sessionFactory.getCurrentSession().createQuery("FROM Usuario WHERE email = :email");
-        query.setParameter("email", usuario.getEmail());
-
-        if (!query.getResultList().isEmpty()) {
-            throw new Exception("El email ya está en uso");
-        }
-
+    @Transactional
+    public Usuario guardar(Usuario usuario) {
         sessionFactory.getCurrentSession().save(usuario);
-    }
-
-    @Override
-    public Usuario buscar(String email) {
-        String hql = "FROM Usuario WHERE email = :email";
-        Query query = sessionFactory.getCurrentSession().createQuery(hql);
-        query.setParameter("email", email);
-
-        return (Usuario) query.getSingleResult();
-    }
-
-    @Override
-    public void modificar(Usuario usuario) {
-        sessionFactory.getCurrentSession().update(usuario);
+        return usuario;
     }
 
     /*
@@ -75,11 +47,24 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
     }
 
     @Override
-    public Usuario buscarPorId(Long id) {
+    public Usuario buscarPorId(Integer id) {
         String hql = "FROM Usuario WHERE id = :id";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setParameter("id", id);
 
+        return (Usuario) query.getSingleResult();
+    }
+
+    @Override
+    public List<Usuario> encontrarTodos() {
+        return List.of();
+    }
+
+    @Override
+    public Usuario buscarPorUsername(String username) {
+        String hql = "FROM Usuario WHERE username = :username";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("username", username);
         return (Usuario) query.getSingleResult();
     }
 
