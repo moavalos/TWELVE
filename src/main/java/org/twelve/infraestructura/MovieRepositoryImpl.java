@@ -1,12 +1,12 @@
 package org.twelve.infraestructura;
 
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.twelve.dominio.MovieRepository;
 import org.twelve.dominio.entities.Movie;
 
+import javax.persistence.Query;
 import java.util.List;
 
 @Repository("movieRepository")
@@ -21,44 +21,47 @@ public class MovieRepositoryImpl implements MovieRepository {
 
     @Override
     public List<Movie> findAll() {
-        Session session = sessionFactory.getCurrentSession();
-        return session.createQuery("from Movie", Movie.class).list();
+        String hql = "FROM Movie";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        return query.getResultList();
     }
 
     @Override
     public Movie findById(Integer id) {
-        Session session = sessionFactory.getCurrentSession();
-        return session.get(Movie.class, id);
+        String hql = "FROM Movie WHERE id = :id";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("id", id);
+        return (Movie) query.getSingleResult();
     }
 
     @Override
     public Movie save(Movie movie) {
-        Session session = sessionFactory.getCurrentSession();
-        session.save(movie);
+        sessionFactory.getCurrentSession().save(movie);
         return movie;
     }
 
     @Override
     public List<Movie> findByTitle(String title) {
-        Session session = sessionFactory.getCurrentSession();
-        String hql = "from Movie where lower(nombre) like :title";
-        return session.createQuery(hql, Movie.class)
-                .setParameter("title", "%" + title.toLowerCase() + "%")
-                .list();
+        String hql = "FROM Movie WHERE lower(nombre) LIKE :title";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("title", "%" + title.toLowerCase() + "%");
+        return query.getResultList();
     }
 
     @Override
     public List<Movie> findMostViewed() {
-        Session session = sessionFactory.getCurrentSession();
-        String hql = "from Movie order by cantVistas desc";
-        return session.createQuery(hql, Movie.class).setMaxResults(10).list();
+        String hql = "FROM Movie ORDER BY cantVistas DESC";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setMaxResults(10);
+        return query.getResultList();
     }
 
     @Override
     public List<Movie> findTopRated() {
-        Session session = sessionFactory.getCurrentSession();
-        String hql = "from Movie order by valoracion desc";
-        return session.createQuery(hql, Movie.class).setMaxResults(10).list();
+        String hql = "FROM Movie ORDER BY valoracion DESC";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setMaxResults(10);
+        return query.getResultList();
     }
 //
 //    @Override
@@ -72,11 +75,15 @@ public class MovieRepositoryImpl implements MovieRepository {
 
     @Override
     public List<Movie> findByCategoriaId(Integer idCategoria) {
-        Session session = sessionFactory.getCurrentSession();
-        String hql = "SELECT m FROM Movie m JOIN FETCH m.categorias c WHERE c.id = :idCategoria ";
-        return session.createQuery(hql, Movie.class)
-                .setParameter("idCategoria", idCategoria)
-                .list();
+//         Session session = sessionFactory.getCurrentSession();
+//         String hql = "SELECT m FROM Movie m JOIN FETCH m.categorias c WHERE c.id = :idCategoria ";
+//         return session.createQuery(hql, Movie.class)
+//                 .setParameter("idCategoria", idCategoria)
+//                 .list();
+        String hql = "FROM Movie WHERE idCategoria = :idCategoria";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("idCategoria", idCategoria);
+        return query.getResultList();
     }
 
     @Override
@@ -101,9 +108,10 @@ public class MovieRepositoryImpl implements MovieRepository {
 
     @Override
     public List<Movie> findNewestMovie() {
-        Session session = sessionFactory.getCurrentSession();
-        String hql = "from Movie order by añoLanzamiento desc";
-        return session.createQuery(hql, Movie.class).setMaxResults(10).list();
+        String hql = "FROM Movie ORDER BY añoLanzamiento DESC";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setMaxResults(10);
+        return query.getResultList();
     }
 }
 

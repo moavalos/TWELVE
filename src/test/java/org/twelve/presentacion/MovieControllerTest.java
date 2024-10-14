@@ -23,9 +23,11 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class MovieControllerTest {
-
 
     private MovieController movieController;
     private Movie movie;
@@ -33,7 +35,6 @@ public class MovieControllerTest {
     private HttpSession sessionMock;
     private MovieService movieService;
     private CategoriaService categoriaService;
-
 
     @BeforeEach
     public void init() {
@@ -45,8 +46,6 @@ public class MovieControllerTest {
         categoriaService = mock(CategoriaService.class);
         movieController = new MovieController(movieService, categoriaService);
     }
-
-    // Todo casos
 
     @Test
     public void testObtenerVistaDeTodasLasPeliculasConFiltroDeMejorValoradas() {
@@ -289,7 +288,28 @@ public class MovieControllerTest {
         ModelAndView modelAndView = movieController.getMovieCategoryPage(categoriaId, filtro);
 
         assertThat(modelAndView.getViewName(), is("movies-categoria"));
+        }
 
+@Test
+public void testTraerDetalleDePeliculasYSeEncontro() {
+        MovieDTO movieMock = mock(MovieDTO.class);
+        when(movieMock.getNombre()).thenReturn("Coraline");
+        when(movieService.getById(anyInt())).thenReturn(movieMock);
+
+        ModelAndView modelAndView = movieController.getMovieDetails(1);
+
+        assertThat(modelAndView.getViewName(), is("detalle-pelicula"));
+        assertNotNull(modelAndView.getModel().get("movie"));
+        assertThat(((MovieDTO) modelAndView.getModel().get("movie")).getNombre(), is("Coraline"));
+    }
+
+    @Test
+    public void testTraerDetalleDePeliculasPeroNoSeEncontro() {
+        when(movieService.getById(anyInt())).thenReturn(null);
+
+        ModelAndView modelAndView = movieController.getMovieDetails(99);
+
+        assertThat(modelAndView.getViewName(), is("detalle-pelicula"));
     }
 
 

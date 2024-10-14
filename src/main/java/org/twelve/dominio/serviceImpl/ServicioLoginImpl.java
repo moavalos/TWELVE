@@ -36,7 +36,7 @@ public class ServicioLoginImpl implements ServicioLogin {
 
     // busco solo por mail, comparo password encriptada de la bdd con la del usuario
     @Override
-    public void registrar(Usuario usuario, String confirmPassword) throws UsuarioExistente {
+    public void registrar(Usuario usuario, String confirmPassword) throws Exception {
         validarContrasenas(usuario.getPassword(), confirmPassword);
         verificarUsuarioExistente(usuario);
 

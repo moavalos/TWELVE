@@ -17,10 +17,10 @@ public class HibernateTestConfig {
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/twelvetest");
+        dataSource.setDriverClassName("org.hsqldb.jdbcDriver");
+        dataSource.setUrl("jdbc:hsqldb:mem:twelve");
         dataSource.setUsername("usertest");
-        dataSource.setPassword("passwordtest");
+        dataSource.setPassword("");
         return dataSource;
     }
 
@@ -40,7 +40,7 @@ public class HibernateTestConfig {
 
     private Properties hibernateProperties() {
         Properties properties = new Properties();
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
         properties.setProperty("hibernate.show_sql", "true");
         properties.setProperty("hibernate.format_sql", "true");
         properties.setProperty("hibernate.hbm2ddl.auto", "create");

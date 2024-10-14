@@ -40,11 +40,18 @@ public class ControladorLogin {
         Usuario usuarioBuscado = servicioLogin.consultarUsuario(datosLogin.getEmail(), datosLogin.getPassword());
         if (usuarioBuscado != null) {
             request.getSession().setAttribute("ROL", usuarioBuscado.getRol());
+            request.getSession().setAttribute("usuario", usuarioBuscado);
             return new ModelAndView("redirect:/home");
         } else {
             model.put("error", "Usuario o clave incorrecta");
         }
         return new ModelAndView("login", model);
+    }
+
+    @RequestMapping(path = "/salir", method = RequestMethod.GET)
+    public ModelAndView salir(HttpServletRequest request) {
+        request.getSession().invalidate(); // cierra sesion
+        return new ModelAndView("redirect:/home");
     }
 
     @RequestMapping(path = "/registrarme", method = RequestMethod.POST)
@@ -57,8 +64,8 @@ public class ControladorLogin {
             model.put("error", "El usuario ya existe");
             return new ModelAndView("nuevo-usuario", model);
         }  catch (ContrasenasNoCoinciden e) {
-        model.put("error", "Las contraseñas no coinciden");
-        return new ModelAndView("nuevo-usuario", model);
+            model.put("error", "Las contraseñas no coinciden");
+            return new ModelAndView("nuevo-usuario", model);
         } catch (Exception e) {
             model.put("error", "Error al registrar el nuevo usuario");
             return new ModelAndView("nuevo-usuario", model);

@@ -160,6 +160,7 @@ VALUES ('Sin Novedades en el Frente',
         'Alemán',
         'All Quiet on the Western Front, Sin Novedades en el Frente (España)');
 
+
 -- El Origen
 INSERT INTO Movie (nombre,
                    descripcion,
@@ -398,4 +399,14 @@ VALUES (1, 6),
        (10, 1),
        (11, 1),
        (11, 5);
+
+
+
+INSERT INTO Usuario (activo, descripcion, email, id, nombre, pais, password, rol, username) VALUES
+(true, 'Amante del cine de acción y aventura', 'jose@example.com', 1, 'Jose', 'Argentina', 'hashed_password_1', 'usuario', '@Joseee123'),
+(true, 'Fan de las películas de terror y suspenso', 'maria@example.com', 2, 'Maria', 'España', 'hashed_password_2', 'usuario', '@Maria456'),
+(true, 'Cineasta en formación, adicto a las comedias', 'luis@example.com', 3, 'Luis', 'México', 'hashed_password_3', 'usuario', '@LuisCine'),
+(true, 'Crítico de cine, especializado en dramas', 'ana@example.com', 4, 'Ana', 'Colombia', 'hashed_password_4', 'usuario', '@AnaCritica'),
+(true, 'Entusiasta de las películas de ciencia ficción', 'carla@example.com', 5, 'Carla', 'Chile', 'hashed_password_5', 'usuario', '@CarlaSciFi'),
+(true, 'Adicto a las series y películas de fantasía', 'pablo@example.com', 6, 'Pablo', 'Perú', 'hashed_password_6', 'usuario', '@PabloFantasia');
 

@@ -1,13 +1,13 @@
 package org.twelve.infraestructura;
 
-import org.hibernate.Criteria;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.twelve.dominio.RepositorioUsuario;
 import org.twelve.dominio.entities.Usuario;
+
+import javax.persistence.Query;
+import java.util.List;
 
 @Repository("repositorioUsuario")
 public class RepositorioUsuarioImpl implements RepositorioUsuario {
@@ -21,24 +21,31 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
 
     @Override
     public Usuario buscarUsuario(String email, String password) {
+        String hql = "FROM Usuario WHERE email = :email AND password = :password";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("email", email);
+        query.setParameter("password", password);
 
-        final Session session = sessionFactory.getCurrentSession();
-        return (Usuario) session.createCriteria(Usuario.class)
-                .add(Restrictions.eq("email", email))
-                .add(Restrictions.eq("password", password))
-                .uniqueResult();
+        return (Usuario) query.getSingleResult();
     }
 
     @Override
-    public void guardar(Usuario usuario) {
+    public Usuario guardar(Usuario usuario) {
+        Query query = sessionFactory.getCurrentSession().createQuery("FROM Usuario WHERE email = :email");
+        query.setParameter("email", usuario.getEmail());
+
+
         sessionFactory.getCurrentSession().save(usuario);
+        return usuario;
     }
 
     @Override
     public Usuario buscar(String email) {
-        return (Usuario) sessionFactory.getCurrentSession().createCriteria(Usuario.class)
-                .add(Restrictions.eq("email", email))
-                .uniqueResult();
+        String hql = "FROM Usuario WHERE email = :email";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("email", email);
+
+        return (Usuario) query.getSingleResult();
     }
 
     @Override
@@ -53,17 +60,38 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
     */
     @Override
     public Usuario buscarUsuarioPorEmail(String email) {
-        Session session = sessionFactory.getCurrentSession();
-        Criteria criteria = session.createCriteria(Usuario.class);
-        criteria.add(Restrictions.eq("email", email));
-        return (Usuario) criteria.uniqueResult(); // Devuelve un Usuario o null
+        String hql = "FROM Usuario WHERE email = :email";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("email", email);
+
+        List<Usuario> usuarios = query.getResultList();
+        if (usuarios.isEmpty()) {
+            return null;  // Si no se encuentra el usuario, devuelve null
+        }
+
+        return usuarios.get(0);  // Devuelve el primer (y único) resultado
     }
 
     @Override
     public Usuario buscarPorId(Long id) {
-        return (Usuario) sessionFactory.getCurrentSession().createCriteria(Usuario.class)
-                .add(Restrictions.eq("id", id))
-                .uniqueResult();
+        String hql = "FROM Usuario WHERE id = :id";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("id", id);
+
+        return (Usuario) query.getSingleResult();
+    }
+
+    @Override
+    public List<Usuario> encontrarTodos() {
+        return List.of();
+    }
+
+    @Override
+    public Usuario buscarPorUsername(String username) {
+        String hql = "FROM Usuario WHERE username = :username";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("username", username);
+        return (Usuario) query.getSingleResult();
     }
 
 }
