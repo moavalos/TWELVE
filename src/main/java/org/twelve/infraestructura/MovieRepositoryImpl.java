@@ -81,15 +81,6 @@ public class MovieRepositoryImpl implements MovieRepository {
         return query.getResultList();
     }
 
-
-    //para buscara el comentario por peli
-    @Override
-    public List<Comentario> findComentariosByMovieId(Integer idMovie) {
-        String hql = "SELECT c FROM Comentario c WHERE c.movie.id = :idMovie";
-        Query query = sessionFactory.getCurrentSession().createQuery(hql);
-        query.setParameter("idMovie", idMovie);
-        return query.getResultList();
-    }
 }
 
 

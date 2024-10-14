@@ -62,7 +62,7 @@ public class ComentarioServiceImpl implements ComentarioService {
 
     private void actualizarValoracionPelicula(Movie movie) {
 
-        List<Comentario> comentarios = movieRepository.findComentariosByMovieId(movie.getId());
+        List<Comentario> comentarios = comentarioRepository.findByIdMovie(movie.getId());
 
         double promedio = comentarios.stream().mapToDouble(Comentario::getValoracion).average().orElse(0); //sino hay comentario el promedio es 0
 
