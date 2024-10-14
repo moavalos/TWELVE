@@ -3,7 +3,9 @@ package org.twelve.dominio.serviceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.twelve.dominio.RepositorioUsuario;
+import org.twelve.dominio.UsuarioMovieRepository;
 import org.twelve.dominio.UsuarioService;
+import org.twelve.dominio.entities.Movie;
 import org.twelve.dominio.entities.Usuario;
 import org.twelve.dominio.excepcion.ContrasenasNoCoinciden;
 import org.twelve.dominio.excepcion.UsuarioExistente;
@@ -18,10 +20,12 @@ import java.util.stream.Collectors;
 public class UsuarioServiceImpl implements UsuarioService {
 
     private RepositorioUsuario repositorioUsuario;
+    private UsuarioMovieRepository usuarioMovieRepository;
 
     @Autowired
-    public UsuarioServiceImpl(RepositorioUsuario repositorioUsuario) {
+    public UsuarioServiceImpl(RepositorioUsuario repositorioUsuario, UsuarioMovieRepository usuarioMovieRepository) {
         this.repositorioUsuario = repositorioUsuario;
+        this.usuarioMovieRepository = usuarioMovieRepository;
     }
 
     @Override
@@ -39,7 +43,16 @@ public class UsuarioServiceImpl implements UsuarioService {
             throw new EntityNotFoundException("Usuario no encontrado");
         }
 
-        return convertToDTO(usuario);
+        int cantidadPeliculasVistas = usuarioMovieRepository.obtenerCantidadPeliculasVistas(id);
+        int cantidadPeliculasVistasEsteAno = usuarioMovieRepository.obtenerCantidadPeliculasVistasEsteAno(id);
+        List<Movie> peliculasFavoritas = usuarioMovieRepository.obtenerPeliculasFavoritas(id);
+
+        PerfilDTO perfilDTO = convertToDTO(usuario);
+        perfilDTO.setCantidadPeliculasVistas(cantidadPeliculasVistas);
+        perfilDTO.setCantidadPeliculasVistasEsteAno(cantidadPeliculasVistasEsteAno);
+        perfilDTO.setPeliculasFavoritas(peliculasFavoritas);
+
+        return perfilDTO;
     }
 
     @Override
@@ -57,7 +70,6 @@ public class UsuarioServiceImpl implements UsuarioService {
                 .collect(Collectors.toList());
     }
 
-    // dto a entidad en
     public Usuario convertToEntity(PerfilDTO perfilDTO) {
         Usuario usuario = new Usuario();
         usuario.setNombre(perfilDTO.getNombre());
@@ -72,7 +84,6 @@ public class UsuarioServiceImpl implements UsuarioService {
         return usuario;
     }
 
-    // entidad a DTO
     public PerfilDTO convertToDTO(Usuario usuario) {
         PerfilDTO perfilDTO = new PerfilDTO();
         perfilDTO.setId(usuario.getId());

@@ -3,6 +3,7 @@ package org.twelve.dominio.entities;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -39,16 +40,14 @@ public class Movie {
 
     //private Cast cast;
 
-    //private Director director;
-
     private Integer idComentario;
 
+    // favorita
     private Integer likes;
 
     @Column(length = 5)
     private Double valoracion;
 
-    // Nuevos campos agregados
     private String director;
 
     private String escritor;
@@ -56,4 +55,8 @@ public class Movie {
     private String idioma;
 
     private String tambienConocidaComo;
+
+    @OneToMany(mappedBy = "pelicula")
+    private List<UsuarioMovie> usuariosQueLaVieron;
+
 }
