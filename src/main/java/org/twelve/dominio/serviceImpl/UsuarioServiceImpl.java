@@ -7,8 +7,6 @@ import org.twelve.dominio.UsuarioMovieRepository;
 import org.twelve.dominio.UsuarioService;
 import org.twelve.dominio.entities.Movie;
 import org.twelve.dominio.entities.Usuario;
-import org.twelve.dominio.excepcion.ContrasenasNoCoinciden;
-import org.twelve.dominio.excepcion.UsuarioExistente;
 import org.twelve.presentacion.dto.PerfilDTO;
 
 import javax.persistence.EntityNotFoundException;
