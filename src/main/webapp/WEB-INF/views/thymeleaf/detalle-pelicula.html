@@ -44,7 +44,7 @@
             <p th:text="${movie.frase}"></p>
             <p>
                 <i class="bi bi-eye"></i> Vistas: <span th:text="${movie.cantVistas}"></span> |
-                &nbsp; Score: <span th:text="${movie.valoracion}"></span>/10 |
+                &nbsp; Score: <span th:text="${#numbers.formatDecimal(movie.valoracion, 1, 1)}"></span>/10 |
                 &nbsp; Duración: <span th:text="${movie.duracion}"></span> |
                 &nbsp; Categoría: <span th:text="${movie.idCategoria}"></span> |
                 &nbsp; <span th:text="${movie.anioLanzamiento}"></span>

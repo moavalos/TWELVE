@@ -12,4 +12,5 @@ public interface ComentarioService {
     List<ComentarioDTO> obtenerComentariosPorPelicula(Integer idMovie);
 
     Comentario convertToEntity(ComentarioDTO comentarioDTO);
+
 }

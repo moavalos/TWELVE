@@ -37,21 +37,13 @@ public class ComentarioServiceImpl implements ComentarioService {
         List<Comentario> comentarios = comentarioRepository.findByIdMovie(idMovie);
 
         // magia
-        return comentarios.stream()
-                .map(comentario -> {
-                    Usuario usuario = comentario.getUsuario();
-                    Movie movie = comentario.getMovie();
+        return comentarios.stream().map(comentario -> {
+            Usuario usuario = comentario.getUsuario();
+            Movie movie = comentario.getMovie();
 
-                    return new ComentarioDTO(
-                            usuario.getId(),
-                            movie.getId(),
-                            comentario.getDescripcion(),
-                            comentario.getValoracion(),
-                            comentario.getLikes(),
-                            new PerfilDTO(usuario.getId(), usuario.getUsername()) // para q diga el nombre de usuario
-                    );
-                })
-                .collect(Collectors.toList());
+            return new ComentarioDTO(usuario.getId(), movie.getId(), comentario.getDescripcion(), comentario.getValoracion(), comentario.getLikes(), new PerfilDTO(usuario.getId(), usuario.getUsername()) // para q diga el nombre de usuario
+            );
+        }).collect(Collectors.toList());
     }
 
     @Transactional
@@ -61,6 +53,21 @@ public class ComentarioServiceImpl implements ComentarioService {
 
         //hacer que cuando se guarde el comentario se actualice el puntaje en pelicula
         //comooooooooooo
+
+        Movie movie = comentario.getMovie();
+        actualizarValoracionPelicula(movie);
+
+    }
+
+
+    private void actualizarValoracionPelicula(Movie movie) {
+
+        List<Comentario> comentarios = movieRepository.findComentariosByMovieId(movie.getId());
+
+        double promedio = comentarios.stream().mapToDouble(Comentario::getValoracion).average().orElse(0); //sino hay comentario el promedio es 0
+
+        movie.setValoracion(promedio);
+        movieRepository.save(movie);
 
     }
 

@@ -4,6 +4,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.twelve.dominio.MovieRepository;
+import org.twelve.dominio.entities.Comentario;
 import org.twelve.dominio.entities.Movie;
 
 import javax.persistence.Query;
@@ -77,6 +78,16 @@ public class MovieRepositoryImpl implements MovieRepository {
         String hql = "FROM Movie ORDER BY añoLanzamiento DESC";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setMaxResults(10);
+        return query.getResultList();
+    }
+
+
+    //para buscara el comentario por peli
+    @Override
+    public List<Comentario> findComentariosByMovieId(Integer idMovie) {
+        String hql = "SELECT c FROM Comentario c WHERE c.movie.id = :idMovie";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("idMovie", idMovie);
         return query.getResultList();
     }
 }
