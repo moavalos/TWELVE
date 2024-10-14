@@ -1,7 +1,11 @@
 package org.twelve.presentacion.dto;
 
+import org.twelve.dominio.entities.Movie;
+
+import java.util.List;
+
 public class PerfilDTO {
-    private Long id;
+    private Integer id;
     private String nombre;
     private String email;
     private String descripcion;
@@ -11,22 +15,11 @@ public class PerfilDTO {
     private String rol;
     private Boolean activo;
 
+    private Integer cantidadPeliculasVistas;
+    private Integer cantidadPeliculasVistasEsteAno;
+    private List<Movie> peliculasFavoritas;
 
-    public PerfilDTO() {
-
-    }
-
-    public PerfilDTO(Long id, String nombre, String email, String descripcion, String password, String username, String pais, String rol, Boolean activo) {
-        this.id = id;
-        this.nombre = nombre;
-        this.email = email;
-        this.descripcion = descripcion;
-        this.password = password;
-        this.username = username;
-        this.pais = pais;
-        this.rol = rol;
-        this.activo = activo;
-    }
+    public PerfilDTO() {}
 
     public String getUsername() {
         return username;
@@ -68,12 +61,9 @@ public class PerfilDTO {
         this.activo = activo;
     }
 
-    // Getters y Setters
-    public Long getId() {
-        return id;
-    }
+    public Integer getId() { return id; }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -99,6 +89,30 @@ public class PerfilDTO {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public Integer getCantidadPeliculasVistas() {
+        return cantidadPeliculasVistas;
+    }
+
+    public void setCantidadPeliculasVistas(int cantidadPeliculasVistas) {
+        this.cantidadPeliculasVistas = cantidadPeliculasVistas;
+    }
+
+    public Integer getCantidadPeliculasVistasEsteAno() {
+        return cantidadPeliculasVistasEsteAno;
+    }
+
+    public void setCantidadPeliculasVistasEsteAno(Integer cantidadPeliculasVistasEsteAno) {
+        this.cantidadPeliculasVistasEsteAno = cantidadPeliculasVistasEsteAno;
+    }
+
+    public List<Movie> getPeliculasFavoritas() {
+        return peliculasFavoritas;
+    }
+
+    public void setPeliculasFavoritas(List<Movie> peliculasFavoritas) {
+        this.peliculasFavoritas = peliculasFavoritas;
     }
 
 

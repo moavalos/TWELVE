@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -51,10 +52,9 @@ public class Movie {
 
     //private Cast cast;
 
-    //private Director director;
-
     private Integer idComentario;
 
+    // favorita
     private Integer likes;
 
     @Column(length = 5)
@@ -67,5 +67,8 @@ public class Movie {
     private String idioma;
 
     private String tambienConocidaComo;
+
+    @OneToMany(mappedBy = "pelicula")
+    private List<UsuarioMovie> usuariosQueLaVieron;
 
 }

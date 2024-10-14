@@ -7,6 +7,7 @@ import org.twelve.dominio.RepositorioUsuario;
 import org.twelve.dominio.entities.Usuario;
 
 import javax.persistence.Query;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository("repositorioUsuario")
@@ -20,37 +21,10 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
     }
 
     @Override
-    public Usuario buscarUsuario(String email, String password) {
-        String hql = "FROM Usuario WHERE email = :email AND password = :password";
-        Query query = sessionFactory.getCurrentSession().createQuery(hql);
-        query.setParameter("email", email);
-        query.setParameter("password", password);
-
-        return (Usuario) query.getSingleResult();
-    }
-
-    @Override
+    @Transactional
     public Usuario guardar(Usuario usuario) {
-        Query query = sessionFactory.getCurrentSession().createQuery("FROM Usuario WHERE email = :email");
-        query.setParameter("email", usuario.getEmail());
-
-
         sessionFactory.getCurrentSession().save(usuario);
         return usuario;
-    }
-
-    @Override
-    public Usuario buscar(String email) {
-        String hql = "FROM Usuario WHERE email = :email";
-        Query query = sessionFactory.getCurrentSession().createQuery(hql);
-        query.setParameter("email", email);
-
-        return (Usuario) query.getSingleResult();
-    }
-
-    @Override
-    public void modificar(Usuario usuario) {
-        sessionFactory.getCurrentSession().update(usuario);
     }
 
     /*
@@ -73,7 +47,7 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
     }
 
     @Override
-    public Usuario buscarPorId(Long id) {
+    public Usuario buscarPorId(Integer id) {
         String hql = "FROM Usuario WHERE id = :id";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setParameter("id", id);
