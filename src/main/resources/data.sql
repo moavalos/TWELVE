@@ -23,30 +23,6 @@ VALUES (1, 'Argentina'),
        (6, 'Italia');
 
 -- tabla de relacion entre peliculas y categorias
-INSERT INTO movie_categoria (movie_id, categoria_id)
-VALUES (1, 6),
-       (1, 3),
-       (2, 2),
-       (2, 7),
-       (3, 5),
-       (4, 8),
-       (4, 4),
-       (5, 2),
-       (5, 4),
-       (5, 7),
-       (6, 1),
-       (6, 3),
-       (7, 2),
-       (7, 5),
-       (7, 4),
-       (8, 3),
-       (9, 4),
-       (9, 1),
-       (10, 5),
-       (10, 1),
-       (11, 1),
-       (11, 5);
-
 
 
 INSERT INTO Usuario (activo, descripcion, email, id, nombre, pais, password, rol, username) VALUES
@@ -116,3 +92,29 @@ VALUES
     (1, 6, '2023-10-15', false), -- Usuario 1 ve "El Origen"
     (1, 7, '2023-10-16', true),  -- Usuario 1 ve "El Caballero de la Noche"
     (1, 8, '2023-10-17', false); -- Usuario 1 ve "Matrix"
+
+
+INSERT INTO movie_categoria (movie_id, categoria_id)
+VALUES (1, 6),
+       (1, 3),
+       (2, 2),
+       (2, 7),
+       (3, 5),
+       (4, 8),
+       (4, 4),
+       (5, 2),
+       (5, 4),
+       (5, 7),
+       (6, 1),
+       (6, 3),
+       (7, 2),
+       (7, 5),
+       (7, 4),
+       (8, 3),
+       (9, 4),
+       (9, 1),
+       (10, 5),
+       (10, 1),
+       (11, 1),
+       (11, 5);
+

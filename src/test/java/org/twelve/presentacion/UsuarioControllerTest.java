@@ -19,27 +19,8 @@ import static org.mockito.Mockito.*;
 
 public class UsuarioControllerTest {
 
-  // mirama
-//    private UsuarioService usuarioServiceMock;
-//     private Usuario usuarioMock;
-//     private PaisRepository paisRepositoryMock;
 
-//     @BeforeEach
-//     public void setUp() {
-//         usuarioServiceMock = mock(UsuarioService.class);
-//         usuarioMock = mock(Usuario.class);
-//         paisRepositoryMock = mock(PaisRepository.class);
-//         usuarioController = new UsuarioController(usuarioServiceMock, paisRepositoryMock);
-//     }
-
-    // private UsuarioController usuarioController;
-
-    // private Usuario usuario;
-    // private HttpServletRequest requestMock;
-    // private HttpSession sessionMock;
-    // private UsuarioService usuarioService;
-
-
+    private PaisRepository paisRepositoryMock;
     private UsuarioController usuarioController;
     private UsuarioService usuarioServiceMock;
     private ServicioLogin servicioLoginMock;
@@ -52,6 +33,7 @@ public class UsuarioControllerTest {
         usuarioMock = mock(Usuario.class);
         perfilMock = mock(PerfilDTO.class);
         servicioLoginMock = mock(ServicioLogin.class);
-        usuarioController = new UsuarioController(usuarioServiceMock, servicioLoginMock);
+        paisRepositoryMock = mock(PaisRepository.class);
+        usuarioController = new UsuarioController(usuarioServiceMock, paisRepositoryMock, servicioLoginMock);
     }
 }

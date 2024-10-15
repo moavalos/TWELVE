@@ -3,6 +3,7 @@ package org.twelve.presentacion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
+import org.twelve.dominio.PaisRepository;
 import org.twelve.dominio.ServicioLogin;
 import org.twelve.dominio.entities.Usuario;
 
@@ -22,6 +23,7 @@ public class ControladorLoginTest {
     private HttpServletRequest requestMock;
     private HttpSession sessionMock;
     private ServicioLogin servicioLoginMock;
+    private PaisRepository paisRepositoryMock;
 
     @BeforeEach
     public void init() {
@@ -31,7 +33,8 @@ public class ControladorLoginTest {
         requestMock = mock(HttpServletRequest.class);
         sessionMock = mock(HttpSession.class);
         servicioLoginMock = mock(ServicioLogin.class);
-        controladorLogin = new ControladorLogin(servicioLoginMock);
+        paisRepositoryMock = mock(PaisRepository.class);
+        controladorLogin = new ControladorLogin(servicioLoginMock, paisRepositoryMock);
     }
 
     @Test

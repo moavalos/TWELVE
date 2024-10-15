@@ -25,4 +25,10 @@ public class CategoriaRepositoryImpl implements CategoriaRepository {
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         return query.getResultList();
     }
+
+    @Override
+    public Categoria save(Categoria categoria) {
+        sessionFactory.getCurrentSession().save(categoria);
+        return categoria;
+    }
 }
