@@ -4,11 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.twelve.dominio.MovieRepository;
 import org.twelve.dominio.MovieService;
+import org.twelve.dominio.entities.Categoria;
 import org.twelve.dominio.entities.Movie;
+import org.twelve.presentacion.dto.CategoriaDTO;
 import org.twelve.presentacion.dto.MovieDTO;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service("movieService")
@@ -68,6 +73,30 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    public List<MovieDTO> getMoviesByCategory(Integer idCategoria, String filter) {
+        List<Movie> movies;
+
+        if (filter != null) {
+            switch (filter) {
+                case "topRated":
+                    movies = movieRepository.findByCategoriaIdTopRated(idCategoria);
+                    break;
+                case "newest":
+                    movies = movieRepository.findByCategoriaIdNewest(idCategoria);
+                    break;
+                default:
+                    movies = movieRepository.findByCategoriaId(idCategoria);
+                    break;
+            }
+        } else {
+            movies = movieRepository.findByCategoriaId(idCategoria);
+        }
+
+        return movies.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+
+    @Override
     public List<MovieDTO> getMovieByAnio() {
         List<Movie> newestMovies = movieRepository.findNewestMovie();
         return newestMovies.stream().map(this::convertToDTO).collect(Collectors.toList());
@@ -76,13 +105,13 @@ public class MovieServiceImpl implements MovieService {
     // dto a entidad en
     private Movie convertToEntity(MovieDTO movieDTO) {
         Movie movie = new Movie();
+        movie.setId(movieDTO.getId());
         movie.setNombre(movieDTO.getNombre());
         movie.setDescripcion(movieDTO.getDescripcion());
         movie.setFrase(movieDTO.getFrase());
         movie.setDuracion(movieDTO.getDuracion());
         movie.setPais(movieDTO.getPais());
         movie.setCantVistas(movieDTO.getCantVistas());
-        movie.setIdCategoria(movieDTO.getIdCategoria());
         movie.setAñoLanzamiento(movieDTO.getAnioLanzamiento());
         movie.setImagen(movieDTO.getImagen());
         movie.setLikes(movieDTO.getLikes());
@@ -91,11 +120,31 @@ public class MovieServiceImpl implements MovieService {
         movie.setEscritor(movieDTO.getEscritor());
         movie.setIdioma(movieDTO.getIdioma());
         movie.setTambienConocidaComo(movieDTO.getTambienConocidaComo());
+
+
+        if (movieDTO.getCategorias() != null) {
+            Set<Categoria> categorias = new HashSet<>();
+            for (CategoriaDTO categoriaDTO : movieDTO.getCategorias()) {
+                Categoria categoria = new Categoria();
+                categoria.setId(categoriaDTO.getId());
+                categoria.setNombre(categoriaDTO.getNombre());
+                categorias.add(categoria);
+            }
+            movie.setCategorias(categorias);
+        }
+
         return movie;
     }
 
-    // entidad a DTO
     private MovieDTO convertToDTO(Movie movie) {
+        List<CategoriaDTO> categoriasDTOs = new ArrayList<>();
+        for (Categoria categoria : movie.getCategorias()) {
+            CategoriaDTO categoriaDTO = new CategoriaDTO();
+            categoriaDTO.setId(categoria.getId());
+            categoriaDTO.setNombre(categoria.getNombre());
+            categoriasDTOs.add(categoriaDTO);
+        }
+
         return new MovieDTO(
                 movie.getId(),
                 movie.getNombre(),
@@ -104,7 +153,7 @@ public class MovieServiceImpl implements MovieService {
                 movie.getDuracion(),
                 movie.getPais(),
                 movie.getCantVistas(),
-                movie.getIdCategoria(),
+                categoriasDTOs,
                 movie.getAñoLanzamiento(),
                 movie.getImagen(),
                 movie.getLikes(),
@@ -115,5 +164,6 @@ public class MovieServiceImpl implements MovieService {
                 movie.getTambienConocidaComo()
         );
     }
+
 }
 

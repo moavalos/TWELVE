@@ -31,12 +31,16 @@
         <div class="col-md-9">
             <h2 th:text="${movie.nombre}"></h2>
             <p th:text="${movie.frase}"></p>
-            <p><i class="bi bi-eye"></i>Vitas: <span th:text="${movie.cantVistas}"></span> | &nbsp; Score: <span
+            <p><i class="bi bi-eye"></i>Vistas: <span th:text="${movie.cantVistas}"></span> |
+                Score: <span
                     th:text="${movie.valoracion}"></span>/10 |
                 &nbsp;Duracion:
-                <span th:text="${movie.duracion}"></span> &nbsp; | &nbsp;
-                Categoria: <span th:text="${movie.idCategoria}"></span> &nbsp; | &nbsp; <span
-                        th:text="${movie.anioLanzamiento}"></span></p>
+                <span th:text="${movie.duracion}"></span> &nbsp; |
+                Categorías:
+                <span th:each="categoria, iterStat : ${movie.categorias}">
+    <a th:href="@{/categoria/{id}(id=${categoria.id})}" th:text="${categoria.nombre}"></a><span th:if="${!iterStat.last}"> · </span>
+</span>
+                | <span th:text="${movie.anioLanzamiento}"></span></p>
             <hr>
             <!-- Sección de detalles -->
             <div class="row">

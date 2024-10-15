@@ -3,18 +3,21 @@ package org.twelve.servicesImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.twelve.dominio.MovieRepository;
+import org.twelve.dominio.entities.Categoria;
 import org.twelve.dominio.entities.Movie;
 import org.twelve.dominio.serviceImpl.MovieServiceImpl;
+import org.twelve.presentacion.dto.CategoriaDTO;
 import org.twelve.presentacion.dto.MovieDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class MovieServiceImplTest {
@@ -72,8 +75,19 @@ public class MovieServiceImplTest {
 
     @Test
     public void testCreate_CuandoSeCreaPelicula_DeberiaRetornarMovieDTO() {
+        Categoria categoria1 = new Categoria(1, "Acción");
+        Categoria categoria2 = new Categoria(2, "Ciencia Ficción");
+
+        Set<Categoria> categoriasSet = new HashSet<>(Arrays.asList(categoria1, categoria2));
+
         when(movie1.getNombre()).thenReturn("Matrix");
         when(movie1.getDuracion()).thenReturn(136.8);
+        when(movie1.getCategorias()).thenReturn(categoriasSet);
+
+        List<CategoriaDTO> categoriaDTOList = Arrays.asList(
+                new CategoriaDTO(1, "Acción"),
+                new CategoriaDTO(2, "Ciencia Ficción")
+        );
 
         MovieDTO movieDTO = new MovieDTO(
                 1,
@@ -83,7 +97,7 @@ public class MovieServiceImplTest {
                 136.8,
                 "USA",
                 5000,
-                1,
+                categoriaDTOList,
                 "1999",
                 "matrix.jpg",
                 3000,
@@ -101,6 +115,7 @@ public class MovieServiceImplTest {
         assertNotNull(result);
         assertEquals("Matrix", result.getNombre());
         assertEquals(136.8, result.getDuracion());
+        assertEquals(categoriaDTOList.size(), result.getCategorias().size());
 
         verify(movieRepository, times(1)).save(any(Movie.class));
     }
@@ -156,8 +171,13 @@ public class MovieServiceImplTest {
 
     @Test
     public void testGetMoviesByCategory_CuandoCategoriaExiste_DeberiaRetornarListaDeMovieDTO() {
-        when(movie1.getIdCategoria()).thenReturn(1);
-        when(movie2.getIdCategoria()).thenReturn(1);
+        Categoria categoria = new Categoria(1, "Acción");
+
+        Set<Categoria> categoriasSet1 = new HashSet<>(Arrays.asList(categoria));
+        Set<Categoria> categoriasSet2 = new HashSet<>(Arrays.asList(categoria));
+
+        when(movie1.getCategorias()).thenReturn(categoriasSet1);
+        when(movie2.getCategorias()).thenReturn(categoriasSet2);
 
         when(movieRepository.findByCategoriaId(1)).thenReturn(Arrays.asList(movie1, movie2));
 
@@ -165,8 +185,8 @@ public class MovieServiceImplTest {
 
         assertNotNull(result);
         assertEquals(2, result.size());
-        assertEquals(1, result.get(0).getIdCategoria());
-        assertEquals(1, result.get(1).getIdCategoria());
+        assertTrue(result.get(0).getCategorias().stream().anyMatch(c -> c.getId().equals(1)));
+        assertTrue(result.get(1).getCategorias().stream().anyMatch(c -> c.getId().equals(1)));
 
         verify(movieRepository, times(1)).findByCategoriaId(1);
     }
@@ -185,4 +205,57 @@ public class MovieServiceImplTest {
 
         verify(movieRepository, times(1)).findNewestMovie();
     }
+
+    @Test
+    public void testGetMoviesByCategory_SinFiltro_DeberiaRetornarPeliculasPorCategoria() {
+        Integer idCategoria = 1;
+
+        when(movieRepository.findByCategoriaId(idCategoria)).thenReturn(Arrays.asList(movie1, movie2));
+
+        List<MovieDTO> result = movieServiceImpl.getMoviesByCategory(idCategoria, null);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+
+        verify(movieRepository, times(1)).findByCategoriaId(idCategoria);
+    }
+
+    @Test
+    public void testGetMoviesByCategory_ConFilterTopRatedLlamaAlMetodoTopRated() {
+
+        Integer idCategoria = 1;
+        String filter = "topRated";
+
+        movieServiceImpl.getMoviesByCategory(idCategoria, filter);
+
+        verify(movieRepository).findByCategoriaIdTopRated(idCategoria);
+        verify(movieRepository, never()).findByCategoriaIdNewest(idCategoria);
+        verify(movieRepository, never()).findByCategoriaId(idCategoria);
+    }
+
+    @Test
+    public void testGetMoviesByCategory_ConFilterNewestLlamaAlMetodoCorrecto() {
+        Integer idCategoria = 1;
+        String filter = "newest";
+
+        movieServiceImpl.getMoviesByCategory(idCategoria, filter);
+
+        verify(movieRepository).findByCategoriaIdNewest(idCategoria);
+        verify(movieRepository, never()).findByCategoriaIdTopRated(idCategoria);
+        verify(movieRepository, never()).findByCategoriaId(idCategoria);
+    }
+
+    @Test
+    public void testGetMoviesByCategory_SinFiltroLlamaAlMetodoCorrecto() {
+        Integer idCategoria = 1;
+        String filter = null;
+
+        movieServiceImpl.getMoviesByCategory(idCategoria, filter);
+
+        verify(movieRepository).findByCategoriaId(idCategoria);
+        verify(movieRepository, never()).findByCategoriaIdTopRated(idCategoria);
+        verify(movieRepository, never()).findByCategoriaIdNewest(idCategoria);
+    }
+
+
 }
