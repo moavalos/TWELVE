@@ -7,16 +7,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.twelve.dominio.ComentarioService;
 import org.twelve.presentacion.dto.ComentarioDTO;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 public class ComentarioController {
 
     @Autowired
-    private ComentarioService comentarioService;
+    ComentarioService comentarioService;
 
     @PostMapping("/guardar-comentario")
-    public String guardarComentario(@ModelAttribute ComentarioDTO comentarioDTO) {
-
-        //revisar esta conversion falopa
+    public String guardarComentario(@ModelAttribute ComentarioDTO comentarioDTO, HttpServletRequest requestMock) {
 
         comentarioService.agregarComentario(comentarioDTO);
 

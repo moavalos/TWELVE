@@ -31,7 +31,6 @@ public class ComentarioServiceImpl implements ComentarioService {
         this.usuarioRepository = usuarioRepository;
     }
 
-
     @Override
     public List<ComentarioDTO> obtenerComentariosPorPelicula(Integer idMovie) {
         List<Comentario> comentarios = comentarioRepository.findByIdMovie(idMovie);
@@ -60,7 +59,7 @@ public class ComentarioServiceImpl implements ComentarioService {
     }
 
 
-    private void actualizarValoracionPelicula(Movie movie) {
+    public void actualizarValoracionPelicula(Movie movie) {
 
         List<Comentario> comentarios = comentarioRepository.findByIdMovie(movie.getId());
 
