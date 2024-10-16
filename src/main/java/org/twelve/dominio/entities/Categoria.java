@@ -10,7 +10,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = "movies")
 @ToString(exclude = "movies")
 @Table(name = "Categoria")
 public class Categoria {

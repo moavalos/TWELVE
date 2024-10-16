@@ -13,7 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = "categorias")
+@ToString(exclude = "categorias")
 @Table(name = "Movie")
 public class Movie {
 
