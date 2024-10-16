@@ -1,0 +1,25 @@
+package org.twelve.presentacion;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.twelve.dominio.ComentarioService;
+import org.twelve.presentacion.dto.ComentarioDTO;
+
+import javax.servlet.http.HttpServletRequest;
+
+@Controller
+public class ComentarioController {
+
+    @Autowired
+    ComentarioService comentarioService;
+
+    @PostMapping("/guardar-comentario")
+    public String guardarComentario(@ModelAttribute ComentarioDTO comentarioDTO, HttpServletRequest requestMock) {
+
+        comentarioService.agregarComentario(comentarioDTO);
+
+        return "redirect:/detalle-pelicula/" + comentarioDTO.getIdMovie();
+    }
+}

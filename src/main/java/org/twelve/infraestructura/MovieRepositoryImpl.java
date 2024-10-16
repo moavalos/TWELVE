@@ -5,6 +5,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.twelve.dominio.MovieRepository;
+import org.twelve.dominio.entities.Comentario;
 import org.twelve.dominio.entities.Movie;
 
 import javax.persistence.Query;
@@ -100,6 +101,7 @@ public class MovieRepositoryImpl implements MovieRepository {
         query.setMaxResults(10);
         return query.getResultList();
     }
+
 }
 
 

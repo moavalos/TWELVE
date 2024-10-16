@@ -30,6 +30,7 @@ public class CategoriaServiceImpl implements CategoriaService {
                 .collect(Collectors.toList());
     }
 
+
     public CategoriaDTO convertToDTO(Categoria categoria) {
         CategoriaDTO dto = new CategoriaDTO();
         dto.setId(categoria.getId());

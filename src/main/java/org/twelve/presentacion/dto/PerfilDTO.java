@@ -21,6 +21,11 @@ public class PerfilDTO {
 
     public PerfilDTO() {}
 
+    public PerfilDTO(Integer id, String username) {
+        this.id = id;
+        this.username = username;
+    }
+
     public String getUsername() {
         return username;
     }

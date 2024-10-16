@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.ModelAndView;
 import org.twelve.dominio.CategoriaService;
+import org.twelve.dominio.ComentarioService;
 import org.twelve.dominio.MovieService;
 import org.twelve.dominio.entities.Movie;
 import org.twelve.presentacion.dto.CategoriaDTO;
@@ -35,6 +36,7 @@ public class MovieControllerTest {
     private HttpSession sessionMock;
     private MovieService movieService;
     private CategoriaService categoriaService;
+    private ComentarioService comentarioService;
 
     @BeforeEach
     public void init() {
@@ -44,7 +46,8 @@ public class MovieControllerTest {
         sessionMock = mock(HttpSession.class);
         movieService = mock(MovieService.class);
         categoriaService = mock(CategoriaService.class);
-        movieController = new MovieController(movieService, categoriaService);
+        comentarioService = mock(ComentarioService.class);
+        movieController = new MovieController(movieService, categoriaService, comentarioService);
     }
 
     @Test

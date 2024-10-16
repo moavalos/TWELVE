@@ -52,14 +52,16 @@ public class Movie {
 
     //private Cast cast;
 
+    //private Director director;
+
     private Integer idComentario;
 
-    // favorita
     private Integer likes;
 
     @Column(length = 5)
     private Double valoracion;
 
+    // Nuevos campos agregados
     private String director;
 
     private String escritor;
@@ -67,6 +69,10 @@ public class Movie {
     private String idioma;
 
     private String tambienConocidaComo;
+
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Comentario> comentarios;
+
 
     @OneToMany(mappedBy = "pelicula")
     private List<UsuarioMovie> usuariosQueLaVieron;
