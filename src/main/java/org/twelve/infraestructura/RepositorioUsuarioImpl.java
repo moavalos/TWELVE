@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository("repositorioUsuario")
+@Transactional
 public class RepositorioUsuarioImpl implements RepositorioUsuario {
 
     private SessionFactory sessionFactory;
@@ -28,10 +29,10 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
     }
 
     /*
-    * createCriteria establece el tipo de entidad a consultar
-    * Restrictions.eq("email", email) añade restrinccion para filtrar por mail
-    * uniqueResult() devuelve el resultado o null
-    */
+     * createCriteria establece el tipo de entidad a consultar
+     * Restrictions.eq("email", email) añade restrinccion para filtrar por mail
+     * uniqueResult() devuelve el resultado o null
+     */
     @Override
     public Usuario buscarUsuarioPorEmail(String email) {
         String hql = "FROM Usuario WHERE email = :email";

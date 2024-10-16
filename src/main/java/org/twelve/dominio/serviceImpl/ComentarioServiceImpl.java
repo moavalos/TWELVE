@@ -16,13 +16,12 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
-@Transactional
+@Service("comentarioService")
 public class ComentarioServiceImpl implements ComentarioService {
+
     private final ComentarioRepository comentarioRepository;
     private final MovieRepository movieRepository;
     private final RepositorioUsuario usuarioRepository;
-
 
     @Autowired
     public ComentarioServiceImpl(ComentarioRepository comentarioRepository, MovieRepository movieRepository, RepositorioUsuario usuarioRepository) {
@@ -45,6 +44,7 @@ public class ComentarioServiceImpl implements ComentarioService {
         }).collect(Collectors.toList());
     }
 
+    @Override
     @Transactional
     public void agregarComentario(ComentarioDTO comentarioDTO) {
         Comentario comentario = convertToEntity(comentarioDTO);
@@ -56,16 +56,13 @@ public class ComentarioServiceImpl implements ComentarioService {
 
     }
 
-
+    @Override
     public void actualizarValoracionPelicula(Movie movie) {
-
         List<Comentario> comentarios = comentarioRepository.findByIdMovie(movie.getId());
-
         double promedio = comentarios.stream().mapToDouble(Comentario::getValoracion).average().orElse(0); //sino hay comentario el promedio es 0
 
         movie.setValoracion(promedio);
         movieRepository.save(movie);
-
     }
 
     //dto a entidad
@@ -78,6 +75,5 @@ public class ComentarioServiceImpl implements ComentarioService {
         comentario.setMovie(movieRepository.findById(comentarioDTO.getIdMovie()));
         return comentario;
     }
-
 
 }

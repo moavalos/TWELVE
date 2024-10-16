@@ -16,5 +16,6 @@ public interface UsuarioService {
     List<PerfilDTO> buscarPorUsername(String username);
 
     Usuario convertToEntity(PerfilDTO perfilDTO);
+
     PerfilDTO convertToDTO(Usuario tempUsuario);
 }

@@ -13,7 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = "categorias")
+@ToString(exclude = "categorias")
 @Table(name = "Movie")
 public class Movie {
 
@@ -34,8 +35,7 @@ public class Movie {
 
     private Integer cantVistas;
 
-
-    @ManyToMany(cascade = {
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE
     })
@@ -72,7 +72,6 @@ public class Movie {
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Comentario> comentarios;
-
 
     @OneToMany(mappedBy = "pelicula")
     private List<UsuarioMovie> usuariosQueLaVieron;

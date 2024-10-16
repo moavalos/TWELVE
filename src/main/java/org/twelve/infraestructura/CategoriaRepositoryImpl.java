@@ -7,9 +7,11 @@ import org.twelve.dominio.CategoriaRepository;
 import org.twelve.dominio.entities.Categoria;
 
 import javax.persistence.Query;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository("categoriaRepository")
+@Transactional
 public class CategoriaRepositoryImpl implements CategoriaRepository {
 
     private SessionFactory sessionFactory;

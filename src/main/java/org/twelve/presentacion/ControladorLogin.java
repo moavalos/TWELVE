@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.twelve.dominio.PaisRepository;
+import org.twelve.dominio.PaisService;
 import org.twelve.dominio.ServicioLogin;
-import org.twelve.dominio.entities.Pais;
 import org.twelve.dominio.entities.Usuario;
 import org.twelve.dominio.excepcion.ContrasenasNoCoinciden;
 import org.twelve.dominio.excepcion.UsuarioExistente;
+import org.twelve.presentacion.dto.PaisDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -22,12 +22,12 @@ import java.util.List;
 public class ControladorLogin {
 
     private ServicioLogin servicioLogin;
-    private PaisRepository paisRepository;
+    private PaisService paisService;
 
     @Autowired
-    public ControladorLogin(ServicioLogin servicioLogin, PaisRepository paisRepository) {
+    public ControladorLogin(ServicioLogin servicioLogin, PaisService paisService) {
         this.servicioLogin = servicioLogin;
-        this.paisRepository = paisRepository;
+        this.paisService = paisService;
     }
 
     @RequestMapping("/login")
@@ -93,10 +93,8 @@ public class ControladorLogin {
     public ModelAndView nuevoUsuario() {
         ModelMap model = new ModelMap();
 
-        List<Pais> paises = paisRepository.findAll();
+        List<PaisDTO> paises = paisService.findAll();
         model.put("paises", paises);
-
-
         model.put("usuario", new Usuario());
 
         return new ModelAndView("usuario-datos", model);

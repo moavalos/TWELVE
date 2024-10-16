@@ -19,7 +19,8 @@ public class PerfilDTO {
     private Integer cantidadPeliculasVistasEsteAno;
     private List<Movie> peliculasFavoritas;
 
-    public PerfilDTO() {}
+    public PerfilDTO() {
+    }
 
     public PerfilDTO(Integer id, String username) {
         this.id = id;
@@ -66,7 +67,9 @@ public class PerfilDTO {
         this.activo = activo;
     }
 
-    public Integer getId() { return id; }
+    public Integer getId() {
+        return id;
+    }
 
     public void setId(Integer id) {
         this.id = id;

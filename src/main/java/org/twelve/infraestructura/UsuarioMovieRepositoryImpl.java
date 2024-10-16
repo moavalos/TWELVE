@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository("usuarioMovieRepository")
+@Transactional
 public class UsuarioMovieRepositoryImpl implements UsuarioMovieRepository {
 
     private SessionFactory sessionFactory;

@@ -137,6 +137,7 @@ public class ServicioLoginImplTest {
 
         assertNull(resultado);
     }
+
     @Test
     public void testVerificarUsuarioExistente_CuandoUsuarioYaExiste_DeberiaLanzarExcepcion() {
         String email = "test@unlam.com";

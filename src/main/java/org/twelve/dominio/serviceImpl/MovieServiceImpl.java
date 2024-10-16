@@ -17,7 +17,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service("movieService")
-@Transactional
 public class MovieServiceImpl implements MovieService {
 
     private final MovieRepository movieRepository;
