@@ -1,11 +1,11 @@
-Proyecto base Taller Web I (Maven and Thymeleaf)
+Proyecto base Taller Web I (Maven and Thymeleaf) - Movie Project
 ===============================
 
 ## 1. Como iniciar el proyecto
 
 ```shell
 $ mvn clean jetty:run
-# http://localhost:8080/spring
+# http://localhost:8081/spring
 ```
 
 ## 2. Thymeleaf
@@ -69,6 +69,7 @@ $ npm test
 * Mockito 5.3.1
 * Playwright 1.36.0
 * Node 18.16.1 o superior <- Instalación manual desde la [página de node](https://nodejs.org/en)
+* Lombok
 
 *_Proyecto modificado en base
 a: [Spring MVC hello world example (Maven and Thymeleaf)](https://mkyong.com/spring-mvc/spring-mvc-hello-world-example/)

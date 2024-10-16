@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.ModelAndView;
 import org.twelve.dominio.CategoriaService;
+import org.twelve.dominio.ComentarioService;
 import org.twelve.dominio.MovieService;
 import org.twelve.dominio.entities.Movie;
 import org.twelve.presentacion.dto.CategoriaDTO;
@@ -21,6 +22,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -33,6 +35,7 @@ public class MovieControllerTest {
     private HttpSession sessionMock;
     private MovieService movieService;
     private CategoriaService categoriaService;
+    private ComentarioService comentarioService;
 
     @BeforeEach
     public void init() {
@@ -42,7 +45,8 @@ public class MovieControllerTest {
         sessionMock = mock(HttpSession.class);
         movieService = mock(MovieService.class);
         categoriaService = mock(CategoriaService.class);
-        movieController = new MovieController(movieService, categoriaService);
+        comentarioService = mock(ComentarioService.class);
+        movieController = new MovieController(movieService, categoriaService, comentarioService);
     }
 
     @Test
@@ -276,7 +280,20 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testTraerDetalleDePeliculasYSeEncontro() {
+    public void testGetMovieCategoryPageDevuelveVistaDeCategoria() {
+        Integer categoriaId = 1;
+        String filtro = null;
+        List<MovieDTO> mockMovies = Arrays.asList(mock(MovieDTO.class), mock(MovieDTO.class));
+
+        when(movieService.getMoviesByCategory(categoriaId, filtro)).thenReturn(mockMovies);
+
+        ModelAndView modelAndView = movieController.getMovieCategoryPage(categoriaId, filtro);
+
+        assertThat(modelAndView.getViewName(), is("movies-categoria"));
+        }
+
+@Test
+public void testTraerDetalleDePeliculasYSeEncontro() {
         MovieDTO movieMock = mock(MovieDTO.class);
         when(movieMock.getNombre()).thenReturn("Coraline");
         when(movieService.getById(anyInt())).thenReturn(movieMock);

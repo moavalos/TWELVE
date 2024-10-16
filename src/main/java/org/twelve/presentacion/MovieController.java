@@ -7,9 +7,12 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.twelve.dominio.CategoriaService;
+import org.twelve.dominio.ComentarioService;
 import org.twelve.dominio.MovieService;
 import org.twelve.presentacion.dto.CategoriaDTO;
+import org.twelve.presentacion.dto.ComentarioDTO;
 import org.twelve.presentacion.dto.MovieDTO;
+import org.twelve.presentacion.dto.PerfilDTO;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,11 +24,14 @@ public class MovieController {
 
     private CategoriaService categoriaService;
 
+    private ComentarioService comentarioService;
+
     @Autowired
 
-    public MovieController(MovieService movieService, CategoriaService categoriaService) {
+    public MovieController(MovieService movieService, CategoriaService categoriaService, ComentarioService comentarioService) {
         this.movieService = movieService;
         this.categoriaService = categoriaService;
+        this.comentarioService = comentarioService;
     }
 
     @RequestMapping(path = "/home", method = RequestMethod.GET)
@@ -67,13 +73,7 @@ public class MovieController {
 
 
     /*
-    @RequestMapping(path = "/detalle-pelicula", method = RequestMethod.GET)
-    public ModelAndView detallePelicula() {
-        return new ModelAndView("detalle-pelicula");
-    }
-
-     */
-
+    ESTE ES EL QUE FUNCIONA AHRE
     @RequestMapping(path = "/detalle-pelicula/{id}", method = RequestMethod.GET)
     public ModelAndView getMovieDetails(@PathVariable("id") Integer id) {
         MovieDTO movie = movieService.getById(id);
@@ -83,6 +83,26 @@ public class MovieController {
 
         return new ModelAndView("detalle-pelicula", modelo);
     }
+
+     */
+
+
+    @RequestMapping(path = "/detalle-pelicula/{id}", method = RequestMethod.GET)
+    public ModelAndView getMovieDetails(@PathVariable("id") Integer id) {
+
+        MovieDTO movie = movieService.getById(id);
+        //lista de comentarios
+        List<ComentarioDTO> comentarios = comentarioService.obtenerComentariosPorPelicula(id);
+
+        //modelo
+        ModelMap modelo = new ModelMap();
+        modelo.put("movie", movie);
+        modelo.put("comentarios", comentarios);
+        modelo.put("usuario", new PerfilDTO());
+
+        return new ModelAndView("detalle-pelicula", modelo);
+    }
+
 
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<MovieDTO> getMovieById(@PathVariable Integer id) {
@@ -147,5 +167,15 @@ public class MovieController {
             return ResponseEntity.ok(movies);
         else
             return ResponseEntity.notFound().build();
+    }
+
+    @RequestMapping(path = "/categoria/{id}", method = RequestMethod.GET)
+    public ModelAndView getMovieCategoryPage(@PathVariable Integer id, @RequestParam(required = false) String filter) {
+        ModelMap modelo = new ModelMap();
+        List<MovieDTO> movies = movieService.getMoviesByCategory(id, filter);
+
+        modelo.addAttribute("movies", movies);
+        modelo.addAttribute("selectedFilter", filter);
+        return new ModelAndView("movies-categoria", modelo);
     }
 }

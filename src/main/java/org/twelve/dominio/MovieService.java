@@ -22,6 +22,8 @@ public interface MovieService {
 
     List<MovieDTO> getMoviesByCategory(Integer idCategoria);
 
+    List<MovieDTO> getMoviesByCategory(Integer idCategoria, String filter);
+
     List<MovieDTO> getMovieByAnio();
 
 }

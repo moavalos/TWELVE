@@ -55,7 +55,9 @@
 
                     <div class="form-group mb-3">
                         <label for="pais" class="form-label text-gray">País</label>
-                        <input th:field="*{pais}" id="pais" type="text" class="form-control" placeholder="País" />
+                        <select th:field="*{pais}" id="pais" class="form-control" required>
+                            <option th:each="pais : ${paises}" th:value="${pais.nombre}" th:text="${pais.nombre}"></option>
+                        </select>
                     </div>
 
                     <p th:if="${error != null}" class="alert alert-danger" th:text="'Error: ' + ${error}"></p>

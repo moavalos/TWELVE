@@ -7,27 +7,30 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.twelve.dominio.PaisRepository;
 import org.twelve.dominio.ServicioLogin;
 import org.twelve.dominio.UsuarioService;
+import org.twelve.dominio.entities.Pais;
 import org.twelve.dominio.entities.Usuario;
 import org.twelve.presentacion.dto.PerfilDTO;
+
+import javax.transaction.Transactional;
+import java.util.List;
 
 @Controller
 public class UsuarioController {
 
     private UsuarioService usuarioService;
 
+     private final PaisRepository paisRepository;
+
     @Autowired
-    public UsuarioController(UsuarioService usuarioService, ServicioLogin servicioLogin) {
+    public UsuarioController(UsuarioService usuarioService,PaisRepository paisRepository, ServicioLogin servicioLogin) {
         this.usuarioService = usuarioService;
+        this.paisRepository = paisRepository;
     }
 
-    @RequestMapping(path = "/registrarme", method = RequestMethod.GET)
-    public ModelAndView mostrarFormularioRegistro() {
-        ModelMap model = new ModelMap();
-        model.put("usuario", new Usuario());
-        return new ModelAndView("nuevo-usuario", model);
-    }
+
 
     @RequestMapping(path = "/perfil/{id}", method = RequestMethod.GET)
     public ModelAndView buscarPorId(@PathVariable Integer id) {

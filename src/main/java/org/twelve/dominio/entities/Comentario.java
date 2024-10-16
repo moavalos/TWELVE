@@ -5,6 +5,8 @@ import lombok.*;
 import javax.persistence.*;
 
 @Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
@@ -18,17 +20,20 @@ public class Comentario {
     @Column(nullable = false, unique = true)
     private Integer id;
 
-    @Column(nullable = false)
-    private Integer idMovie;
+    @ManyToOne
+    @JoinColumn(name = "idMovie", nullable = false)
+    private Movie movie;
+
+    @ManyToOne
+    @JoinColumn(name = "idUsuario", nullable = false)
+    private Usuario usuario;
 
     @Column(length = 800)
     private String descripcion;
-
-    @Column(nullable = false)
-    private Integer idUsuario;
 
     private Integer likes;
 
     @Column(length = 5)
     private Double valoracion;
+
 }
