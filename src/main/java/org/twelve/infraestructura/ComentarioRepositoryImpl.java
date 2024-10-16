@@ -14,7 +14,7 @@ import java.util.List;
 @Transactional
 public class ComentarioRepositoryImpl implements ComentarioRepository {
 
-    private SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
 
     @Autowired
     public ComentarioRepositoryImpl(SessionFactory sessionFactory) {

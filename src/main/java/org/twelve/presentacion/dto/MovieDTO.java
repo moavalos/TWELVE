@@ -11,7 +11,7 @@ public class MovieDTO {
     private Double duracion;
     private String pais;
     private Integer cantVistas;
-//    private Integer idCategoria;
+    //    private Integer idCategoria;
     private List<CategoriaDTO> categorias;
     private String anioLanzamiento;
     private String imagen;
@@ -33,7 +33,7 @@ public class MovieDTO {
         this.duracion = duracion;
         this.pais = pais;
         this.cantVistas = cantVistas;
-        this.categorias= categorias;
+        this.categorias = categorias;
         this.anioLanzamiento = anioLanzamiento;
         this.imagen = imagen;
         this.likes = likes;

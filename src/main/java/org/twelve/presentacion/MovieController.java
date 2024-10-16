@@ -21,11 +21,11 @@ import java.util.stream.Collectors;
 @Controller
 public class MovieController {
 
-    private MovieService movieService;
+    private final MovieService movieService;
 
     @Lazy
-    private CategoriaService categoriaService;
-    private ComentarioService comentarioService;
+    private final CategoriaService categoriaService;
+    private final ComentarioService comentarioService;
 
     @Autowired
     public MovieController(MovieService movieService, CategoriaService categoriaService, ComentarioService comentarioService) {
@@ -71,22 +71,6 @@ public class MovieController {
         return new ModelAndView("movies", modelo);
     }
 
-
-    /*
-    ESTE ES EL QUE FUNCIONA AHRE
-    @RequestMapping(path = "/detalle-pelicula/{id}", method = RequestMethod.GET)
-    public ModelAndView getMovieDetails(@PathVariable("id") Integer id) {
-        MovieDTO movie = movieService.getById(id);
-
-        ModelMap modelo = new ModelMap();
-        modelo.put("movie", movie);
-
-        return new ModelAndView("detalle-pelicula", modelo);
-    }
-
-     */
-
-
     @RequestMapping(path = "/detalle-pelicula/{id}", method = RequestMethod.GET)
     public ModelAndView getMovieDetails(@PathVariable("id") Integer id) {
 
@@ -102,7 +86,6 @@ public class MovieController {
 
         return new ModelAndView("detalle-pelicula", modelo);
     }
-
 
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<MovieDTO> getMovieById(@PathVariable Integer id) {

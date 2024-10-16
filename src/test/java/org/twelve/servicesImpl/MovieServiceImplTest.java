@@ -11,10 +11,7 @@ import org.twelve.presentacion.dto.MovieDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -39,7 +36,7 @@ public class MovieServiceImplTest {
     }
 
     @Test
-    public void testGetAll_CuandoHayPeliculas_DeberiaRetornarListaDeMovieDTO() {
+    public void testGetAllCuandoHayPeliculasDeberiaRetornarListaDeMovieDTO() {
         when(movie1.getNombre()).thenReturn("Matrix");
         when(movie2.getNombre()).thenReturn("Inception");
 
@@ -56,7 +53,7 @@ public class MovieServiceImplTest {
     }
 
     @Test
-    public void testGetById_CuandoPeliculaExiste_DeberiaRetornarMovieDTO() {
+    public void testGetByIdCuandoPeliculaExisteDeberiaRetornarMovieDTO() {
         when(movie1.getNombre()).thenReturn("Matrix");
         when(movie1.getDescripcion()).thenReturn("A hacker discovers...");
 
@@ -73,7 +70,7 @@ public class MovieServiceImplTest {
 
 
     @Test
-    public void testCreate_CuandoSeCreaPelicula_DeberiaRetornarMovieDTO() {
+    public void testCreateCuandoSeCreaPeliculaDeberiaRetornarMovieDTO() {
         Categoria categoria1 = new Categoria(1, "Acción");
         Categoria categoria2 = new Categoria(2, "Ciencia Ficción");
 
@@ -121,10 +118,10 @@ public class MovieServiceImplTest {
 
 
     @Test
-    public void testSearchByTitle_CuandoTituloExiste_DeberiaRetornarListaDeMovieDTO() {
+    public void testSearchByTitleCuandoTituloExisteDeberiaRetornarListaDeMovieDTO() {
         when(movie1.getNombre()).thenReturn("Matrix");
 
-        when(movieRepository.findByTitle("Matrix")).thenReturn(Arrays.asList(movie1));
+        when(movieRepository.findByTitle("Matrix")).thenReturn(Collections.singletonList(movie1));
 
         List<MovieDTO> result = movieServiceImpl.searchByTitle("Matrix");
 
@@ -136,7 +133,7 @@ public class MovieServiceImplTest {
     }
 
     @Test
-    public void testGetMovieMasVista_DeberiaRetornarListaDeMovieDTO() {
+    public void testGetMovieMasVistaDeberiaRetornarListaDeMovieDTO() {
         when(movie1.getCantVistas()).thenReturn(5000);
         when(movie2.getCantVistas()).thenReturn(6000);
 
@@ -153,7 +150,7 @@ public class MovieServiceImplTest {
     }
 
     @Test
-    public void testGetMovieByValoracion_DeberiaRetornarListaDeMovieDTO() {
+    public void testGetMovieByValoracionDeberiaRetornarListaDeMovieDTO() {
         when(movie1.getValoracion()).thenReturn(9.0);
         when(movie2.getValoracion()).thenReturn(8.8);
 
@@ -169,11 +166,11 @@ public class MovieServiceImplTest {
     }
 
     @Test
-    public void testGetMoviesByCategory_CuandoCategoriaExiste_DeberiaRetornarListaDeMovieDTO() {
+    public void testGetMoviesByCategoryCuandoCategoriaExisteDeberiaRetornarListaDeMovieDTO() {
         Categoria categoria = new Categoria(1, "Acción");
 
-        Set<Categoria> categoriasSet1 = new HashSet<>(Arrays.asList(categoria));
-        Set<Categoria> categoriasSet2 = new HashSet<>(Arrays.asList(categoria));
+        Set<Categoria> categoriasSet1 = new HashSet<>(List.of(categoria));
+        Set<Categoria> categoriasSet2 = new HashSet<>(List.of(categoria));
 
         when(movie1.getCategorias()).thenReturn(categoriasSet1);
         when(movie2.getCategorias()).thenReturn(categoriasSet2);
@@ -191,10 +188,10 @@ public class MovieServiceImplTest {
     }
 
     @Test
-    public void testGetMovieByAnio_DeberiaRetornarListaDeMovieDTO() {
+    public void testGetMovieByAnioDeberiaRetornarListaDeMovieDTO() {
         when(movie2.getAñoLanzamiento()).thenReturn("2010");
 
-        when(movieRepository.findNewestMovie()).thenReturn(Arrays.asList(movie2));
+        when(movieRepository.findNewestMovie()).thenReturn(Collections.singletonList(movie2));
 
         List<MovieDTO> result = movieServiceImpl.getMovieByAnio();
 
@@ -206,7 +203,7 @@ public class MovieServiceImplTest {
     }
 
     @Test
-    public void testGetMoviesByCategory_SinFiltro_DeberiaRetornarPeliculasPorCategoria() {
+    public void testGetMoviesByCategorySinFiltroDeberiaRetornarPeliculasPorCategoria() {
         Integer idCategoria = 1;
 
         when(movieRepository.findByCategoriaId(idCategoria)).thenReturn(Arrays.asList(movie1, movie2));
@@ -220,7 +217,7 @@ public class MovieServiceImplTest {
     }
 
     @Test
-    public void testGetMoviesByCategory_ConFilterTopRatedLlamaAlMetodoTopRated() {
+    public void testGetMoviesByCategoryConFilterTopRatedLlamaAlMetodoTopRated() {
 
         Integer idCategoria = 1;
         String filter = "topRated";
@@ -233,7 +230,7 @@ public class MovieServiceImplTest {
     }
 
     @Test
-    public void testGetMoviesByCategory_ConFilterNewestLlamaAlMetodoCorrecto() {
+    public void testGetMoviesByCategoryConFilterNewestLlamaAlMetodoCorrecto() {
         Integer idCategoria = 1;
         String filter = "newest";
 
@@ -245,7 +242,7 @@ public class MovieServiceImplTest {
     }
 
     @Test
-    public void testGetMoviesByCategory_SinFiltroLlamaAlMetodoCorrecto() {
+    public void testGetMoviesByCategorySinFiltroLlamaAlMetodoCorrecto() {
         Integer idCategoria = 1;
         String filter = null;
 

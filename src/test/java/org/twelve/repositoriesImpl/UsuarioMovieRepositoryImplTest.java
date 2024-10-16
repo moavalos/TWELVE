@@ -16,8 +16,7 @@ import org.twelve.integracion.config.HibernateTestConfig;
 import javax.transaction.Transactional;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {HibernateTestConfig.class})
@@ -25,20 +24,11 @@ public class UsuarioMovieRepositoryImplTest {
 
     @Autowired
     private SessionFactory sessionFactory;
-
     private UsuarioMovieRepositoryImpl usuarioMovieRepository;
-    private Usuario usuario;
-    private Movie movie;
 
     @BeforeEach
     public void setUp() {
         this.usuarioMovieRepository = new UsuarioMovieRepositoryImpl(sessionFactory);
-
-        this.usuario = new Usuario();
-        this.usuario.setId(1);
-
-        this.movie = new Movie();
-        movie.setId(1);
     }
 
     @Test
@@ -46,6 +36,45 @@ public class UsuarioMovieRepositoryImplTest {
     @Rollback
     public void testObtenerPeliculasFavoritasSinResultados() {
         Integer usuarioId = 1;
+
+        List<Movie> peliculasFavoritas = usuarioMovieRepository.obtenerPeliculasFavoritas(usuarioId);
+
+        assertNotNull(peliculasFavoritas);
+        assertTrue(peliculasFavoritas.isEmpty());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testObtenerCantidadPeliculasVistasSinPeliculas() {
+        Usuario usuario = new Usuario();
+        Integer usuarioId = usuario.getId();
+
+        Integer cantidadPeliculasVistas = usuarioMovieRepository.obtenerCantidadPeliculasVistas(usuarioId);
+
+        assertNotNull(cantidadPeliculasVistas);
+        assertEquals(0, cantidadPeliculasVistas);
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testObtenerCantidadPeliculasVistasEsteAnoSinPeliculas() {
+        Usuario usuario = new Usuario();
+        Integer usuarioId = usuario.getId();
+
+        Integer cantidadPeliculasVistasEsteAno = usuarioMovieRepository.obtenerCantidadPeliculasVistasEsteAno(usuarioId);
+
+        assertNotNull(cantidadPeliculasVistasEsteAno);
+        assertEquals(0, cantidadPeliculasVistasEsteAno);
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testObtenerPeliculasFavoritasSinResultados2() {
+        Usuario usuario = new Usuario();
+        Integer usuarioId = usuario.getId();
 
         List<Movie> peliculasFavoritas = usuarioMovieRepository.obtenerPeliculasFavoritas(usuarioId);
 

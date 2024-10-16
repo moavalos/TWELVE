@@ -7,7 +7,6 @@ import org.twelve.dominio.CategoriaService;
 import org.twelve.dominio.entities.Categoria;
 import org.twelve.presentacion.dto.CategoriaDTO;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 

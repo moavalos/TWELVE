@@ -9,7 +9,6 @@ import org.twelve.dominio.entities.Movie;
 import org.twelve.presentacion.dto.CategoriaDTO;
 import org.twelve.presentacion.dto.MovieDTO;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

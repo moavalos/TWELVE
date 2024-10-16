@@ -69,7 +69,7 @@ public class ControladorLoginTest {
     }
 
     @Test
-    public void irALogin_DeberiaRetornarVistaLoginYModeloConDatosLogin() {
+    public void irALoginDeberiaRetornarVistaLoginYModeloConDatosLogin() {
         ModelAndView modelAndView = controladorLogin.irALogin();
 
         assertThat(modelAndView.getViewName(), equalTo("login"));
@@ -80,7 +80,7 @@ public class ControladorLoginTest {
     }
 
     @Test
-    public void inicio_DeberiaRedirigirALogin() {
+    public void inicioDeberiaRedirigirALogin() {
         ModelAndView modelAndView = controladorLogin.inicio();
 
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/login"));
@@ -98,7 +98,7 @@ public class ControladorLoginTest {
     }
 
     @Test
-    public void nuevoUsuario_DeberiaRetornarVistaUsuarioDatosConModeloConUsuario() {
+    public void nuevoUsuarioDeberiaRetornarVistaUsuarioDatosConModeloConUsuario() {
         ModelAndView modelAndView = controladorLogin.nuevoUsuario();
 
         assertThat(modelAndView.getViewName(), equalTo("usuario-datos"));
@@ -109,7 +109,7 @@ public class ControladorLoginTest {
     }
 
     @Test
-    public void nuevoUsuarioConUsuarioExistente_DeberiaMostrarError() {
+    public void nuevoUsuarioConUsuarioExistenteDeberiaMostrarError() {
         usuarioMock.setEmail("dami@unlam.com");
         when(servicioLoginMock.consultarUsuario(anyString(), anyString())).thenReturn(usuarioMock);
 

@@ -26,7 +26,7 @@ public class PaisServiceImpl implements PaisService {
         return paises.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
-    private PaisDTO convertToDTO(Pais pais) {
+    public PaisDTO convertToDTO(Pais pais) {
         return new PaisDTO(
                 pais.getId(),
                 pais.getNombre()

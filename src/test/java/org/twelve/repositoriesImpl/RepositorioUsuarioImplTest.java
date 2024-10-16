@@ -2,7 +2,6 @@ package org.twelve.repositoriesImpl;
 
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,30 +85,6 @@ public class RepositorioUsuarioImplTest {
     public void testBuscarPorEmailDevuelveNullSiNoExiste() {
         Usuario usuarioEncontrado = repositorioUsuario.buscarUsuarioPorEmail("inexistente@unlam.com");
         assertNull(usuarioEncontrado);
-    }
-
-    @Test
-    @Transactional
-    @Rollback
-    @Disabled
-    public void testModificarUsuarioConEmailDuplicadoNoSePermite() throws Exception {
-        Usuario usuario1 = new Usuario();
-        usuario1.setEmail("duplicado@unlam.com");
-        usuario1.setPassword("contrasena1");
-        repositorioUsuario.guardar(usuario1);
-
-        Usuario usuario2 = new Usuario();
-        usuario2.setEmail("duplicado@unlam.com");
-        usuario2.setPassword("contrasena2");
-
-        Exception excepcion = assertThrows(Exception.class, () -> {
-            repositorioUsuario.guardar(usuario2);
-        });
-
-        String esperado = "El email ya está en uso";
-        String actual = excepcion.getMessage();
-
-        assertTrue(actual.contains(esperado));
     }
 
 }

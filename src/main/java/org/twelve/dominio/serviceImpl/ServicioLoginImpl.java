@@ -10,12 +10,10 @@ import org.twelve.dominio.entities.Usuario;
 import org.twelve.dominio.excepcion.ContrasenasNoCoinciden;
 import org.twelve.dominio.excepcion.UsuarioExistente;
 
-import javax.transaction.Transactional;
-
 @Service("servicioLogin")
 public class ServicioLoginImpl implements ServicioLogin {
 
-    private RepositorioUsuario repositorioUsuario;
+    private final RepositorioUsuario repositorioUsuario;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired

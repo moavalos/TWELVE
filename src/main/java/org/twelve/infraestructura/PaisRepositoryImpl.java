@@ -14,7 +14,7 @@ import java.util.List;
 @Transactional
 public class PaisRepositoryImpl implements PaisRepository {
 
-    private SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
 
     @Autowired
     public PaisRepositoryImpl(SessionFactory sessionFactory) {

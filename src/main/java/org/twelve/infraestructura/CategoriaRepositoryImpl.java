@@ -14,7 +14,7 @@ import java.util.List;
 @Transactional
 public class CategoriaRepositoryImpl implements CategoriaRepository {
 
-    private SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
 
     @Autowired
     public CategoriaRepositoryImpl(SessionFactory sessionFactory) {
