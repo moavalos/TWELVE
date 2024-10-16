@@ -6,12 +6,13 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@EqualsAndHashCode
+@ToString(exclude = "movies")
 @Table(name = "Categoria")
-
-
 public class Categoria {
 
     @Id
@@ -21,27 +22,11 @@ public class Categoria {
 
     private String nombre;
 
-    @ManyToMany(mappedBy = "categorias", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "categorias")
     private Set<Movie> movies = new HashSet<>();
 
     public Categoria(Integer id, String nombre) {
         this.id = id;
-        this.nombre = nombre;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 }

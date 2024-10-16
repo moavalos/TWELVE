@@ -3,47 +3,41 @@ package org.twelve.presentacion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.twelve.dominio.ComentarioService;
+import org.twelve.dominio.entities.Comentario;
 import org.twelve.presentacion.dto.ComentarioDTO;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class ComentarioControllerTest {
 
+    private Comentario comentario;
     private ComentarioController comentarioController;
-    private HttpServletRequest requestMock;
     private ComentarioService comentarioService;
-
+    private HttpServletRequest requestMock;
+    private HttpSession sessionMock;
 
     @BeforeEach
     public void init() {
+        comentario = mock(Comentario.class);
         comentarioService = mock(ComentarioService.class);
-        comentarioController = new ComentarioController();
-        comentarioController.comentarioService = comentarioService;
         requestMock = mock(HttpServletRequest.class);
-
+        sessionMock = mock(HttpSession.class);
+        comentarioController = new ComentarioController(comentarioService);
     }
 
     @Test
     public void testGuardarComentarioDeberiaRedireccionarALaPelicula() {
-
-
-        // preparacion
         ComentarioDTO comentarioDTO = new ComentarioDTO();
         comentarioDTO.setIdMovie(1);
-        comentarioDTO.setIdUsuario(1);
-        comentarioDTO.setDescripcion("buenisima");
-        comentarioDTO.setLikes(0);
-        comentarioDTO.setValoracion(8.0);
 
-        // ejecucion
-        String result = comentarioController.guardarComentario(comentarioDTO, requestMock);
+        String resultado = comentarioController.guardarComentario(comentarioDTO, requestMock);
 
-        // validacion
-        assertThat(result, is("redirect:/detalle-pelicula/1"));
-        verify(comentarioService).agregarComentario(comentarioDTO);
+        verify(comentarioService, times(1)).agregarComentario(comentarioDTO);
+
+        assertEquals("redirect:/detalle-pelicula/1", resultado);
     }
 }

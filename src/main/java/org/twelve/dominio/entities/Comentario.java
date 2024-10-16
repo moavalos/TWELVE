@@ -5,11 +5,8 @@ import lombok.*;
 import javax.persistence.*;
 
 @Data
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Entity
 @EqualsAndHashCode
 @Table(name = "Comentario")

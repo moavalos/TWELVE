@@ -13,7 +13,6 @@ import org.twelve.dominio.excepcion.UsuarioExistente;
 import javax.transaction.Transactional;
 
 @Service("servicioLogin")
-@Transactional
 public class ServicioLoginImpl implements ServicioLogin {
 
     private RepositorioUsuario repositorioUsuario;

@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service("categoriaService")
-@Transactional
 public class CategoriaServiceImpl implements CategoriaService {
 
     private final CategoriaRepository categoriaRepository;
@@ -29,7 +28,6 @@ public class CategoriaServiceImpl implements CategoriaService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
-
 
     public CategoriaDTO convertToDTO(Categoria categoria) {
         CategoriaDTO dto = new CategoriaDTO();

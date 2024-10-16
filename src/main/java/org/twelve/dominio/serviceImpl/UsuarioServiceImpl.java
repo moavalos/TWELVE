@@ -14,7 +14,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
+@Service("usuarioService")
 public class UsuarioServiceImpl implements UsuarioService {
 
     private RepositorioUsuario repositorioUsuario;

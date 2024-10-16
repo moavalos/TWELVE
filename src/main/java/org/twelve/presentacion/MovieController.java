@@ -1,6 +1,7 @@
 package org.twelve.presentacion;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -22,12 +23,11 @@ public class MovieController {
 
     private MovieService movieService;
 
+    @Lazy
     private CategoriaService categoriaService;
-
     private ComentarioService comentarioService;
 
     @Autowired
-
     public MovieController(MovieService movieService, CategoriaService categoriaService, ComentarioService comentarioService) {
         this.movieService = movieService;
         this.categoriaService = categoriaService;

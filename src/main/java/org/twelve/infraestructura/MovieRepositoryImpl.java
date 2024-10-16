@@ -9,9 +9,11 @@ import org.twelve.dominio.entities.Comentario;
 import org.twelve.dominio.entities.Movie;
 
 import javax.persistence.Query;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository("movieRepository")
+@Transactional
 public class MovieRepositoryImpl implements MovieRepository {
 
     private SessionFactory sessionFactory;
