@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.twelve.dominio.entities.Comentario;
@@ -16,7 +15,6 @@ import org.twelve.integracion.config.HibernateTestConfig;
 
 import javax.persistence.Query;
 import javax.transaction.Transactional;
-
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -29,8 +27,6 @@ public class ComentarioRepositoryImplTest {
 
     @Autowired
     private SessionFactory sessionFactory;
-
-
     private ComentarioRepositoryImpl comentarioRepository;
 
     @BeforeEach

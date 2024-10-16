@@ -14,7 +14,7 @@ import java.util.List;
 @Transactional
 public class RepositorioUsuarioImpl implements RepositorioUsuario {
 
-    private final SessionFactory sessionFactory;
+    private SessionFactory sessionFactory;
 
     @Autowired
     public RepositorioUsuarioImpl(SessionFactory sessionFactory) {

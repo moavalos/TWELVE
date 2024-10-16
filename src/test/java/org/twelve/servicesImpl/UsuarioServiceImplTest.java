@@ -1,7 +1,6 @@
 package org.twelve.servicesImpl;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.twelve.dominio.RepositorioUsuario;
 import org.twelve.dominio.UsuarioMovieRepository;
@@ -86,19 +85,6 @@ public class UsuarioServiceImplTest {
         assertEquals("carlos.diaz@ejemplo.com", resultado.getEmail());
 
         verify(repositorioUsuario, times(1)).guardar(any(Usuario.class));
-    }
-
-    @Test
-    @Disabled
-    public void testBuscarPorUsernameCuandoUsuarioNoExisteDeberiaRetornarListaVacia() {
-        when(repositorioUsuario.buscarPorUsername("inexistente")).thenReturn((Usuario) Collections.emptyList());
-
-        List<PerfilDTO> resultado = usuarioServiceImpl.buscarPorUsername("inexistente");
-
-        assertNotNull(resultado);
-        assertTrue(resultado.isEmpty());
-
-        verify(repositorioUsuario, times(1)).buscarPorUsername("inexistente");
     }
 
     @Test

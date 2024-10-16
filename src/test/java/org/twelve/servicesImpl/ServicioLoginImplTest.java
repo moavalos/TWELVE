@@ -139,7 +139,7 @@ public class ServicioLoginImplTest {
     }
 
     @Test
-    public void testVerificarUsuarioExistente_CuandoUsuarioYaExiste_DeberiaLanzarExcepcion() {
+    public void testVerificarUsuarioExistenteCuandoUsuarioYaExisteDeberiaLanzarExcepcion() {
         String email = "test@unlam.com";
 
         when(usuarioMock.getEmail()).thenReturn(email);
@@ -153,7 +153,7 @@ public class ServicioLoginImplTest {
     }
 
     @Test
-    public void testVerificarUsuarioExistente_CuandoUsuarioNoExiste_NoLanzaExcepcion() {
+    public void testVerificarUsuarioExistenteCuandoUsuarioNoExisteNoLanzaExcepcion() {
         String email = "nuevo@unlam.com";
 
         when(usuarioMock.getEmail()).thenReturn(email);
