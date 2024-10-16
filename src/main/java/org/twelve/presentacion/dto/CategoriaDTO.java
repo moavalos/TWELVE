@@ -8,7 +8,8 @@ public class CategoriaDTO {
         this.nombre = nombre;
     }
 
-    public CategoriaDTO() {}
+    public CategoriaDTO() {
+    }
 
     private Integer id;
 

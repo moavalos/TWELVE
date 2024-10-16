@@ -21,8 +21,8 @@ import java.util.List;
 @Controller
 public class ControladorLogin {
 
-    private ServicioLogin servicioLogin;
-    private PaisService paisService;
+    private final ServicioLogin servicioLogin;
+    private final PaisService paisService;
 
     @Autowired
     public ControladorLogin(ServicioLogin servicioLogin, PaisService paisService) {

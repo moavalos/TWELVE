@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 @Service("usuarioService")
 public class UsuarioServiceImpl implements UsuarioService {
 
-    private RepositorioUsuario repositorioUsuario;
-    private UsuarioMovieRepository usuarioMovieRepository;
+    private final RepositorioUsuario repositorioUsuario;
+    private final UsuarioMovieRepository usuarioMovieRepository;
 
     @Autowired
     public UsuarioServiceImpl(RepositorioUsuario repositorioUsuario, UsuarioMovieRepository usuarioMovieRepository) {

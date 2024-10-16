@@ -21,11 +21,11 @@ import java.util.stream.Collectors;
 @Controller
 public class MovieController {
 
-    private MovieService movieService;
+    private final MovieService movieService;
 
     @Lazy
-    private CategoriaService categoriaService;
-    private ComentarioService comentarioService;
+    private final CategoriaService categoriaService;
+    private final ComentarioService comentarioService;
 
     @Autowired
     public MovieController(MovieService movieService, CategoriaService categoriaService, ComentarioService comentarioService) {

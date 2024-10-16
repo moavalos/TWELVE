@@ -5,7 +5,6 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.twelve.dominio.MovieRepository;
-import org.twelve.dominio.entities.Comentario;
 import org.twelve.dominio.entities.Movie;
 
 import javax.persistence.Query;
@@ -16,7 +15,7 @@ import java.util.List;
 @Transactional
 public class MovieRepositoryImpl implements MovieRepository {
 
-    private SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
 
     @Autowired
     public MovieRepositoryImpl(SessionFactory sessionFactory) {
@@ -93,7 +92,6 @@ public class MovieRepositoryImpl implements MovieRepository {
                 .setParameter("idCategoria", idCategoria)
                 .list();
     }
-
 
 
     @Override

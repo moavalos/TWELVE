@@ -7,21 +7,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.twelve.dominio.PaisRepository;
-import org.twelve.dominio.PaisService;
-import org.twelve.dominio.ServicioLogin;
 import org.twelve.dominio.UsuarioService;
-import org.twelve.dominio.entities.Pais;
-import org.twelve.dominio.entities.Usuario;
 import org.twelve.presentacion.dto.PerfilDTO;
-
-import javax.transaction.Transactional;
-import java.util.List;
 
 @Controller
 public class UsuarioController {
 
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
 
     @Autowired
     public UsuarioController(UsuarioService usuarioService) {
