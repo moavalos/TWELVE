@@ -168,4 +168,14 @@ public class MovieController {
         else
             return ResponseEntity.notFound().build();
     }
+
+    @RequestMapping(path = "/categoria/{id}", method = RequestMethod.GET)
+    public ModelAndView getMovieCategoryPage(@PathVariable Integer id, @RequestParam(required = false) String filter) {
+        ModelMap modelo = new ModelMap();
+        List<MovieDTO> movies = movieService.getMoviesByCategory(id, filter);
+
+        modelo.addAttribute("movies", movies);
+        modelo.addAttribute("selectedFilter", filter);
+        return new ModelAndView("movies-categoria", modelo);
+    }
 }

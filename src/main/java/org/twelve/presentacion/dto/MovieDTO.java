@@ -1,5 +1,7 @@
 package org.twelve.presentacion.dto;
 
+import java.util.List;
+
 public class MovieDTO {
 
     private Integer id;
@@ -9,7 +11,8 @@ public class MovieDTO {
     private Double duracion;
     private String pais;
     private Integer cantVistas;
-    private Integer idCategoria;
+//    private Integer idCategoria;
+    private List<CategoriaDTO> categorias;
     private String anioLanzamiento;
     private String imagen;
     private Integer likes;
@@ -22,7 +25,7 @@ public class MovieDTO {
     public MovieDTO() {
     }
 
-    public MovieDTO(Integer id, String nombre, String descripcion, String frase, Double duracion, String pais, Integer cantVistas, Integer idCategoria, String anioLanzamiento, String imagen, Integer likes, Double valoracion, String director, String escritor, String idioma, String tambienConocidaComo) {
+    public MovieDTO(Integer id, String nombre, String descripcion, String frase, Double duracion, String pais, Integer cantVistas, List<CategoriaDTO> categorias, String anioLanzamiento, String imagen, Integer likes, Double valoracion, String director, String escritor, String idioma, String tambienConocidaComo) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -30,7 +33,7 @@ public class MovieDTO {
         this.duracion = duracion;
         this.pais = pais;
         this.cantVistas = cantVistas;
-        this.idCategoria = idCategoria;
+        this.categorias= categorias;
         this.anioLanzamiento = anioLanzamiento;
         this.imagen = imagen;
         this.likes = likes;
@@ -89,12 +92,13 @@ public class MovieDTO {
         this.cantVistas = cantVistas;
     }
 
-    public Integer getIdCategoria() {
-        return idCategoria;
+
+    public List<CategoriaDTO> getCategorias() {
+        return categorias;
     }
 
-    public void setIdCategoria(Integer idCategoria) {
-        this.idCategoria = idCategoria;
+    public void setCategorias(List<CategoriaDTO> categorias) {
+        this.categorias = categorias;
     }
 
     public String getAnioLanzamiento() {
@@ -102,7 +106,7 @@ public class MovieDTO {
     }
 
     public void setAnioLanzamiento(String anioLanzamiento) {
-        this.anioLanzamiento = this.anioLanzamiento;
+        this.anioLanzamiento = anioLanzamiento;
     }
 
     public String getImagen() {

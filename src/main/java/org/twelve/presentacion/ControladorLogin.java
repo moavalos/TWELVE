@@ -8,21 +8,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.twelve.dominio.PaisRepository;
 import org.twelve.dominio.ServicioLogin;
+import org.twelve.dominio.entities.Pais;
 import org.twelve.dominio.entities.Usuario;
 import org.twelve.dominio.excepcion.ContrasenasNoCoinciden;
 import org.twelve.dominio.excepcion.UsuarioExistente;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 public class ControladorLogin {
 
     private ServicioLogin servicioLogin;
+    private PaisRepository paisRepository;
 
     @Autowired
-    public ControladorLogin(ServicioLogin servicioLogin) {
+    public ControladorLogin(ServicioLogin servicioLogin, PaisRepository paisRepository) {
         this.servicioLogin = servicioLogin;
+        this.paisRepository = paisRepository;
     }
 
     @RequestMapping("/login")
@@ -87,7 +92,13 @@ public class ControladorLogin {
     @RequestMapping(path = "/nuevo-usuario", method = RequestMethod.GET)
     public ModelAndView nuevoUsuario() {
         ModelMap model = new ModelMap();
+
+        List<Pais> paises = paisRepository.findAll();
+        model.put("paises", paises);
+
+
         model.put("usuario", new Usuario());
+
         return new ModelAndView("usuario-datos", model);
     }
 
