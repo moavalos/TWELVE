@@ -1,6 +1,7 @@
 package org.twelve.dominio;
 
 import org.twelve.dominio.entities.Comentario;
+import org.twelve.dominio.entities.Movie;
 import org.twelve.presentacion.dto.ComentarioDTO;
 
 import java.util.List;
@@ -13,4 +14,5 @@ public interface ComentarioService {
 
     Comentario convertToEntity(ComentarioDTO comentarioDTO);
 
+    void actualizarValoracionPelicula(Movie movie);
 }

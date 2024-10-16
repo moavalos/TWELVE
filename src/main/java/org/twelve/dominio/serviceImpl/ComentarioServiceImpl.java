@@ -35,7 +35,7 @@ public class ComentarioServiceImpl implements ComentarioService {
     public List<ComentarioDTO> obtenerComentariosPorPelicula(Integer idMovie) {
         List<Comentario> comentarios = comentarioRepository.findByIdMovie(idMovie);
 
-        // magia
+        //lo vuelve a convertir en dto
         return comentarios.stream().map(comentario -> {
             Usuario usuario = comentario.getUsuario();
             Movie movie = comentario.getMovie();
@@ -50,9 +50,7 @@ public class ComentarioServiceImpl implements ComentarioService {
         Comentario comentario = convertToEntity(comentarioDTO);
         comentarioRepository.save(comentario);
 
-        //hacer que cuando se guarde el comentario se actualice el puntaje en pelicula
-        //comooooooooooo
-
+        //actualiza el puntaje
         Movie movie = comentario.getMovie();
         actualizarValoracionPelicula(movie);
 

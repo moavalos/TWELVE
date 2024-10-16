@@ -49,7 +49,6 @@ public class ComentarioServiceImplTest {
         this.comentario1 = mock(Comentario.class);
         this.comentario2 = mock(Comentario.class);
 
-
     }
 
     @Test
@@ -61,46 +60,31 @@ public class ComentarioServiceImplTest {
         List<ComentarioDTO> listaComentario = comentarioServiceImpl.obtenerComentariosPorPelicula(1);
 
         //validacion
-        assertEquals(0, listaComentario.size(), "La lista debería estar vacía cuando no hay comentarios.");
+        assertEquals(0, listaComentario.size());
         verify(comentarioRepository, times(1)).findByIdMovie(1);
     }
 
 
     @Test
-    public void testHacerComentario() {
+    public void testQueUnUsuarioPuedaAgregarUnComentario() {
         //preparacion
-        //validacion
+        ComentarioDTO comentarioDTO = new ComentarioDTO();
+        comentarioDTO.setDescripcion("Comentario de prueba");
+        comentarioDTO.setValoracion(8.0);
+        comentarioDTO.setIdUsuario(1);
+        comentarioDTO.setIdMovie(1);
+
+        when(repositorioUsuario.buscarPorId(1)).thenReturn(usuario1);
+        when(movieRepository.findById(1)).thenReturn(movie1);
+
         //ejecucion
-    }
-
-
-    @Test
-    public void testSiUnUsuarioHizoUnComentarioEnUnaPeliculaDeberiaTraerElComentario() {
-
-        //preparacion
-        when(movie1.getId()).thenReturn(1);
-
-        when(usuario1.getId()).thenReturn(1);
-        when(usuario1.getUsername()).thenReturn("userTest");
-
-        when(comentario1.getDescripcion()).thenReturn("muy buena");
-        when(comentario1.getValoracion()).thenReturn(9.0);
-        when(comentario1.getUsuario()).thenReturn(usuario1);
-        when(comentario1.getMovie()).thenReturn(movie1);
-
-        when(comentarioRepository.findByIdMovie(1)).thenReturn(Collections.singletonList(comentario1));
-        //ejecucion
-        List<ComentarioDTO> listaComentario = comentarioServiceImpl.obtenerComentariosPorPelicula(1);
+        comentarioServiceImpl.agregarComentario(comentarioDTO);
 
         //validacion
-
-        assertEquals(1, listaComentario.size());
-        assertEquals("muy buena", listaComentario.get(0).getDescripcion());
-        assertEquals(9.0, listaComentario.get(0).getValoracion());
-        assertEquals("userTest", listaComentario.get(0).getUsuario().getUsername());
-
-        verify(comentarioRepository, times(1)).findByIdMovie(1);
+        verify(comentarioRepository, times(1)).save(any(Comentario.class));
+        verify(movieRepository, times(1)).save(movie1);
     }
+
 
     @Test
     public void testQueSiLaMismaPeliculaTieneDosComentariosPorDosUsuariosDiferentesTeTraeLosDosComentarios() {
@@ -146,14 +130,59 @@ public class ComentarioServiceImplTest {
     }
 
     @Test
-    public void testQueAlHacerDosComentariosEnLaMismaPeliculaElPuntajeSePromedie() {
+    public void testActualizarValoracionPeliculaSinComentariosDeberiaEstablecerValoracionACero() {
+        //preparacion
+        when(movie1.getId()).thenReturn(1);
+        when(comentarioRepository.findByIdMovie(1)).thenReturn(Collections.emptyList());
 
+        //ejecucion
+        comentarioServiceImpl.actualizarValoracionPelicula(movie1);
+
+        //validacion
+        verify(movie1).setValoracion(0.0);
+        verify(movieRepository, times(1)).save(movie1);
     }
 
     @Test
-    public void testQueUnMismoUsuarioTengaComentariosEnDosPeliculasDiferentes() {
+    public void testActualizarValoracionPeliculaDeberiaCalcularPromedioCorrectamente() {
+        //preparacion
+        when(movie1.getId()).thenReturn(1); // Mock de la película
+        when(comentarioRepository.findByIdMovie(1)).thenReturn(Arrays.asList(comentario1, comentario2));
 
+        when(comentario1.getValoracion()).thenReturn(7.0);
+        when(comentario2.getValoracion()).thenReturn(9.0);
 
+        //ejecucion
+        comentarioServiceImpl.actualizarValoracionPelicula(movie1);
+
+        //validacion
+        verify(movie1).setValoracion(8.0);
+        verify(movieRepository, times(1)).save(movie1);
     }
 
+
+    @Test
+    public void testParaConvertirDeComentarioDTOAComentarioEntidad() {
+        //preparacion
+        ComentarioDTO comentarioDTO = new ComentarioDTO();
+        comentarioDTO.setDescripcion("Comentario de prueba");
+        comentarioDTO.setValoracion(8.0);
+        comentarioDTO.setIdUsuario(1);
+        comentarioDTO.setIdMovie(1);
+
+        when(repositorioUsuario.buscarPorId(1)).thenReturn(usuario1);
+        when(movieRepository.findById(1)).thenReturn(movie1);
+
+        //ejecucion
+        Comentario comentario = comentarioServiceImpl.convertToEntity(comentarioDTO);
+
+        //validacion
+        assertEquals("Comentario de prueba", comentario.getDescripcion());
+        assertEquals(8.0, comentario.getValoracion());
+        assertEquals(usuario1, comentario.getUsuario());
+        assertEquals(movie1, comentario.getMovie());
+
+        verify(repositorioUsuario, times(1)).buscarPorId(1);
+        verify(movieRepository, times(1)).findById(1);
+    }
 }

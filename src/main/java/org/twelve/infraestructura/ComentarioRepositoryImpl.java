@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository
 public class ComentarioRepositoryImpl implements ComentarioRepository {
-    private final SessionFactory sessionFactory;
+    private SessionFactory sessionFactory;
 
     @Autowired
     public ComentarioRepositoryImpl(SessionFactory sessionFactory) {
