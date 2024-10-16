@@ -46,7 +46,6 @@ public class ComentarioRepositoryImplTest {
         //preparacion
         Movie movie = new Movie();
         movie.setId(1);
-        movie.setIdCategoria(1);
         movie.setNombre("Matrix");
         sessionFactory.getCurrentSession().save(movie);
 
@@ -82,7 +81,6 @@ public class ComentarioRepositoryImplTest {
         //preparacion
         Movie movie = new Movie();
         movie.setId(1);
-        movie.setIdCategoria(1);
         movie.setNombre("matrix");
         sessionFactory.getCurrentSession().save(movie);
 
