@@ -144,7 +144,7 @@ public class ComentarioServiceImplTest {
     @Test
     public void testActualizarValoracionPeliculaDeberiaCalcularPromedioCorrectamente() {
         //preparacion
-        when(movie1.getId()).thenReturn(1); // Mock de la película
+        when(movie1.getId()).thenReturn(1);
         when(comentarioRepository.findByIdMovie(1)).thenReturn(Arrays.asList(comentario1, comentario2));
 
         when(comentario1.getValoracion()).thenReturn(7.0);
