@@ -43,6 +43,7 @@ public class ServicioLoginImpl implements ServicioLogin {
         String passwordEncriptada = passwordEncoder.encode(perfilDTO.getPassword());
         perfilDTO.setPassword(passwordEncriptada);
 
+        perfilDTO.setActivo(true);
         Usuario usuario = PerfilDTO.convertToEntity(perfilDTO);
         Usuario usuarioGuardado = repositorioUsuario.guardar(usuario);
 
