@@ -1,6 +1,7 @@
 package org.twelve.presentacion.dto;
 
 import org.twelve.dominio.entities.Movie;
+import org.twelve.dominio.entities.Usuario;
 
 import java.util.List;
 
@@ -123,5 +124,33 @@ public class PerfilDTO {
         this.peliculasFavoritas = peliculasFavoritas;
     }
 
+    public static Usuario convertToEntity(PerfilDTO perfilDTO) {
+        Usuario usuario = new Usuario();
+        usuario.setId(perfilDTO.getId());
+        usuario.setUsername(perfilDTO.getUsername());
+        usuario.setPassword(perfilDTO.getPassword());
+        usuario.setNombre(perfilDTO.getNombre());
+        usuario.setEmail(perfilDTO.getEmail());
+        usuario.setPais(perfilDTO.getPais());
+        usuario.setDescripcion(perfilDTO.getDescripcion());
+        usuario.setRol(perfilDTO.getRol());
+        usuario.setActivo(perfilDTO.getActivo());
+        return usuario;
+    }
+
+    public static PerfilDTO convertToDTO(Usuario usuario) {
+        PerfilDTO perfilDTO = new PerfilDTO();
+        perfilDTO.setId(usuario.getId());
+        perfilDTO.setUsername(usuario.getUsername());
+        perfilDTO.setPassword(usuario.getPassword());
+        perfilDTO.setNombre(usuario.getNombre());
+        perfilDTO.setEmail(usuario.getEmail());
+        perfilDTO.setPais(usuario.getPais());
+        perfilDTO.setDescripcion(usuario.getDescripcion());
+        perfilDTO.setRol(usuario.getRol());
+        perfilDTO.setActivo(usuario.getActivo());
+
+        return perfilDTO;
+    }
 
 }

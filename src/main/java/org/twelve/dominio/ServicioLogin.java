@@ -1,16 +1,19 @@
 package org.twelve.dominio;
 
-import org.twelve.dominio.entities.Usuario;
 import org.twelve.dominio.excepcion.UsuarioExistente;
+import org.twelve.presentacion.dto.PerfilDTO;
 
+import javax.transaction.Transactional;
+
+@Transactional
 public interface ServicioLogin {
 
-    Usuario consultarUsuario(String email, String password);
+    PerfilDTO consultarUsuario(String email, String password);
 
-    Usuario registrar(Usuario usuario, String confirmPassword) throws Exception;
+    PerfilDTO registrar(PerfilDTO usuario, String confirmPassword) throws Exception;
 
     void validarContrasenas(String password, String confirmPassword);
 
-    void verificarUsuarioExistente(Usuario usuario) throws UsuarioExistente;
+    void verificarUsuarioExistente(PerfilDTO usuario) throws UsuarioExistente;
 
 }

@@ -12,7 +12,6 @@ import org.twelve.dominio.entities.Usuario;
 import org.twelve.presentacion.dto.ComentarioDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,15 +44,13 @@ public class ComentarioServiceImpl implements ComentarioService {
     }
 
     @Override
-    @Transactional
     public void agregarComentario(ComentarioDTO comentarioDTO) {
-        Comentario comentario = convertToEntity(comentarioDTO);
+        Comentario comentario = ComentarioDTO.convertToEntity(comentarioDTO);
+
         comentarioRepository.save(comentario);
 
-        //actualiza el puntaje
         Movie movie = comentario.getMovie();
         actualizarValoracionPelicula(movie);
-
     }
 
     @Override
@@ -63,17 +60,6 @@ public class ComentarioServiceImpl implements ComentarioService {
 
         movie.setValoracion(promedio);
         movieRepository.save(movie);
-    }
-
-    //dto a entidad
-    public Comentario convertToEntity(ComentarioDTO comentarioDTO) {
-        Comentario comentario = new Comentario();
-        comentario.setDescripcion(comentarioDTO.getDescripcion());
-        comentario.setValoracion(comentarioDTO.getValoracion());
-
-        comentario.setUsuario(usuarioRepository.buscarPorId(comentarioDTO.getIdUsuario()));
-        comentario.setMovie(movieRepository.findById(comentarioDTO.getIdMovie()));
-        return comentario;
     }
 
 }

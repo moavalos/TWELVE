@@ -14,6 +14,9 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.twelve.presentacion.dto.PerfilDTO.convertToDTO;
+import static org.twelve.presentacion.dto.PerfilDTO.convertToEntity;
+
 @Service("usuarioService")
 public class UsuarioServiceImpl implements UsuarioService {
 
@@ -29,7 +32,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public List<PerfilDTO> encontrarTodos() {
         List<Usuario> usuarios = repositorioUsuario.encontrarTodos();
-        return usuarios.stream().map(this::convertToDTO).collect(Collectors.toList());
+        return usuarios.stream().map(PerfilDTO::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -64,36 +67,8 @@ public class UsuarioServiceImpl implements UsuarioService {
     public List<PerfilDTO> buscarPorUsername(String username) {
         List<Usuario> usuarios = (List<Usuario>) repositorioUsuario.buscarPorUsername(username);
         return usuarios.stream()
-                .map(this::convertToDTO)
+                .map(PerfilDTO::convertToDTO)
                 .collect(Collectors.toList());
-    }
-
-    public Usuario convertToEntity(PerfilDTO perfilDTO) {
-        Usuario usuario = new Usuario();
-        usuario.setNombre(perfilDTO.getNombre());
-        usuario.setDescripcion(perfilDTO.getDescripcion());
-        usuario.setPais(perfilDTO.getPais());
-        usuario.setEmail(perfilDTO.getEmail());
-        usuario.setId(perfilDTO.getId());
-        usuario.setActivo(perfilDTO.getActivo());
-        usuario.setRol(perfilDTO.getRol());
-        usuario.setPassword(perfilDTO.getPassword());
-        usuario.setUsername(perfilDTO.getUsername());
-        return usuario;
-    }
-
-    public PerfilDTO convertToDTO(Usuario usuario) {
-        PerfilDTO perfilDTO = new PerfilDTO();
-        perfilDTO.setId(usuario.getId());
-        perfilDTO.setNombre(usuario.getNombre());
-        perfilDTO.setDescripcion(usuario.getDescripcion());
-        perfilDTO.setPais(usuario.getPais());
-        perfilDTO.setEmail(usuario.getEmail());
-        perfilDTO.setActivo(usuario.getActivo());
-        perfilDTO.setRol(usuario.getRol());
-        perfilDTO.setPassword(usuario.getPassword());
-        perfilDTO.setUsername(usuario.getUsername());
-        return perfilDTO;
     }
 }
 

@@ -1,10 +1,11 @@
 package org.twelve.dominio;
 
-import org.twelve.dominio.entities.Usuario;
 import org.twelve.presentacion.dto.PerfilDTO;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
+@Transactional
 public interface UsuarioService {
 
     List<PerfilDTO> encontrarTodos();
@@ -15,7 +16,4 @@ public interface UsuarioService {
 
     List<PerfilDTO> buscarPorUsername(String username);
 
-    Usuario convertToEntity(PerfilDTO perfilDTO);
-
-    PerfilDTO convertToDTO(Usuario tempUsuario);
 }

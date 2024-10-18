@@ -1,5 +1,7 @@
 package org.twelve.presentacion.dto;
 
+import org.twelve.dominio.entities.Pais;
+
 public class PaisDTO {
 
     private Integer id;
@@ -24,5 +26,12 @@ public class PaisDTO {
 
     public Integer getId() {
         return id;
+    }
+
+    public static PaisDTO convertToDTO(Pais pais) {
+        return new PaisDTO(
+                pais.getId(),
+                pais.getNombre()
+        );
     }
 }

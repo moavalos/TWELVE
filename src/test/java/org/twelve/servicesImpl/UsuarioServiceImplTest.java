@@ -93,7 +93,7 @@ public class UsuarioServiceImplTest {
         perfilDTO.setNombre("Luis Gomez");
         perfilDTO.setEmail("luis.gomez@ejemplo.com");
 
-        Usuario usuario = usuarioServiceImpl.convertToEntity(perfilDTO);
+        Usuario usuario = PerfilDTO.convertToEntity(perfilDTO);
 
         assertNotNull(usuario);
         assertEquals("Luis Gomez", usuario.getNombre());
@@ -107,7 +107,7 @@ public class UsuarioServiceImplTest {
         usuario.setNombre("Maria Lopez");
         usuario.setEmail("maria.lopez@ejemplo.com");
 
-        PerfilDTO perfilDTO = usuarioServiceImpl.convertToDTO(usuario);
+        PerfilDTO perfilDTO = PerfilDTO.convertToDTO(usuario);
 
         assertNotNull(perfilDTO);
         assertEquals(1, perfilDTO.getId());

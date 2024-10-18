@@ -72,7 +72,7 @@ public class CategoriaServiceImplTest {
         categoria.setId(1);
         categoria.setNombre("Arte");
 
-        CategoriaDTO dto = categoriaServiceImpl.convertToDTO(categoria);
+        CategoriaDTO dto = CategoriaDTO.convertToDTO(categoria);
 
         assertNotNull(dto);
         assertEquals(categoria.getId(), dto.getId());

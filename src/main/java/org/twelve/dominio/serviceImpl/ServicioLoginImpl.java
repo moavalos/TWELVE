@@ -9,6 +9,7 @@ import org.twelve.dominio.ServicioLogin;
 import org.twelve.dominio.entities.Usuario;
 import org.twelve.dominio.excepcion.ContrasenasNoCoinciden;
 import org.twelve.dominio.excepcion.UsuarioExistente;
+import org.twelve.presentacion.dto.PerfilDTO;
 
 @Service("servicioLogin")
 public class ServicioLoginImpl implements ServicioLogin {
@@ -23,24 +24,29 @@ public class ServicioLoginImpl implements ServicioLogin {
     }
 
     @Override
-    public Usuario consultarUsuario(String email, String password) {
+    public PerfilDTO consultarUsuario(String email, String password) {
         Usuario usuario = repositorioUsuario.buscarUsuarioPorEmail(email);
+
         if (usuario != null && passwordEncoder.matches(password, usuario.getPassword())) {
-            return usuario;
+            return PerfilDTO.convertToDTO(usuario);
         }
+
         return null;
     }
 
     // busco solo por mail, comparo password encriptada de la bdd con la del usuario
     @Override
-    public Usuario registrar(Usuario usuario, String confirmPassword) throws Exception {
-        validarContrasenas(usuario.getPassword(), confirmPassword);
-        verificarUsuarioExistente(usuario);
+    public PerfilDTO registrar(PerfilDTO perfilDTO, String confirmPassword) throws Exception {
+        validarContrasenas(perfilDTO.getPassword(), confirmPassword);
+        verificarUsuarioExistente(perfilDTO);
 
-        // encripto contraseña antes de guardar
-        String passwordEncriptada = passwordEncoder.encode(usuario.getPassword());
-        usuario.setPassword(passwordEncriptada);
-        return repositorioUsuario.guardar(usuario);
+        String passwordEncriptada = passwordEncoder.encode(perfilDTO.getPassword());
+        perfilDTO.setPassword(passwordEncriptada);
+
+        Usuario usuario = PerfilDTO.convertToEntity(perfilDTO);
+        Usuario usuarioGuardado = repositorioUsuario.guardar(usuario);
+
+        return PerfilDTO.convertToDTO(usuarioGuardado);
     }
 
     @Override
@@ -51,8 +57,9 @@ public class ServicioLoginImpl implements ServicioLogin {
     }
 
     @Override
-    public void verificarUsuarioExistente(Usuario usuario) throws UsuarioExistente {
-        Usuario usuarioEncontrado = repositorioUsuario.buscarUsuarioPorEmail(usuario.getEmail());
+    public void verificarUsuarioExistente(PerfilDTO perfilDTO) throws UsuarioExistente {
+        Usuario usuarioEncontrado = repositorioUsuario.buscarUsuarioPorEmail(perfilDTO.getEmail());
+
         if (usuarioEncontrado != null) {
             throw new UsuarioExistente();
         }
