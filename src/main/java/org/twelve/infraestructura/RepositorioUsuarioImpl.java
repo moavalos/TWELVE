@@ -65,14 +65,6 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
     }
 
     @Override
-    public Usuario buscarPorUsername(String username) {
-        String hql = "FROM Usuario WHERE username = :username";
-        Query query = sessionFactory.getCurrentSession().createQuery(hql);
-        query.setParameter("username", username);
-        return (Usuario) query.getSingleResult();
-    }
-
-    @Override
     public void seguirUsuario(Usuario usuario, Usuario seguido) {
         Seguidor seguidor = new Seguidor();
         seguidor.setUsuario(usuario);

@@ -14,8 +14,6 @@ public interface UsuarioService {
 
     PerfilDTO crear(PerfilDTO usuario);
 
-    List<PerfilDTO> buscarPorUsername(String username);
-
     void seguirUsuario(Integer usuarioId, Integer seguidoId);
 
     void dejarDeSeguirUsuario(Integer usuarioId, Integer seguidoId);

@@ -15,8 +15,6 @@ public interface RepositorioUsuario {
 
     List<Usuario> encontrarTodos();
 
-    Usuario buscarPorUsername(String username);
-
     void seguirUsuario(Usuario usuario, Usuario seguido);
 
     void dejarDeSeguirUsuario(Usuario usuario, Usuario seguido);

@@ -12,7 +12,6 @@ import org.twelve.presentacion.dto.PerfilDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @Controller
 public class UsuarioController {
@@ -60,8 +59,13 @@ public class UsuarioController {
 
     @RequestMapping(path = "/seguir/{idSeguido}", method = RequestMethod.POST)
     public String seguirUsuario(@PathVariable Integer idSeguido, HttpServletRequest request) {
+        Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
+
+        if (usuarioLogueadoId.equals(idSeguido)) {
+            return "redirect:/error";
+        }
+
         try {
-            Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
             usuarioService.seguirUsuario(usuarioLogueadoId, idSeguido);
         } catch (Exception e) {
             return "redirect:/error";
