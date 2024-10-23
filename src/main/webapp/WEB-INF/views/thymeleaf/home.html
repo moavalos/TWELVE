@@ -66,6 +66,21 @@
 
         </div>
     </div>
+
+        <!-- Columna de perfiles de usuario -->
+        <div class="col-md-3">
+            <h2 class="mb-3">Perfiles</h2>
+            <div class="list-group">
+                <div th:each="perfil : ${perfiles}">
+                    <a th:href="@{'/perfil/' + ${perfil.id}}" class="list-group-item list-group-item-action">
+                        <div class="d-flex align-items-center">
+                            <img th:src="@{/images/user/foto-perfil.jpg}" class="rounded-circle" alt="Avatar de usuario" style="width: 40px; height: 40px;">
+                            <span class="ms-3" th:text="${perfil.nombre}">Nombre del Perfil</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
 </div>
 
 <div th:insert="fragments/footer :: footer"></div>

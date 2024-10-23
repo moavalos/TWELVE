@@ -1,6 +1,11 @@
 -- Inserts del Usuario
-INSERT INTO Usuario (email, password, rol, activo, username)
-VALUES ('test@unlam.edu.ar', 'test', 'ADMIN', true, 'usertest');
+INSERT INTO Usuario (email, password, nombre, username, pais, descripcion, rol, activo)
+VALUES
+    ('admin@example.com', 'password123', 'Admin User', 'admin', 'Argentina', 'Administrador del sistema', 'ADMIN', TRUE),
+    ('juan.perez@example.com', 'pass1234', 'Juan Perez', 'juanperez', 'México', 'Cinéfilo amateur', 'USER', FALSE),
+    ('moderador@example.com', 'modpass456', 'Moderador Uno', 'moduser', 'España', 'Encargado de moderar reseñas', 'MOD', TRUE),
+    ('ana.gomez@example.com', 'ana123', 'Ana Gomez', 'anagomez', 'Chile', 'Amante de películas de acción', 'USER', TRUE),
+    ('carlos.lopez@example.com', 'carlospass', 'Carlos Lopez', 'carlosl', 'Perú', 'Fanático del cine clásico', 'USER', FALSE);
 
 INSERT INTO Categoria (id, nombre)
 VALUES (1, 'SUSPENSO'),

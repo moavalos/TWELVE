@@ -16,4 +16,10 @@ public interface UsuarioService {
 
     List<PerfilDTO> buscarPorUsername(String username);
 
+    void seguirUsuario(Integer usuarioId, Integer seguidoId);
+
+    void dejarDeSeguirUsuario(Integer usuarioId, Integer seguidoId);
+
+    Boolean estaSiguiendo(Integer usuarioId, Integer seguidoId);
+
 }

@@ -8,6 +8,8 @@ import org.twelve.dominio.entities.Movie;
 import org.twelve.dominio.entities.Usuario;
 import org.twelve.presentacion.dto.PerfilDTO;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -22,20 +24,24 @@ public class UsuarioControllerTest {
     private UsuarioService usuarioServiceMock;
     private PerfilDTO perfilMock;
     private Usuario usuarioMock;
+    private HttpSession sessionMock;
+    private HttpServletRequest requestMock;
 
     @BeforeEach
     public void setUp() {
         usuarioServiceMock = mock(UsuarioService.class);
         usuarioMock = mock(Usuario.class);
         perfilMock = mock(PerfilDTO.class);
-        usuarioController = new UsuarioController(usuarioServiceMock);
+        sessionMock = mock(HttpSession.class);
+        requestMock = mock(HttpServletRequest.class);
+        usuarioController = new UsuarioController(usuarioServiceMock, sessionMock);
     }
 
     @Test
     public void testBuscarPorIdUsuarioNoEncontrado() {
         when(usuarioServiceMock.buscarPorId(1)).thenReturn(null);
 
-        ModelAndView modelAndView = usuarioController.buscarPorId(1);
+        ModelAndView modelAndView = usuarioController.verPerfil(1, requestMock);
 
         assertEquals("perfil", modelAndView.getViewName());
         assertNotNull(modelAndView.getModel().get("error"));
@@ -49,7 +55,7 @@ public class UsuarioControllerTest {
         when(perfilMock.getCantidadPeliculasVistasEsteAno()).thenReturn(2);
         when(perfilMock.getPeliculasFavoritas()).thenReturn(Collections.emptyList());
 
-        ModelAndView modelAndView = usuarioController.buscarPorId(1);
+        ModelAndView modelAndView = usuarioController.verPerfil(1, requestMock);
 
         assertEquals("perfil", modelAndView.getViewName());
         assertNotNull(modelAndView.getModel().get("usuario"));
@@ -65,7 +71,7 @@ public class UsuarioControllerTest {
         List<Movie> peliculasFavoritas = Arrays.asList(new Movie(), new Movie());
         when(perfilMock.getPeliculasFavoritas()).thenReturn(peliculasFavoritas);
 
-        ModelAndView modelAndView = usuarioController.buscarPorId(1);
+        ModelAndView modelAndView = usuarioController.verPerfil(1, requestMock);
 
         assertEquals("perfil", modelAndView.getViewName());
         assertNotNull(modelAndView.getModel().get("usuario"));
