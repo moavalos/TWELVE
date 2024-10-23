@@ -6,13 +6,18 @@ import org.twelve.dominio.RepositorioUsuario;
 import org.twelve.dominio.UsuarioMovieRepository;
 import org.twelve.dominio.UsuarioService;
 import org.twelve.dominio.entities.Movie;
+import org.twelve.dominio.entities.Seguidor;
 import org.twelve.dominio.entities.Usuario;
 import org.twelve.presentacion.dto.PerfilDTO;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.twelve.presentacion.dto.PerfilDTO.convertToDTO;
+import static org.twelve.presentacion.dto.PerfilDTO.convertToEntity;
 
 @Service("usuarioService")
 public class UsuarioServiceImpl implements UsuarioService {
@@ -29,7 +34,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public List<PerfilDTO> encontrarTodos() {
         List<Usuario> usuarios = repositorioUsuario.encontrarTodos();
-        return usuarios.stream().map(this::convertToDTO).collect(Collectors.toList());
+        return usuarios.stream().map(PerfilDTO::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -45,10 +50,15 @@ public class UsuarioServiceImpl implements UsuarioService {
         int cantidadPeliculasVistasEsteAno = usuarioMovieRepository.obtenerCantidadPeliculasVistasEsteAno(id);
         List<Movie> peliculasFavoritas = usuarioMovieRepository.obtenerPeliculasFavoritas(id);
 
+        List<Seguidor> seguidores = repositorioUsuario.obtenerSeguidores(id);
+        List<Seguidor> seguidos = repositorioUsuario.obtenerSeguidos(id);
+
         PerfilDTO perfilDTO = convertToDTO(usuario);
         perfilDTO.setCantidadPeliculasVistas(cantidadPeliculasVistas);
         perfilDTO.setCantidadPeliculasVistasEsteAno(cantidadPeliculasVistasEsteAno);
         perfilDTO.setPeliculasFavoritas(peliculasFavoritas);
+        perfilDTO.setSeguidores(seguidores);
+        perfilDTO.setSeguidos(seguidos);
 
         return perfilDTO;
     }
@@ -61,39 +71,35 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public List<PerfilDTO> buscarPorUsername(String username) {
-        List<Usuario> usuarios = (List<Usuario>) repositorioUsuario.buscarPorUsername(username);
-        return usuarios.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public void seguirUsuario(Integer usuarioId, Integer seguidoId) {
+        Usuario usuario = repositorioUsuario.buscarPorId(usuarioId);
+        Usuario seguido = repositorioUsuario.buscarPorId(seguidoId);
+
+        if (usuario == null || seguido == null)
+            throw new IllegalArgumentException("Usuario o seguido no encontrado");
+
+        if (!repositorioUsuario.estaSiguiendo(usuario, seguido))
+            repositorioUsuario.seguirUsuario(usuario, seguido);
     }
 
-    public Usuario convertToEntity(PerfilDTO perfilDTO) {
-        Usuario usuario = new Usuario();
-        usuario.setNombre(perfilDTO.getNombre());
-        usuario.setDescripcion(perfilDTO.getDescripcion());
-        usuario.setPais(perfilDTO.getPais());
-        usuario.setEmail(perfilDTO.getEmail());
-        usuario.setId(perfilDTO.getId());
-        usuario.setActivo(perfilDTO.getActivo());
-        usuario.setRol(perfilDTO.getRol());
-        usuario.setPassword(perfilDTO.getPassword());
-        usuario.setUsername(perfilDTO.getUsername());
-        return usuario;
+    @Override
+    public void dejarDeSeguirUsuario(Integer usuarioId, Integer seguidoId) {
+        Usuario usuario = repositorioUsuario.buscarPorId(usuarioId);
+        Usuario seguido = repositorioUsuario.buscarPorId(seguidoId);
+
+        if (usuario == null || seguido == null)
+            throw new IllegalArgumentException("Usuario o seguido no encontrado");
+
+        if (repositorioUsuario.estaSiguiendo(usuario, seguido))
+            repositorioUsuario.dejarDeSeguirUsuario(usuario, seguido);
     }
 
-    public PerfilDTO convertToDTO(Usuario usuario) {
-        PerfilDTO perfilDTO = new PerfilDTO();
-        perfilDTO.setId(usuario.getId());
-        perfilDTO.setNombre(usuario.getNombre());
-        perfilDTO.setDescripcion(usuario.getDescripcion());
-        perfilDTO.setPais(usuario.getPais());
-        perfilDTO.setEmail(usuario.getEmail());
-        perfilDTO.setActivo(usuario.getActivo());
-        perfilDTO.setRol(usuario.getRol());
-        perfilDTO.setPassword(usuario.getPassword());
-        perfilDTO.setUsername(usuario.getUsername());
-        return perfilDTO;
+    @Override
+    public Boolean estaSiguiendo(Integer usuarioId, Integer seguidoId) {
+        Usuario usuario = repositorioUsuario.buscarPorId(usuarioId);
+        Usuario seguido = repositorioUsuario.buscarPorId(seguidoId);
+        return repositorioUsuario.estaSiguiendo(usuario, seguido);
     }
+
 }
 

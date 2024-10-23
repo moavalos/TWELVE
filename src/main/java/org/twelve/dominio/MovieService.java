@@ -2,8 +2,10 @@ package org.twelve.dominio;
 
 import org.twelve.presentacion.dto.MovieDTO;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
+@Transactional
 public interface MovieService {
 
     List<MovieDTO> getAll();

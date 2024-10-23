@@ -9,8 +9,6 @@ import org.twelve.dominio.serviceImpl.UsuarioServiceImpl;
 import org.twelve.presentacion.dto.PerfilDTO;
 
 import javax.persistence.EntityNotFoundException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,8 +18,7 @@ import static org.mockito.Mockito.*;
 public class UsuarioServiceImplTest {
 
     private Usuario usuarioMock;
-    private HttpServletRequest requestMock;
-    private HttpSession sessionMock;
+    private Usuario seguidoMock;
     private UsuarioServiceImpl usuarioServiceImpl;
     private RepositorioUsuario repositorioUsuario;
     private UsuarioMovieRepository usuarioMovieRepository;
@@ -29,8 +26,7 @@ public class UsuarioServiceImplTest {
     @BeforeEach
     public void init() {
         usuarioMock = mock(Usuario.class);
-        requestMock = mock(HttpServletRequest.class);
-        sessionMock = mock(HttpSession.class);
+        seguidoMock = mock(Usuario.class);
         repositorioUsuario = mock(RepositorioUsuario.class);
         usuarioMovieRepository = mock(UsuarioMovieRepository.class);
         usuarioServiceImpl = new UsuarioServiceImpl(repositorioUsuario, usuarioMovieRepository);
@@ -93,7 +89,7 @@ public class UsuarioServiceImplTest {
         perfilDTO.setNombre("Luis Gomez");
         perfilDTO.setEmail("luis.gomez@ejemplo.com");
 
-        Usuario usuario = usuarioServiceImpl.convertToEntity(perfilDTO);
+        Usuario usuario = PerfilDTO.convertToEntity(perfilDTO);
 
         assertNotNull(usuario);
         assertEquals("Luis Gomez", usuario.getNombre());
@@ -107,7 +103,7 @@ public class UsuarioServiceImplTest {
         usuario.setNombre("Maria Lopez");
         usuario.setEmail("maria.lopez@ejemplo.com");
 
-        PerfilDTO perfilDTO = usuarioServiceImpl.convertToDTO(usuario);
+        PerfilDTO perfilDTO = PerfilDTO.convertToDTO(usuario);
 
         assertNotNull(perfilDTO);
         assertEquals(1, perfilDTO.getId());
@@ -125,5 +121,153 @@ public class UsuarioServiceImplTest {
         assertTrue(resultado.isEmpty());
 
         verify(repositorioUsuario, times(1)).encontrarTodos();
+    }
+
+    @Test
+    public void testSeguirUsuarioExitosoDeberiaGuardarRelacion() {
+        when(repositorioUsuario.buscarPorId(1)).thenReturn(usuarioMock);
+        when(repositorioUsuario.buscarPorId(2)).thenReturn(seguidoMock);
+        when(repositorioUsuario.estaSiguiendo(usuarioMock, seguidoMock)).thenReturn(false);
+
+        usuarioServiceImpl.seguirUsuario(1, 2);
+
+        verify(repositorioUsuario, times(1)).seguirUsuario(usuarioMock, seguidoMock);
+    }
+
+    @Test
+    public void testSeguirUsuarioYaSiguiendoNoDeberiaGuardarRelacion() {
+        when(repositorioUsuario.buscarPorId(1)).thenReturn(usuarioMock);
+        when(repositorioUsuario.buscarPorId(2)).thenReturn(seguidoMock);
+        when(repositorioUsuario.estaSiguiendo(usuarioMock, seguidoMock)).thenReturn(true);
+
+        usuarioServiceImpl.seguirUsuario(1, 2);
+
+        verify(repositorioUsuario, never()).seguirUsuario(usuarioMock, seguidoMock);
+    }
+
+    @Test
+    public void testSeguirUsuarioConUsuarioNoEncontradoDeberiaLanzarExcepcion() {
+        when(repositorioUsuario.buscarPorId(999)).thenReturn(null);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.seguirUsuario(999, 2);
+        });
+
+        assertEquals("Usuario o seguido no encontrado", exception.getMessage());
+        verify(repositorioUsuario, never()).seguirUsuario(any(), any());
+    }
+
+    @Test
+    public void testSeguirUsuarioConSeguidoNoEncontradoDeberiaLanzarExcepcion() {
+        when(repositorioUsuario.buscarPorId(1)).thenReturn(usuarioMock);
+        when(repositorioUsuario.buscarPorId(999)).thenReturn(null);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.seguirUsuario(1, 999);
+        });
+
+        assertEquals("Usuario o seguido no encontrado", exception.getMessage());
+        verify(repositorioUsuario, never()).seguirUsuario(any(), any());
+    }
+
+    @Test
+    public void testSeguirUsuarioConAmbosNoEncontradosDeberiaLanzarExcepcion() {
+        when(repositorioUsuario.buscarPorId(999)).thenReturn(null);
+        when(repositorioUsuario.buscarPorId(888)).thenReturn(null);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.seguirUsuario(999, 888);
+        });
+
+        assertEquals("Usuario o seguido no encontrado", exception.getMessage());
+        verify(repositorioUsuario, never()).seguirUsuario(any(), any());
+    }
+
+    @Test
+    public void testDejarDeSeguirUsuarioExitosoDeberiaEliminarRelacion() {
+        when(repositorioUsuario.buscarPorId(1)).thenReturn(usuarioMock);
+        when(repositorioUsuario.buscarPorId(2)).thenReturn(seguidoMock);
+        when(repositorioUsuario.estaSiguiendo(usuarioMock, seguidoMock)).thenReturn(true);
+
+        usuarioServiceImpl.dejarDeSeguirUsuario(1, 2);
+
+        verify(repositorioUsuario, times(1)).dejarDeSeguirUsuario(usuarioMock, seguidoMock);
+    }
+
+    @Test
+    public void testDejarDeSeguirUsuarioNoSiguiendoNoDeberiaEliminarRelacion() {
+        when(repositorioUsuario.buscarPorId(1)).thenReturn(usuarioMock);
+        when(repositorioUsuario.buscarPorId(2)).thenReturn(seguidoMock);
+        when(repositorioUsuario.estaSiguiendo(usuarioMock, seguidoMock)).thenReturn(false);
+
+        usuarioServiceImpl.dejarDeSeguirUsuario(1, 2);
+
+        verify(repositorioUsuario, never()).dejarDeSeguirUsuario(usuarioMock, seguidoMock);
+    }
+
+    @Test
+    public void testDejarDeSeguirUsuarioConUsuarioNoEncontradoDeberiaLanzarExcepcion() {
+        when(repositorioUsuario.buscarPorId(999)).thenReturn(null);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.dejarDeSeguirUsuario(999, 2);
+        });
+
+        assertEquals("Usuario o seguido no encontrado", exception.getMessage());
+        verify(repositorioUsuario, never()).dejarDeSeguirUsuario(any(), any());
+    }
+
+    @Test
+    public void testDejarDeSeguirUsuarioConSeguidoNoEncontradoDeberiaLanzarExcepcion() {
+        when(repositorioUsuario.buscarPorId(1)).thenReturn(usuarioMock);
+        when(repositorioUsuario.buscarPorId(999)).thenReturn(null);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.dejarDeSeguirUsuario(1, 999);
+        });
+
+        assertEquals("Usuario o seguido no encontrado", exception.getMessage());
+        verify(repositorioUsuario, never()).dejarDeSeguirUsuario(any(), any());
+    }
+
+    @Test
+    public void testDejarDeSeguirUsuarioConAmbosNoEncontradosDeberiaLanzarExcepcion() {
+        when(repositorioUsuario.buscarPorId(999)).thenReturn(null);
+        when(repositorioUsuario.buscarPorId(888)).thenReturn(null);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.dejarDeSeguirUsuario(999, 888);
+        });
+
+        assertEquals("Usuario o seguido no encontrado", exception.getMessage());
+        verify(repositorioUsuario, never()).dejarDeSeguirUsuario(any(), any());
+    }
+
+    @Test
+    public void testEstaSiguiendoUsuarioCuandoAmbosExistenDeberiaRetornarTrue() {
+        when(repositorioUsuario.buscarPorId(1)).thenReturn(usuarioMock);
+        when(repositorioUsuario.buscarPorId(2)).thenReturn(seguidoMock);
+        when(repositorioUsuario.estaSiguiendo(usuarioMock, seguidoMock)).thenReturn(true);
+
+        Boolean resultado = usuarioServiceImpl.estaSiguiendo(1, 2);
+
+        assertTrue(resultado);
+        verify(repositorioUsuario, times(1)).buscarPorId(1);
+        verify(repositorioUsuario, times(1)).buscarPorId(2);
+        verify(repositorioUsuario, times(1)).estaSiguiendo(usuarioMock, seguidoMock);
+    }
+
+    @Test
+    public void testEstaSiguiendoUsuarioCuandoAmbosExistenPeroNoSiguiendoDeberiaRetornarFalse() {
+        when(repositorioUsuario.buscarPorId(1)).thenReturn(usuarioMock);
+        when(repositorioUsuario.buscarPorId(2)).thenReturn(seguidoMock);
+        when(repositorioUsuario.estaSiguiendo(usuarioMock, seguidoMock)).thenReturn(false);
+
+        Boolean resultado = usuarioServiceImpl.estaSiguiendo(1, 2);
+
+        assertFalse(resultado);
+        verify(repositorioUsuario, times(1)).buscarPorId(1);
+        verify(repositorioUsuario, times(1)).buscarPorId(2);
+        verify(repositorioUsuario, times(1)).estaSiguiendo(usuarioMock, seguidoMock);
     }
 }

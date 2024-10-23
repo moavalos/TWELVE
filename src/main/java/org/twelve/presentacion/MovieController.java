@@ -10,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.twelve.dominio.CategoriaService;
 import org.twelve.dominio.ComentarioService;
 import org.twelve.dominio.MovieService;
+import org.twelve.dominio.UsuarioService;
 import org.twelve.presentacion.dto.CategoriaDTO;
 import org.twelve.presentacion.dto.ComentarioDTO;
 import org.twelve.presentacion.dto.MovieDTO;
@@ -26,12 +27,14 @@ public class MovieController {
     @Lazy
     private final CategoriaService categoriaService;
     private final ComentarioService comentarioService;
+    private final UsuarioService usuarioService;
 
     @Autowired
-    public MovieController(MovieService movieService, CategoriaService categoriaService, ComentarioService comentarioService) {
+    public MovieController(MovieService movieService, CategoriaService categoriaService, ComentarioService comentarioService, UsuarioService usuarioService) {
         this.movieService = movieService;
         this.categoriaService = categoriaService;
         this.comentarioService = comentarioService;
+        this.usuarioService = usuarioService;
     }
 
     @RequestMapping(path = "/home", method = RequestMethod.GET)
@@ -40,8 +43,11 @@ public class MovieController {
                 .limit(4) // limita 4 peli nomas
                 .collect(Collectors.toList());
 
+        List<PerfilDTO> perfiles = usuarioService.encontrarTodos();
+
         ModelMap modelo = new ModelMap();
         modelo.put("movies", topMovies);
+        modelo.put("perfiles", perfiles);
 
         return new ModelAndView("home", modelo);
     }

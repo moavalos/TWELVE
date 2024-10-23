@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.twelve.dominio.PaisService;
 import org.twelve.dominio.ServicioLogin;
-import org.twelve.dominio.entities.Usuario;
 import org.twelve.dominio.excepcion.ContrasenasNoCoinciden;
 import org.twelve.dominio.excepcion.UsuarioExistente;
 import org.twelve.presentacion.dto.PaisDTO;
+import org.twelve.presentacion.dto.PerfilDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -42,10 +42,10 @@ public class ControladorLogin {
     public ModelAndView validarLogin(@ModelAttribute("datosLogin") DatosLogin datosLogin, HttpServletRequest request) {
         ModelMap model = new ModelMap();
 
-        Usuario usuarioBuscado = servicioLogin.consultarUsuario(datosLogin.getEmail(), datosLogin.getPassword());
+        PerfilDTO usuarioBuscado = servicioLogin.consultarUsuario(datosLogin.getEmail(), datosLogin.getPassword());
         if (usuarioBuscado != null) {
             request.getSession().setAttribute("ROL", usuarioBuscado.getRol());
-            request.getSession().setAttribute("usuario", usuarioBuscado);
+            request.getSession().setAttribute("usuarioId", usuarioBuscado.getId());
             return new ModelAndView("redirect:/home");
         } else {
             model.put("error", "Usuario o clave incorrecta");
@@ -54,14 +54,14 @@ public class ControladorLogin {
     }
 
     @RequestMapping(path = "/registrarme", method = RequestMethod.POST)
-    public ModelAndView registrarYCompletarPerfil(@ModelAttribute("usuario") Usuario usuario,
+    public ModelAndView registrarYCompletarPerfil(@ModelAttribute("usuario") PerfilDTO usuario,
                                                   @RequestParam("confirmPassword") String confirmPassword,
                                                   HttpServletRequest request) {
         ModelMap model = new ModelMap();
 
         try {
             servicioLogin.verificarUsuarioExistente(usuario);
-            Usuario usuarioGuardado = servicioLogin.registrar(usuario, confirmPassword);
+            PerfilDTO usuarioGuardado = servicioLogin.registrar(usuario, confirmPassword);
 
             if (usuarioGuardado.getNombre() == null || usuarioGuardado.getNombre().isEmpty()) {
                 model.put("mensaje", "Por favor, completa tu perfil.");
@@ -95,7 +95,7 @@ public class ControladorLogin {
 
         List<PaisDTO> paises = paisService.findAll();
         model.put("paises", paises);
-        model.put("usuario", new Usuario());
+        model.put("usuario", new PerfilDTO());
 
         return new ModelAndView("usuario-datos", model);
     }

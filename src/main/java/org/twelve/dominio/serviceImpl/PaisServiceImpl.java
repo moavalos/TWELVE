@@ -23,14 +23,7 @@ public class PaisServiceImpl implements PaisService {
     @Override
     public List<PaisDTO> findAll() {
         List<Pais> paises = paisRepository.findAll();
-        return paises.stream().map(this::convertToDTO).collect(Collectors.toList());
-    }
-
-    public PaisDTO convertToDTO(Pais pais) {
-        return new PaisDTO(
-                pais.getId(),
-                pais.getNombre()
-        );
+        return paises.stream().map(PaisDTO::convertToDTO).collect(Collectors.toList());
     }
 
 }

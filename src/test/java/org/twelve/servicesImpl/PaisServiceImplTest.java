@@ -65,7 +65,7 @@ public class PaisServiceImplTest {
 
     @Test
     public void testConvertToDTODeberiaConvertirPaisCorrectamente() {
-        PaisDTO result = paisServiceImpl.convertToDTO(pais1);
+        PaisDTO result = PaisDTO.convertToDTO(pais1);
 
         assertNotNull(result);
         assertEquals(pais1.getId(), result.getId());

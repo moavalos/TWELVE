@@ -7,6 +7,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.twelve.dominio.CategoriaService;
 import org.twelve.dominio.ComentarioService;
 import org.twelve.dominio.MovieService;
+import org.twelve.dominio.UsuarioService;
 import org.twelve.dominio.entities.Movie;
 import org.twelve.presentacion.dto.CategoriaDTO;
 import org.twelve.presentacion.dto.MovieDTO;
@@ -35,6 +36,7 @@ public class MovieControllerTest {
     private MovieService movieService;
     private CategoriaService categoriaService;
     private ComentarioService comentarioService;
+    private UsuarioService usuarioService;
 
     @BeforeEach
     public void init() {
@@ -45,7 +47,8 @@ public class MovieControllerTest {
         movieService = mock(MovieService.class);
         categoriaService = mock(CategoriaService.class);
         comentarioService = mock(ComentarioService.class);
-        movieController = new MovieController(movieService, categoriaService, comentarioService);
+        usuarioService = mock(UsuarioService.class);
+        movieController = new MovieController(movieService, categoriaService, comentarioService, usuarioService);
     }
 
     @Test
