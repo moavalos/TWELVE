@@ -25,5 +25,4 @@ public interface MovieRepository {
     List<Movie> findByCategoriaIdNewest(Integer idCategoria);
 
     List<Movie> findNewestMovie();
-
 }

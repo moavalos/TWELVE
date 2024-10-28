@@ -4,6 +4,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.twelve.dominio.RepositorioUsuario;
+import org.twelve.dominio.entities.Seguidor;
 import org.twelve.dominio.entities.Usuario;
 
 import javax.persistence.Query;
@@ -11,6 +12,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository("repositorioUsuario")
+@Transactional
 public class RepositorioUsuarioImpl implements RepositorioUsuario {
 
     private SessionFactory sessionFactory;
@@ -28,10 +30,10 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
     }
 
     /*
-    * createCriteria establece el tipo de entidad a consultar
-    * Restrictions.eq("email", email) añade restrinccion para filtrar por mail
-    * uniqueResult() devuelve el resultado o null
-    */
+     * createCriteria establece el tipo de entidad a consultar
+     * Restrictions.eq("email", email) añade restrinccion para filtrar por mail
+     * uniqueResult() devuelve el resultado o null
+     */
     @Override
     public Usuario buscarUsuarioPorEmail(String email) {
         String hql = "FROM Usuario WHERE email = :email";
@@ -57,15 +59,52 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
 
     @Override
     public List<Usuario> encontrarTodos() {
-        return List.of();
+        String hql = "FROM Usuario";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        return query.getResultList();
     }
 
     @Override
-    public Usuario buscarPorUsername(String username) {
-        String hql = "FROM Usuario WHERE username = :username";
+    public void seguirUsuario(Usuario usuario, Usuario seguido) {
+        Seguidor seguidor = new Seguidor();
+        seguidor.setUsuario(usuario);
+        seguidor.setSeguido(seguido);
+        sessionFactory.getCurrentSession().save(seguidor);
+    }
+
+    @Override
+    public void dejarDeSeguirUsuario(Usuario usuario, Usuario seguido) {
+        String hql = "DELETE FROM Seguidor WHERE usuario.id = :usuarioId AND seguido.id = :seguidoId";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
-        query.setParameter("username", username);
-        return (Usuario) query.getSingleResult();
+        query.setParameter("usuarioId", usuario.getId());
+        query.setParameter("seguidoId", seguido.getId());
+        query.executeUpdate();
+    }
+
+    @Override
+    public Boolean estaSiguiendo(Usuario usuario, Usuario seguido) {
+        String hql = "SELECT COUNT(*) FROM Seguidor WHERE usuario.id = :usuarioId AND seguido.id = :seguidoId";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("usuarioId", usuario.getId());
+        query.setParameter("seguidoId", seguido.getId());
+        Long count = (Long) query.getSingleResult();
+        return count > 0;
+    }
+
+    @Override
+    public List<Seguidor> obtenerSeguidores(Integer usuarioId) {
+        String hql = "FROM Seguidor WHERE seguido.id = :usuarioId";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("usuarioId", usuarioId);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Seguidor> obtenerSeguidos(Integer usuarioId) {
+        String hql = "FROM Seguidor WHERE usuario.id = :usuarioId";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("usuarioId", usuarioId);
+        return query.getResultList();
     }
 
 }

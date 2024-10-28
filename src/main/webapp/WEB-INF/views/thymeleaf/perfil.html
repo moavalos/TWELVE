@@ -22,6 +22,13 @@
                 <p class="mt-3" th:text="${usuario.descripcion}">Descripción del perfil</p>
                 <p>Ubicación: <span th:text="${usuario.pais}">Ubicación</span></p>
                 <p>Username: <span th:text="${usuario.username}">@username</span></p>
+
+                <div class="follow-button mt-4">
+                    <form th:action="@{${seguirODejarUrl}}" method="post">
+                        <button type="submit" class="btn" th:classappend="${estaSiguiendo ? 'btn-danger' : 'btn-primary'}" th:text="${estaSiguiendo ? 'Dejar de Seguir' : 'Seguir'}"></button>
+                    </form>
+                </div>
+
             </div>
         </div>
         <div class="stats col-md-4 d-flex justify-content-around">
@@ -31,15 +38,15 @@
             </div>
             <div class="stat-item">
                 <p class="stat-title">Vistas este año</p>
-                <p class="stat-number" th:text="${cantidadPeliculasVistasEsteAno}">58</p>
+                <p class="stat-number" th:text="${cantidadPeliculasVistasEsteAno}"></p>
             </div>
             <div class="stat-item">
                 <p class="stat-title">Seguidores</p>
-                <p class="stat-number">100</p>
+                <p class="stat-number" th:text="${seguidores.size()}"></p>
             </div>
             <div class="stat-item">
                 <p class="stat-title">Siguiendo</p>
-                <p class="stat-number">78</p>
+                <p class="stat-number" th:text="${siguiendo.size()}"></p>
             </div>
         </div>
     </div>

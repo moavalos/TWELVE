@@ -3,17 +3,16 @@ package org.twelve.dominio.entities;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = "categorias")
+@ToString(exclude = "categorias")
 @Table(name = "Movie")
 public class Movie {
 
@@ -34,8 +33,7 @@ public class Movie {
 
     private Integer cantVistas;
 
-
-    @ManyToMany(cascade = {
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE
     })
@@ -52,14 +50,16 @@ public class Movie {
 
     //private Cast cast;
 
+    //private Director director;
+
     private Integer idComentario;
 
-    // favorita
     private Integer likes;
 
     @Column(length = 5)
     private Double valoracion;
 
+    // Nuevos campos agregados
     private String director;
 
     private String escritor;
@@ -67,6 +67,9 @@ public class Movie {
     private String idioma;
 
     private String tambienConocidaComo;
+
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Comentario> comentarios;
 
     @OneToMany(mappedBy = "pelicula")
     private List<UsuarioMovie> usuariosQueLaVieron;

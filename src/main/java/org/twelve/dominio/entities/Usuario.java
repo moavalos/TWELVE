@@ -1,6 +1,9 @@
 package org.twelve.dominio.entities;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
@@ -8,7 +11,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Entity
 @EqualsAndHashCode
 @Table(name = "Usuario")
@@ -37,5 +39,11 @@ public class Usuario {
 
     @OneToMany(mappedBy = "usuario")
     private List<UsuarioMovie> peliculasVistas;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<Seguidor> seguidores;
+
+    @OneToMany(mappedBy = "seguido", cascade = CascadeType.ALL)
+    private List<Seguidor> seguidos;
 
 }

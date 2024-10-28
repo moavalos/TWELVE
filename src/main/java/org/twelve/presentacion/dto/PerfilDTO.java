@@ -1,7 +1,11 @@
 package org.twelve.presentacion.dto;
 
 import org.twelve.dominio.entities.Movie;
+import org.twelve.dominio.entities.Seguidor;
+import org.twelve.dominio.entities.Usuario;
 
+import javax.persistence.CascadeType;
+import javax.persistence.OneToMany;
 import java.util.List;
 
 public class PerfilDTO {
@@ -19,7 +23,16 @@ public class PerfilDTO {
     private Integer cantidadPeliculasVistasEsteAno;
     private List<Movie> peliculasFavoritas;
 
-    public PerfilDTO() {}
+    private List<Seguidor> seguidores;
+    private List<Seguidor> seguidos;
+
+    public PerfilDTO() {
+    }
+
+    public PerfilDTO(Integer id, String username) {
+        this.id = id;
+        this.username = username;
+    }
 
     public String getUsername() {
         return username;
@@ -61,7 +74,9 @@ public class PerfilDTO {
         this.activo = activo;
     }
 
-    public Integer getId() { return id; }
+    public Integer getId() {
+        return id;
+    }
 
     public void setId(Integer id) {
         this.id = id;
@@ -115,5 +130,53 @@ public class PerfilDTO {
         this.peliculasFavoritas = peliculasFavoritas;
     }
 
+    public List<Seguidor> getSeguidores() {
+        return seguidores;
+    }
+
+    public void setSeguidores(List<Seguidor> seguidores) {
+        this.seguidores = seguidores;
+    }
+
+    public List<Seguidor> getSeguidos() {
+        return seguidos;
+    }
+
+    public void setSeguidos(List<Seguidor> seguidos) {
+        this.seguidos = seguidos;
+    }
+
+    public static Usuario convertToEntity(PerfilDTO perfilDTO) {
+        Usuario usuario = new Usuario();
+        usuario.setId(perfilDTO.getId());
+        usuario.setUsername(perfilDTO.getUsername());
+        usuario.setPassword(perfilDTO.getPassword());
+        usuario.setNombre(perfilDTO.getNombre());
+        usuario.setEmail(perfilDTO.getEmail());
+        usuario.setPais(perfilDTO.getPais());
+        usuario.setDescripcion(perfilDTO.getDescripcion());
+        usuario.setRol(perfilDTO.getRol());
+        usuario.setActivo(perfilDTO.getActivo());
+        usuario.setSeguidos(perfilDTO.getSeguidores());
+        usuario.setSeguidores(perfilDTO.getSeguidores());
+        return usuario;
+    }
+
+    public static PerfilDTO convertToDTO(Usuario usuario) {
+        PerfilDTO perfilDTO = new PerfilDTO();
+        perfilDTO.setId(usuario.getId());
+        perfilDTO.setUsername(usuario.getUsername());
+        perfilDTO.setPassword(usuario.getPassword());
+        perfilDTO.setNombre(usuario.getNombre());
+        perfilDTO.setEmail(usuario.getEmail());
+        perfilDTO.setPais(usuario.getPais());
+        perfilDTO.setDescripcion(usuario.getDescripcion());
+        perfilDTO.setRol(usuario.getRol());
+        perfilDTO.setActivo(usuario.getActivo());
+        perfilDTO.setSeguidores(usuario.getSeguidores());
+        perfilDTO.setSeguidos(usuario.getSeguidos());
+
+        return perfilDTO;
+    }
 
 }

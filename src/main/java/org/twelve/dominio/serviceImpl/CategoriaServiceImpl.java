@@ -7,12 +7,10 @@ import org.twelve.dominio.CategoriaService;
 import org.twelve.dominio.entities.Categoria;
 import org.twelve.presentacion.dto.CategoriaDTO;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service("categoriaService")
-@Transactional
 public class CategoriaServiceImpl implements CategoriaService {
 
     private final CategoriaRepository categoriaRepository;
@@ -26,14 +24,8 @@ public class CategoriaServiceImpl implements CategoriaService {
     public List<CategoriaDTO> getAll() {
         List<Categoria> categorias = categoriaRepository.findAll();
         return categorias.stream()
-                .map(this::convertToDTO)
+                .map(CategoriaDTO::convertToDTO)
                 .collect(Collectors.toList());
     }
 
-    public CategoriaDTO convertToDTO(Categoria categoria) {
-        CategoriaDTO dto = new CategoriaDTO();
-        dto.setId(categoria.getId());
-        dto.setNombre(categoria.getNombre());
-        return dto;
-    }
 }

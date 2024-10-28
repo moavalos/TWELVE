@@ -8,12 +8,14 @@ import org.twelve.dominio.MovieRepository;
 import org.twelve.dominio.entities.Movie;
 
 import javax.persistence.Query;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository("movieRepository")
+@Transactional
 public class MovieRepositoryImpl implements MovieRepository {
 
-    private SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
 
     @Autowired
     public MovieRepositoryImpl(SessionFactory sessionFactory) {
@@ -92,7 +94,6 @@ public class MovieRepositoryImpl implements MovieRepository {
     }
 
 
-
     @Override
     public List<Movie> findNewestMovie() {
         String hql = "FROM Movie ORDER BY añoLanzamiento DESC";
@@ -100,6 +101,7 @@ public class MovieRepositoryImpl implements MovieRepository {
         query.setMaxResults(10);
         return query.getResultList();
     }
+
 }
 
 
