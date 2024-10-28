@@ -97,5 +97,18 @@ public class UsuarioServiceImpl implements UsuarioService {
         perfilDTO.setUsername(usuario.getUsername());
         return perfilDTO;
     }
+
+    @Override
+    public void actualizarFotoPerfil(Integer userId, String fotoRuta) {
+         Usuario usuario = repositorioUsuario.buscarPorId(userId);
+
+        if (usuario.getId().equals(userId)) {
+            usuario.setRutaFotoPerfil(fotoRuta); // Asumiendo que la entidad Usuario tiene este atributo
+
+            repositorioUsuario.guardar(usuario); // Guardar cambios en la base de datos
+        } else {
+            throw new RuntimeException("Usuario no encontrado con ID: " + userId);
+        }
+    }
 }
 

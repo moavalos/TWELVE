@@ -15,5 +15,6 @@ public interface RepositorioUsuario {
     List<Usuario> encontrarTodos();
 
     Usuario buscarPorUsername(String username);
+
 }
 

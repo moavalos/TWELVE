@@ -15,7 +15,11 @@
     <div class="profile-info row">
         <div class="profile-left col-md-8 d-flex">
             <div class="avatar">
-                <img th:src="@{/images/user/foto-perfil.jpg}" alt="User Avatar">
+                <img th:src="@{/images/user/no-user-image-icon.jpg}" alt="User Avatar">
+                <form action="/upload-profile-picture" method="post" enctype="multipart/form-data">
+                    <input type="file" name="profilePicture" accept="image/*" onchange="previewImage(event)">
+                    <button type="submit">Cambiar Foto de Perfil</button>
+                </form>
             </div>
             <div class="info ms-4">
                 <h1 th:text="${usuario.nombre}">Nombre del Usuario</h1>

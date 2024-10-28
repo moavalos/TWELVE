@@ -35,7 +35,12 @@ public class Usuario {
 
     private Boolean activo = false;
 
+    private String rutaFotoPerfil; // Campo para almacenar la ruta de la foto de perfil
+
+
     @OneToMany(mappedBy = "usuario")
     private List<UsuarioMovie> peliculasVistas;
+
+
 
 }
