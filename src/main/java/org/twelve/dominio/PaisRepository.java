@@ -7,4 +7,6 @@ import java.util.List;
 public interface PaisRepository {
 
     List<Pais> findAll();
+
+    Pais findPaisById(Integer id);
 }

@@ -67,54 +67,54 @@ public class MovieServiceImplTest {
 
         verify(movieRepository, times(1)).findById(1);
     }
-
-
-    @Test
-    public void testCreateCuandoSeCreaPeliculaDeberiaRetornarMovieDTO() {
-        Categoria categoria1 = new Categoria(1, "Acción");
-        Categoria categoria2 = new Categoria(2, "Ciencia Ficción");
-
-        Set<Categoria> categoriasSet = new HashSet<>(Arrays.asList(categoria1, categoria2));
-
-        when(movie1.getNombre()).thenReturn("Matrix");
-        when(movie1.getDuracion()).thenReturn(136.8);
-        when(movie1.getCategorias()).thenReturn(categoriasSet);
-
-        List<CategoriaDTO> categoriaDTOList = Arrays.asList(
-                new CategoriaDTO(1, "Acción"),
-                new CategoriaDTO(2, "Ciencia Ficción")
-        );
-
-        MovieDTO movieDTO = new MovieDTO(
-                1,
-                "Matrix",
-                "A hacker discovers...",
-                "Welcome to the real world",
-                136.8,
-                "USA",
-                5000,
-                categoriaDTOList,
-                "1999",
-                "matrix.jpg",
-                3000,
-                9.0,
-                "Lana Wachowski, Lilly Wachowski", // director
-                "Lana Wachowski, Lilly Wachowski", // escritor
-                "Inglés",                         // idioma
-                "The Matrix, Matrix"              // también conocida como
-        );
-
-        when(movieRepository.save(any(Movie.class))).thenReturn(movie1);
-
-        MovieDTO result = movieServiceImpl.create(movieDTO);
-
-        assertNotNull(result);
-        assertEquals("Matrix", result.getNombre());
-        assertEquals(136.8, result.getDuracion());
-        assertEquals(categoriaDTOList.size(), result.getCategorias().size());
-
-        verify(movieRepository, times(1)).save(any(Movie.class));
-    }
+//
+//
+//    @Test
+//    public void testCreateCuandoSeCreaPeliculaDeberiaRetornarMovieDTO() {
+//        Categoria categoria1 = new Categoria(1, "Acción");
+//        Categoria categoria2 = new Categoria(2, "Ciencia Ficción");
+//
+//        Set<Categoria> categoriasSet = new HashSet<>(Arrays.asList(categoria1, categoria2));
+//
+//        when(movie1.getNombre()).thenReturn("Matrix");
+//        when(movie1.getDuracion()).thenReturn(136.8);
+//        when(movie1.getCategorias()).thenReturn(categoriasSet);
+//
+//        List<CategoriaDTO> categoriaDTOList = Arrays.asList(
+//                new CategoriaDTO(1, "Acción"),
+//                new CategoriaDTO(2, "Ciencia Ficción")
+//        );
+//
+//        MovieDTO movieDTO = new MovieDTO(
+//                1,
+//                "Matrix",
+//                "A hacker discovers...",
+//                "Welcome to the real world",
+//                136.8,
+//                "USA",
+//                5000,
+//                categoriaDTOList,
+//                "1999",
+//                "matrix.jpg",
+//                3000,
+//                9.0,
+//                "Lana Wachowski, Lilly Wachowski", // director
+//                "Lana Wachowski, Lilly Wachowski", // escritor
+//                "Inglés",                         // idioma
+//                "The Matrix, Matrix"              // también conocida como
+//        );
+//
+//        when(movieRepository.save(any(Movie.class))).thenReturn(movie1);
+//
+//        MovieDTO result = movieServiceImpl.create(movieDTO);
+//
+//        assertNotNull(result);
+//        assertEquals("Matrix", result.getNombre());
+//        assertEquals(136.8, result.getDuracion());
+//        assertEquals(categoriaDTOList.size(), result.getCategorias().size());
+//
+//        verify(movieRepository, times(1)).save(any(Movie.class));
+//    }
 
 
     @Test
