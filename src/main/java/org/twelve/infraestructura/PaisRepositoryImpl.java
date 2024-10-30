@@ -29,7 +29,7 @@ public class PaisRepositoryImpl implements PaisRepository {
     }
 
     @Override
-    public Pais findPaisById(Integer id) {
+    public Pais findById(Integer id) {
         String hql = "FROM Pais WHERE id = :id";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setParameter("id", id);

@@ -32,7 +32,7 @@ public class PaisServiceImpl implements PaisService {
     }
 
     public PaisDTO findById(Integer id) {
-            Pais pais = paisRepository.findPaisById(id);
+            Pais pais = paisRepository.findById(id);
             return convertToDTO(pais);
     }
 

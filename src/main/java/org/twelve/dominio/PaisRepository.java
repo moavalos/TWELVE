@@ -8,5 +8,5 @@ public interface PaisRepository {
 
     List<Pais> findAll();
 
-    Pais findPaisById(Integer id);
+    Pais findById(Integer id);
 }
