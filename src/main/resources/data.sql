@@ -83,17 +83,15 @@ VALUES ('Volver al Futuro',
 
 -- Inserta registros en UsuarioMovie
 -- Nota: Se deben conocer los ids de las peliculas
-INSERT INTO UsuarioMovie (usuario_id, pelicula_id, fechaVista, esFavorita)
+INSERT INTO UsuarioMovie (usuario_id, pelicula_id, fechaVista, esLike)
 VALUES (1, 1, '2023-10-10', true),  -- Usuario 1 ve "Volver al Futuro"
-       (1, 2, '2023-10-11', false), -- Usuario 1 ve "Apocalypse Now"
+       (1, 2, '2023-10-11', true), -- Usuario 1 ve "Apocalypse Now"
        (1, 3, '2023-10-12', true),  -- Usuario 1 ve "El Bueno, el Malo y el Feo"
-       (1, 4, '2023-10-13', false), -- Usuario 1 ve "El Viaje de Chihiro"
+       (1, 4, '2023-10-13', true), -- Usuario 1 ve "El Viaje de Chihiro"
        (1, 5, '2023-10-14', true),  -- Usuario 1 ve "Sin Novedades en el Frente"
-       (1, 6, '2023-10-15', false), -- Usuario 1 ve "El Origen"
+       (1, 6, '2023-10-15', true), -- Usuario 1 ve "El Origen"
        (1, 7, '2023-10-16', true),  -- Usuario 1 ve "El Caballero de la Noche"
-       (1, 8, '2023-10-17', false);
--- Usuario 1 ve "Matrix"
-
+       (1, 8, '2023-10-17', true); -- Usuario 1 ve "Matrix"
 
 -- Inserts Comentarios
 INSERT INTO Comentario (id, descripcion, likes, valoracion, idMovie, idUsuario)

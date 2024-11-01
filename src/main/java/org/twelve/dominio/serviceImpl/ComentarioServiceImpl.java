@@ -59,7 +59,7 @@ public class ComentarioServiceImpl implements ComentarioService {
         double promedio = comentarios.stream().mapToDouble(Comentario::getValoracion).average().orElse(0); //sino hay comentario el promedio es 0
 
         movie.setValoracion(promedio);
-        movieRepository.save(movie);
+        movieRepository.guardar(movie);
     }
 
 }

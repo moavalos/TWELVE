@@ -1,5 +1,6 @@
 package org.twelve.dominio;
 
+import org.twelve.presentacion.dto.MovieDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
 
 import javax.transaction.Transactional;
@@ -19,5 +20,9 @@ public interface UsuarioService {
     void dejarDeSeguirUsuario(Integer usuarioId, Integer seguidoId);
 
     Boolean estaSiguiendo(Integer usuarioId, Integer seguidoId);
+
+    void guardarMeGusta(PerfilDTO usuario, MovieDTO movie);
+
+    boolean haDadoLike(PerfilDTO usuarioDTO, MovieDTO movieDTO);
 
 }

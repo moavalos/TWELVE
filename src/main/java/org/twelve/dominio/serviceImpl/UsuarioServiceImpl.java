@@ -2,18 +2,24 @@ package org.twelve.dominio.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.twelve.dominio.MovieRepository;
 import org.twelve.dominio.RepositorioUsuario;
 import org.twelve.dominio.UsuarioMovieRepository;
 import org.twelve.dominio.UsuarioService;
 import org.twelve.dominio.entities.Movie;
 import org.twelve.dominio.entities.Seguidor;
 import org.twelve.dominio.entities.Usuario;
+import org.twelve.dominio.entities.UsuarioMovie;
+import org.twelve.presentacion.dto.MovieDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
+import org.twelve.presentacion.dto.UsuarioMovieDTO;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.twelve.presentacion.dto.PerfilDTO.convertToDTO;
@@ -24,11 +30,13 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     private final RepositorioUsuario repositorioUsuario;
     private final UsuarioMovieRepository usuarioMovieRepository;
+    private final MovieRepository movieRepository;
 
     @Autowired
-    public UsuarioServiceImpl(RepositorioUsuario repositorioUsuario, UsuarioMovieRepository usuarioMovieRepository) {
+    public UsuarioServiceImpl(RepositorioUsuario repositorioUsuario, UsuarioMovieRepository usuarioMovieRepository, MovieRepository movieRepository) {
         this.repositorioUsuario = repositorioUsuario;
         this.usuarioMovieRepository = usuarioMovieRepository;
+        this.movieRepository = movieRepository;
     }
 
     @Override
@@ -99,6 +107,36 @@ public class UsuarioServiceImpl implements UsuarioService {
         Usuario usuario = repositorioUsuario.buscarPorId(usuarioId);
         Usuario seguido = repositorioUsuario.buscarPorId(seguidoId);
         return repositorioUsuario.estaSiguiendo(usuario, seguido);
+    }
+
+    @Override
+    public void guardarMeGusta(PerfilDTO usuarioDTO, MovieDTO movieDTO) {
+        Usuario usuario = convertToEntity(usuarioDTO);
+        Movie movie = MovieDTO.convertToEntity(movieDTO);
+
+        Optional<UsuarioMovie> like = usuarioMovieRepository.buscarMeGustaPorUsuario(usuario, movie);
+
+        if (like.isPresent()) {
+            usuarioMovieRepository.borrarMeGusta(like.get());
+        } else {
+            UsuarioMovie nuevoLike = new UsuarioMovie();
+            nuevoLike.setUsuario(usuario);
+            nuevoLike.setPelicula(movie);
+            nuevoLike.setEsLike(Boolean.TRUE);
+            nuevoLike.setFechaLike(LocalDate.now());
+            usuarioMovieRepository.guardar(nuevoLike);
+        }
+        long likesCount = usuarioMovieRepository.obtenerCantidadDeLikes(movie);
+        System.out.println("LIKES ACTUALZADOS;" + likesCount);
+        movie.setLikes((int) likesCount);
+        movieRepository.actualizar(movie);
+    }
+
+    @Override
+    public boolean haDadoLike(PerfilDTO usuarioDTO, MovieDTO movieDTO) {
+        Usuario usuario = convertToEntity(usuarioDTO);
+        Movie movie = MovieDTO.convertToEntity(movieDTO);
+        return usuarioMovieRepository.buscarMeGustaPorUsuario(usuario, movie).isPresent();
     }
 
 }

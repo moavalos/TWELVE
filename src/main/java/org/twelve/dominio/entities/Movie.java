@@ -48,10 +48,6 @@ public class Movie {
 
     private String imagen;
 
-    //private Cast cast;
-
-    //private Director director;
-
     private Integer idComentario;
 
     private Integer likes;

@@ -29,7 +29,9 @@ public class UsuarioMovie {
     @JoinColumn(name = "pelicula_id")
     private Movie pelicula;
 
+    private Boolean esLike = Boolean.FALSE;
+
     private LocalDate fechaVista;
 
-    private Boolean esFavorita = false;
+    private LocalDate fechaLike;
 }

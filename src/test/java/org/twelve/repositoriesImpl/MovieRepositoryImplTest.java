@@ -47,7 +47,7 @@ public class MovieRepositoryImplTest {
         movie.setNombre("The Matrix");
         movie.setAñoLanzamiento("1999");
         movie.getCategorias().add(categoria); // Asignar categoría
-        movieRepository.save(movie);
+        movieRepository.guardar(movie);
 
         String hql = "FROM Movie WHERE nombre = :nombre";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
@@ -71,7 +71,7 @@ public class MovieRepositoryImplTest {
         movie.setNombre("Inception");
         movie.setAñoLanzamiento("2010");
         movie.getCategorias().add(categoria); // Asignar categoría
-        movieRepository.save(movie);
+        movieRepository.guardar(movie);
 
         Movie peliculaEncontrada = movieRepository.findById(movie.getId());
 
@@ -92,7 +92,7 @@ public class MovieRepositoryImplTest {
         Movie movie = new Movie();
         movie.setNombre("Avatar");
         movie.getCategorias().add(categoria); // Asignar categoría
-        movieRepository.save(movie);
+        movieRepository.guardar(movie);
 
         List<Movie> peliculasEncontradas = movieRepository.findByTitle("Avatar");
         assertFalse(peliculasEncontradas.isEmpty());
@@ -112,10 +112,10 @@ public class MovieRepositoryImplTest {
         movie.setNombre("Titanic");
         movie.setAñoLanzamiento("1997");
         movie.getCategorias().add(categoria); // Asignar categoría
-        movieRepository.save(movie);
+        movieRepository.guardar(movie);
 
         movie.setAñoLanzamiento("1998");
-        movieRepository.save(movie);
+        movieRepository.guardar(movie);
 
         String hql = "FROM Movie WHERE nombre = :nombre";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
@@ -137,7 +137,7 @@ public class MovieRepositoryImplTest {
         movie1.setNombre("Coraline");
         movie1.setCantVistas(100);
         movie1.getCategorias().add(categoria1); // Añadir categoría a la película
-        movieRepository.save(movie1);
+        movieRepository.guardar(movie1);
 
         Categoria categoria2 = new Categoria();
         categoria2.setId(3);
@@ -146,7 +146,7 @@ public class MovieRepositoryImplTest {
         movie2.setNombre("Avatar");
         movie2.setCantVistas(200);
         movie2.getCategorias().add(categoria2); // Añadir categoría a la película
-        movieRepository.save(movie2);
+        movieRepository.guardar(movie2);
 
         List<Movie> peliculasMasVistas = movieRepository.findMostViewed();
         assertFalse(peliculasMasVistas.isEmpty());
@@ -165,7 +165,7 @@ public class MovieRepositoryImplTest {
         movie1.setNombre("Coraline");
         movie1.setValoracion(4.5);
         movie1.getCategorias().add(categoria1); // Añadir categoría a la película
-        movieRepository.save(movie1);
+        movieRepository.guardar(movie1);
 
         Categoria categoria2 = new Categoria();
         categoria2.setId(5);
@@ -175,7 +175,7 @@ public class MovieRepositoryImplTest {
         movie2.setNombre("Avatar");
         movie2.setValoracion(4.8);
         movie2.getCategorias().add(categoria2); // Añadir categoría a la película
-        movieRepository.save(movie2);
+        movieRepository.guardar(movie2);
 
         List<Movie> topRatedMovies = movieRepository.findTopRated();
         assertFalse(topRatedMovies.isEmpty());
@@ -193,7 +193,7 @@ public class MovieRepositoryImplTest {
         movie1.setNombre("pelicula vieja");
         movie1.setAñoLanzamiento("1980");
         movie1.getCategorias().add(categoria1);
-        movieRepository.save(movie1);
+        movieRepository.guardar(movie1);
 
         Categoria categoria2 = new Categoria();
         categoria2.setId(2);
@@ -202,7 +202,7 @@ public class MovieRepositoryImplTest {
         movie2.setNombre("pelicula nueva");
         movie2.setAñoLanzamiento("2020");
         movie2.getCategorias().add(categoria2);
-        movieRepository.save(movie2);
+        movieRepository.guardar(movie2);
 
         List<Movie> newestMovies = movieRepository.findNewestMovie();
         assertFalse(newestMovies.isEmpty());
@@ -220,7 +220,7 @@ public class MovieRepositoryImplTest {
         movie1.setNombre("Matrix");
         movie1.setAñoLanzamiento("1999");
         movie1.getCategorias().add(categoria1);
-        movieRepository.save(movie1);
+        movieRepository.guardar(movie1);
 
         Categoria categoria2 = new Categoria();
         categoria2.setId(4);
@@ -229,7 +229,7 @@ public class MovieRepositoryImplTest {
         movie2.setNombre("Toy Story");
         movie2.setAñoLanzamiento("1999");
         movie2.getCategorias().add(categoria2);
-        movieRepository.save(movie2);
+        movieRepository.guardar(movie2);
 
         String hql = "FROM Movie WHERE añoLanzamiento = :año";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
@@ -259,7 +259,7 @@ public class MovieRepositoryImplTest {
         movie.setNombre("The Godfather");
         movie.setAñoLanzamiento("1972");
         movie.getCategorias().add(categoria);
-        movieRepository.save(movie);
+        movieRepository.guardar(movie);
 
         sessionFactory.getCurrentSession().delete(movie);
         sessionFactory.getCurrentSession().flush();

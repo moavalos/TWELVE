@@ -2,6 +2,7 @@ package org.twelve.servicesImpl;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.twelve.dominio.MovieRepository;
 import org.twelve.dominio.RepositorioUsuario;
 import org.twelve.dominio.UsuarioMovieRepository;
 import org.twelve.dominio.entities.Usuario;
@@ -22,6 +23,7 @@ public class UsuarioServiceImplTest {
     private UsuarioServiceImpl usuarioServiceImpl;
     private RepositorioUsuario repositorioUsuario;
     private UsuarioMovieRepository usuarioMovieRepository;
+    private MovieRepository movieRepository;
 
     @BeforeEach
     public void init() {
@@ -29,7 +31,8 @@ public class UsuarioServiceImplTest {
         seguidoMock = mock(Usuario.class);
         repositorioUsuario = mock(RepositorioUsuario.class);
         usuarioMovieRepository = mock(UsuarioMovieRepository.class);
-        usuarioServiceImpl = new UsuarioServiceImpl(repositorioUsuario, usuarioMovieRepository);
+        movieRepository = mock(MovieRepository.class);
+        usuarioServiceImpl = new UsuarioServiceImpl(repositorioUsuario, usuarioMovieRepository, movieRepository);
     }
 
     @Test

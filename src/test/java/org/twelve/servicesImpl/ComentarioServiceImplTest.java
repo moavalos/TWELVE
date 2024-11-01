@@ -82,7 +82,7 @@ public class ComentarioServiceImplTest {
 
         //validacion
         verify(comentarioRepository, times(1)).save(any(Comentario.class));
-        verify(movieRepository, times(1)).save(movie1);
+        verify(movieRepository, times(1)).guardar(movie1);
     }
 
     @Test
@@ -139,7 +139,7 @@ public class ComentarioServiceImplTest {
 
         //validacion
         verify(movie1).setValoracion(0.0);
-        verify(movieRepository, times(1)).save(movie1);
+        verify(movieRepository, times(1)).guardar(movie1);
     }
 
     @Test
@@ -156,6 +156,6 @@ public class ComentarioServiceImplTest {
 
         //validacion
         verify(movie1).setValoracion(8.0);
-        verify(movieRepository, times(1)).save(movie1);
+        verify(movieRepository, times(1)).guardar(movie1);
     }
 }

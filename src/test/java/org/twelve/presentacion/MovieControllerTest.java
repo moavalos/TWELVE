@@ -300,7 +300,7 @@ public class MovieControllerTest {
         when(movieMock.getNombre()).thenReturn("Coraline");
         when(movieService.getById(anyInt())).thenReturn(movieMock);
 
-        ModelAndView modelAndView = movieController.getMovieDetails(1);
+        ModelAndView modelAndView = movieController.getMovieDetails(1,requestMock);
 
         assertThat(modelAndView.getViewName(), is("detalle-pelicula"));
         assertNotNull(modelAndView.getModel().get("movie"));
@@ -311,7 +311,7 @@ public class MovieControllerTest {
     public void testTraerDetalleDePeliculasPeroNoSeEncontro() {
         when(movieService.getById(anyInt())).thenReturn(null);
 
-        ModelAndView modelAndView = movieController.getMovieDetails(99);
+        ModelAndView modelAndView = movieController.getMovieDetails(99, requestMock);
 
         assertThat(modelAndView.getViewName(), is("detalle-pelicula"));
     }

@@ -17,7 +17,6 @@ public class MovieDTO {
     private Double duracion;
     private String pais;
     private Integer cantVistas;
-    //    private Integer idCategoria;
     private List<CategoriaDTO> categorias;
     private String anioLanzamiento;
     private String imagen;
@@ -222,7 +221,6 @@ public class MovieDTO {
         movie.setEscritor(movieDTO.getEscritor());
         movie.setIdioma(movieDTO.getIdioma());
         movie.setTambienConocidaComo(movieDTO.getTambienConocidaComo());
-
 
         if (movieDTO.getCategorias() != null) {
             Set<Categoria> categorias = new HashSet<>();
