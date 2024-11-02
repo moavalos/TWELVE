@@ -16,6 +16,7 @@ import org.twelve.presentacion.dto.ComentarioDTO;
 import org.twelve.presentacion.dto.MovieDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,17 +79,25 @@ public class MovieController {
     }
 
     @RequestMapping(path = "/detalle-pelicula/{id}", method = RequestMethod.GET)
-    public ModelAndView getMovieDetails(@PathVariable("id") Integer id) {
+    public ModelAndView traerDetallePelicula(@PathVariable("id") Integer id, HttpServletRequest request) {
+        Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
 
         MovieDTO movie = movieService.getById(id);
+
+        long likesActualizados = usuarioService.obtenerCantidadDeLikes(movie);
+        movie.setLikes((int) likesActualizados);
+
         //lista de comentarios
         List<ComentarioDTO> comentarios = comentarioService.obtenerComentariosPorPelicula(id);
+        PerfilDTO usuario = usuarioService.buscarPorId(usuarioLogueadoId);
+        boolean haDadoLike = usuarioService.haDadoLike(usuario, movie);
 
         //modelo
         ModelMap modelo = new ModelMap();
         modelo.put("movie", movie);
         modelo.put("comentarios", comentarios);
-        modelo.put("usuario", new PerfilDTO());
+        modelo.put("usuario", usuario);
+        modelo.put("haDadoLike", haDadoLike);
 
         return new ModelAndView("detalle-pelicula", modelo);
     }
@@ -167,4 +176,23 @@ public class MovieController {
         modelo.addAttribute("selectedFilter", filter);
         return new ModelAndView("movies-categoria", modelo);
     }
+
+    @RequestMapping(path = "/movie/{id}/like", method = RequestMethod.POST)
+    public String darMeGusta(@PathVariable("id") Integer movieId, HttpServletRequest request) {
+        Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
+
+        if (usuarioLogueadoId == null) {
+            return "redirect:/login";
+        }
+
+        PerfilDTO usuario = usuarioService.buscarPorId(usuarioLogueadoId);
+        MovieDTO movie = movieService.getById(movieId);
+
+        if (usuario != null && movie != null) {
+            usuarioService.guardarMeGusta(usuario, movie);
+        }
+
+        return "redirect:/detalle-pelicula/" + movieId;
+    }
+
 }

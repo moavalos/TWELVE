@@ -101,10 +101,10 @@ public class MovieServiceImplTest {
                 "Lana Wachowski, Lilly Wachowski", // director
                 "Lana Wachowski, Lilly Wachowski", // escritor
                 "Inglés",                         // idioma
-                "The Matrix, Matrix"              // también conocida como
+                "The Matrix, Matrix"// también conocida como
         );
 
-        when(movieRepository.save(any(Movie.class))).thenReturn(movie1);
+        when(movieRepository.guardar(any(Movie.class))).thenReturn(movie1);
 
         MovieDTO result = movieServiceImpl.create(movieDTO);
 
@@ -113,7 +113,7 @@ public class MovieServiceImplTest {
         assertEquals(136.8, result.getDuracion());
         assertEquals(categoriaDTOList.size(), result.getCategorias().size());
 
-        verify(movieRepository, times(1)).save(any(Movie.class));
+        verify(movieRepository, times(1)).guardar(any(Movie.class));
     }
 
 

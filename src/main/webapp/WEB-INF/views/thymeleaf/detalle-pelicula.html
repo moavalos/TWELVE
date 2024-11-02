@@ -15,16 +15,25 @@
 <div th:insert="fragments/header :: header"></div>
 
 <div class="container my-4">
-
     <div class="row">
         <!-- columna img y boton -->
         <div class="col-md-3">
             <img th:src="@{'/images/' + ${movie.imagen}}" alt="Movie Image" class="movie-image">
             <div class="sidebar-buttons mt-3">
-                <button class="btn btn-warning w-100 mb-2">♥ Favoritos</button>
+
+                <!-- Botón Me gusta -->
+                <div th:if="${session.usuario != null}">
+                    <form th:action="@{/movie/{id}/like(id=${movie.id})}" method="post">
+                        <button type="submit" class="btn w-100 mb-2"
+                                th:classappend="${haDadoLike ? 'btn-danger' : 'btn-warning'}"
+                                th:text="${haDadoLike ? 'Quitar Me gusta' : 'Me gusta'}">
+                        </button>
+                    </form>
+                </div>
+
                 <button class="btn btn-warning w-100 mb-2">+ Plan to Watch</button>
 
-                <!-- aca verificamos primero si el usuario esta logeado -->
+                <!-- Verificar si el usuario está logueado -->
                 <div th:if="${session.usuario != null}">
                     <button class="btn btn-warning w-100" data-bs-toggle="modal" data-bs-target="#commentModal">
                         Comentar
@@ -46,10 +55,12 @@
                 &nbsp; Duración: <span th:text="${movie.duracion}"></span> |
                 Categorías:
                 <span th:each="categoria, iterStat : ${movie.categorias}">
-    <a th:href="@{/categoria/{id}(id=${categoria.id})}" th:text="${categoria.nombre}"></a><span
+                    <a th:href="@{/categoria/{id}(id=${categoria.id})}" th:text="${categoria.nombre}"></a><span
                         th:if="${!iterStat.last}"> · </span>
-               </span> |
+                </span> |
                 &nbsp; <span th:text="${movie.anioLanzamiento}"></span>
+                |
+                &nbsp; <span th:text="${movie.likes}"></span>
             </p>
             <hr>
 
@@ -65,55 +76,58 @@
                     <p><strong>También conocido como: </strong><span th:text="${movie.tambienConocidaComo}"></span></p>
                 </div>
             </div>
-
-            <hr>
-
-            <!-- sec historia -->
-            <h4>Historia</h4>
-            <p><span th:text="${movie.descripcion}"></span></p>
         </div>
     </div>
+</div>
 
-    <hr>
+<hr>
 
-    <!-- comentarios populares -->
-    <h4>Comentarios Populares</h4>
-    <div class="review-section">
-        <!-- Iteramos sobre los comentarios -->
-        <div th:each="comentario : ${comentarios}" class="card mb-3">
-            <div class="card-body">
-                <div class="d-flex align-items-start">
-                    <img th:src="@{/images/user/foto-perfil.jpg}" alt="User Avatar" class="rounded-circle me-3"
-                         width="50">
-                    <div>
-                        <h6>
-                            Comentario por <span class="fw-bold" th:text="${comentario.usuario.username}"></span>
-                            <span class="text-success">Puntaje: <span
-                                    th:text="${comentario.valoracion}"></span>/10</span>
-                        </h6>
-                        <p th:text="${comentario.descripcion}"></p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span><i class="bi bi-heart"></i> <span th:text="${comentario.likes}"></span> likes</span>
-                        </div>
+<!-- sec historia -->
+<h4>Historia</h4>
+<p><span th:text="${movie.descripcion}"></span></p>
+</div>
+</div>
+
+<hr>
+
+<!-- comentarios populares -->
+<h4>Comentarios Populares</h4>
+<div class="review-section">
+    <!-- Iteramos sobre los comentarios -->
+    <div th:each="comentario : ${comentarios}" class="card mb-3">
+        <div class="card-body">
+            <div class="d-flex align-items-start">
+                <img th:src="@{/images/user/foto-perfil.jpg}" alt="User Avatar" class="rounded-circle me-3"
+                     width="50">
+                <div>
+                    <h6>
+                        Comentario por <span class="fw-bold" th:text="${comentario.usuario.username}"></span>
+                        <span class="text-success">Puntaje: <span
+                                th:text="${comentario.valoracion}"></span>/10</span>
+                    </h6>
+                    <p th:text="${comentario.descripcion}"></p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span><i class="bi bi-heart"></i> <span th:text="${comentario.likes}"></span> likes</span>
                     </div>
                 </div>
             </div>
         </div>
-        <a href="#">Ver todos los comentarios</a>
     </div>
+    <a href="#">Ver todos los comentarios</a>
+</div>
 
-    <hr>
+<hr>
 
-    <!-- peliculas similares/ arreglar esto con categoria -->
-    <div class="pelisSimilares">
-        <div class="row similar-movies">
-            <h4>Películas Similares</h4><br>
+<!-- peliculas similares/ arreglar esto con categoria -->
+<div class="pelisSimilares">
+    <div class="row similar-movies">
+        <h4>Películas Similares</h4><br>
 
-            <div class="col-md-3"><img th:src="@{'/images/' + ${movie.imagen}}" alt="Similar Movie"></div>
-            <div class="col-md-3"><img th:src="@{'/images/' + ${movie.imagen}}" alt="Similar Movie"></div>
-            <div class="col-md-3"><img th:src="@{'/images/' + ${movie.imagen}}" alt="Similar Movie"></div>
-        </div>
+        <div class="col-md-3"><img th:src="@{'/images/' + ${movie.imagen}}" alt="Similar Movie"></div>
+        <div class="col-md-3"><img th:src="@{'/images/' + ${movie.imagen}}" alt="Similar Movie"></div>
+        <div class="col-md-3"><img th:src="@{'/images/' + ${movie.imagen}}" alt="Similar Movie"></div>
     </div>
+</div>
 </div>
 
 <!-- modal/popup comentario si esta logeado -->
@@ -163,3 +177,4 @@
 
 </body>
 </html>
+

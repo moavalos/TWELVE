@@ -38,8 +38,15 @@ public class MovieRepositoryImpl implements MovieRepository {
     }
 
     @Override
-    public Movie save(Movie movie) {
+    public Movie guardar(Movie movie) {
         sessionFactory.getCurrentSession().save(movie);
+        return movie;
+    }
+
+    @Override
+    public Movie actualizar(Movie movie) {
+        Movie movieActualizar = findById(movie.getId());
+        sessionFactory.getCurrentSession().update(movieActualizar);
         return movie;
     }
 

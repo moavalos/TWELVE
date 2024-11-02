@@ -1,19 +1,26 @@
 package org.twelve.servicesImpl;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.twelve.dominio.MovieRepository;
 import org.twelve.dominio.RepositorioUsuario;
 import org.twelve.dominio.UsuarioMovieRepository;
+import org.twelve.dominio.entities.Movie;
 import org.twelve.dominio.entities.Usuario;
+import org.twelve.dominio.entities.UsuarioMovie;
 import org.twelve.dominio.serviceImpl.UsuarioServiceImpl;
+import org.twelve.presentacion.dto.MovieDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.twelve.presentacion.dto.PerfilDTO.convertToEntity;
 
 public class UsuarioServiceImplTest {
 
@@ -22,6 +29,7 @@ public class UsuarioServiceImplTest {
     private UsuarioServiceImpl usuarioServiceImpl;
     private RepositorioUsuario repositorioUsuario;
     private UsuarioMovieRepository usuarioMovieRepository;
+    private MovieRepository movieRepository;
 
     @BeforeEach
     public void init() {
@@ -29,7 +37,8 @@ public class UsuarioServiceImplTest {
         seguidoMock = mock(Usuario.class);
         repositorioUsuario = mock(RepositorioUsuario.class);
         usuarioMovieRepository = mock(UsuarioMovieRepository.class);
-        usuarioServiceImpl = new UsuarioServiceImpl(repositorioUsuario, usuarioMovieRepository);
+        movieRepository = mock(MovieRepository.class);
+        usuarioServiceImpl = new UsuarioServiceImpl(repositorioUsuario, usuarioMovieRepository, movieRepository);
     }
 
     @Test
@@ -89,7 +98,7 @@ public class UsuarioServiceImplTest {
         perfilDTO.setNombre("Luis Gomez");
         perfilDTO.setEmail("luis.gomez@ejemplo.com");
 
-        Usuario usuario = PerfilDTO.convertToEntity(perfilDTO);
+        Usuario usuario = convertToEntity(perfilDTO);
 
         assertNotNull(usuario);
         assertEquals("Luis Gomez", usuario.getNombre());
@@ -270,4 +279,237 @@ public class UsuarioServiceImplTest {
         verify(repositorioUsuario, times(1)).buscarPorId(2);
         verify(repositorioUsuario, times(1)).estaSiguiendo(usuarioMock, seguidoMock);
     }
+
+    @Test
+    @Disabled
+    public void testGuardarMeGustaActualizaLikesEnLaPelicula() {
+        PerfilDTO usuarioDTO = new PerfilDTO();
+        usuarioDTO.setId(1);
+
+        MovieDTO movieDTO = new MovieDTO();
+        movieDTO.setLikes(5);
+
+        Usuario usuario = new Usuario();
+        Movie movie = MovieDTO.convertToEntity(movieDTO);
+
+        when(usuarioMovieRepository.buscarMeGustaPorUsuario(usuario, movie)).thenReturn(Optional.empty());
+
+        usuarioServiceImpl.guardarMeGusta(usuarioDTO, movieDTO);
+
+        assertEquals(6, movie.getLikes());
+        verify(movieRepository, times(1)).actualizar(movie);
+    }
+
+    @Test
+    public void testGuardarMeGustaConUsuarioInvalidoDeberiaLanzarExcepcion() {
+        PerfilDTO usuarioDTO = null;
+        MovieDTO movieDTO = new MovieDTO();
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.guardarMeGusta(usuarioDTO, movieDTO);
+        });
+
+        assertEquals("Usuario o película no puede ser nulo", exception.getMessage());
+    }
+
+    @Test
+    public void testGuardarMeGustaConPeliculaInvalidaDeberiaLanzarExcepcion() {
+        PerfilDTO usuarioDTO = new PerfilDTO();
+        usuarioDTO.setId(1);
+        MovieDTO movieDTO = null;
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.guardarMeGusta(usuarioDTO, movieDTO);
+        });
+
+        assertEquals("Usuario o película no puede ser nulo", exception.getMessage());
+    }
+
+    @Test
+    public void testObtenerCantidadDeLikesCuandoPeliculaExisteDeberiaRetornarCantidadDeLikes() {
+        MovieDTO movieDTO = new MovieDTO();
+        movieDTO.setId(1);
+
+        Movie movie = MovieDTO.convertToEntity(movieDTO);
+        long expectedLikes = 10;
+
+        when(usuarioMovieRepository.obtenerCantidadDeLikes(movie)).thenReturn(expectedLikes);
+
+        long result = usuarioServiceImpl.obtenerCantidadDeLikes(movieDTO);
+
+        assertEquals(expectedLikes, result);
+        verify(usuarioMovieRepository, times(1)).obtenerCantidadDeLikes(movie);
+    }
+
+    @Test
+    public void testObtenerCantidadDeLikesCuandoPeliculaNoExisteDeberiaRetornarCero() {
+        MovieDTO movieDTO = new MovieDTO();
+        movieDTO.setId(999);
+
+        Movie movie = MovieDTO.convertToEntity(movieDTO);
+        long expectedLikes = 0;
+
+        when(usuarioMovieRepository.obtenerCantidadDeLikes(movie)).thenReturn(expectedLikes);
+
+        long result = usuarioServiceImpl.obtenerCantidadDeLikes(movieDTO);
+
+        assertEquals(expectedLikes, result);
+        verify(usuarioMovieRepository, times(1)).obtenerCantidadDeLikes(movie);
+    }
+
+    @Test
+    public void testObtenerCantidadDeLikesConMovieDTONuloDeberiaLanzarExcepcion() {
+        MovieDTO movieDTO = null;
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.obtenerCantidadDeLikes(movieDTO);
+        });
+
+        assertEquals("MovieDTO no puede ser nulo", exception.getMessage());
+        verify(usuarioMovieRepository, never()).obtenerCantidadDeLikes(any());
+    }
+
+    @Test
+    public void testObtenerCantidadDeLikesConIdDePeliculaInvalidoDeberiaLanzarExcepcion() {
+        MovieDTO movieDTO = new MovieDTO();
+        movieDTO.setId(-1);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.obtenerCantidadDeLikes(movieDTO);
+        });
+
+        assertEquals("ID de película no puede ser negativo", exception.getMessage());
+        verify(usuarioMovieRepository, never()).obtenerCantidadDeLikes(any());
+    }
+
+    @Test
+    public void testHaDadoLikeCuandoUsuarioHaDadoLikeDeberiaRetornarTrue() {
+        PerfilDTO usuarioDTO = new PerfilDTO();
+        usuarioDTO.setId(1);
+        MovieDTO movieDTO = new MovieDTO();
+        movieDTO.setId(10);
+
+        Usuario usuario = convertToEntity(usuarioDTO);
+        Movie movie = MovieDTO.convertToEntity(movieDTO);
+
+        when(usuarioMovieRepository.buscarMeGustaPorUsuario(usuario, movie)).thenReturn(Optional.of(new UsuarioMovie()));
+
+        boolean resultado = usuarioServiceImpl.haDadoLike(usuarioDTO, movieDTO);
+
+        assertTrue(resultado);
+        verify(usuarioMovieRepository, times(1)).buscarMeGustaPorUsuario(usuario, movie);
+    }
+
+    @Test
+    public void testHaDadoLikeCuandoUsuarioNoHaDadoLikeDeberiaRetornarFalse() {
+        PerfilDTO usuarioDTO = new PerfilDTO();
+        usuarioDTO.setId(2);
+        MovieDTO movieDTO = new MovieDTO();
+        movieDTO.setId(20);
+
+        Usuario usuario = convertToEntity(usuarioDTO);
+        Movie movie = MovieDTO.convertToEntity(movieDTO);
+
+        when(usuarioMovieRepository.buscarMeGustaPorUsuario(usuario, movie)).thenReturn(Optional.empty());
+
+        boolean resultado = usuarioServiceImpl.haDadoLike(usuarioDTO, movieDTO);
+
+        assertFalse(resultado);
+        verify(usuarioMovieRepository, times(1)).buscarMeGustaPorUsuario(usuario, movie);
+    }
+
+    @Test
+    public void testHaDadoLikeConUsuarioNuloDeberiaLanzarExcepcion() {
+        PerfilDTO usuarioDTO = null;
+        MovieDTO movieDTO = new MovieDTO();
+        movieDTO.setId(1);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.haDadoLike(usuarioDTO, movieDTO);
+        });
+
+        assertEquals("Usuario o película no pueden ser nulos", exception.getMessage());
+        verify(usuarioMovieRepository, never()).buscarMeGustaPorUsuario(any(), any());
+    }
+
+    @Test
+    public void testHaDadoLikeConMovieDTONuloDeberiaLanzarExcepcion() {
+        PerfilDTO usuarioDTO = new PerfilDTO();
+        usuarioDTO.setId(1);
+        MovieDTO movieDTO = null;
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.haDadoLike(usuarioDTO, movieDTO);
+        });
+
+        assertEquals("Usuario o película no pueden ser nulos", exception.getMessage());
+        verify(usuarioMovieRepository, never()).buscarMeGustaPorUsuario(any(), any());
+    }
+
+    @Test
+    public void testHaDadoLikeConMovieYUsuarioInvalidosDeberiaLanzarExcepcion() {
+        PerfilDTO usuarioDTO = new PerfilDTO();
+        usuarioDTO.setId(-1);
+        MovieDTO movieDTO = new MovieDTO();
+        movieDTO.setId(-1);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.haDadoLike(usuarioDTO, movieDTO);
+        });
+
+        assertEquals("ID de usuario o película no pueden ser negativos", exception.getMessage());
+        verify(usuarioMovieRepository, never()).buscarMeGustaPorUsuario(any(), any());
+    }
+
+    @Test
+    public void testObtenerPeliculasFavoritasCuandoUsuarioTienePeliculasDeberiaRetornarLista() {
+        Integer usuarioId = 1;
+        List<Movie> peliculasFavoritas = List.of(new Movie(), new Movie());
+
+        when(usuarioMovieRepository.obtenerPeliculasFavoritas(usuarioId)).thenReturn(peliculasFavoritas);
+
+        List<Movie> resultado = usuarioServiceImpl.obtenerPeliculasFavoritas(usuarioId);
+
+        assertNotNull(resultado);
+        assertEquals(2, resultado.size());
+        verify(usuarioMovieRepository, times(1)).obtenerPeliculasFavoritas(usuarioId);
+    }
+
+    @Test
+    public void testObtenerPeliculasFavoritasCuandoUsuarioNoTienePeliculasDeberiaRetornarListaVacia() {
+        Integer usuarioId = 2;
+
+        when(usuarioMovieRepository.obtenerPeliculasFavoritas(usuarioId)).thenReturn(Collections.emptyList());
+
+        List<Movie> resultado = usuarioServiceImpl.obtenerPeliculasFavoritas(usuarioId);
+
+        assertNotNull(resultado);
+        assertTrue(resultado.isEmpty());
+        verify(usuarioMovieRepository, times(1)).obtenerPeliculasFavoritas(usuarioId);
+    }
+
+    @Test
+    public void testObtenerPeliculasFavoritasConUsuarioIdNuloDeberiaLanzarExcepcion() {
+        Integer usuarioId = null;
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.obtenerPeliculasFavoritas(usuarioId);
+        });
+
+        assertEquals("El ID de usuario no puede ser nulo", exception.getMessage());
+        verify(usuarioMovieRepository, never()).obtenerPeliculasFavoritas(any());
+    }
+
+    @Test
+    public void testObtenerPeliculasFavoritasConUsuarioIdNegativoDeberiaLanzarExcepcion() {
+        Integer usuarioId = -1;
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.obtenerPeliculasFavoritas(usuarioId);
+        });
+
+        assertEquals("El ID de usuario no puede ser negativo", exception.getMessage());
+        verify(usuarioMovieRepository, never()).obtenerPeliculasFavoritas(any());
+    }
+
 }

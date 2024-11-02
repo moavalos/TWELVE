@@ -8,10 +8,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.twelve.dominio.UsuarioService;
+import org.twelve.dominio.entities.Movie;
 import org.twelve.presentacion.dto.PerfilDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Collections;
+import java.util.List;
 
 @Controller
 public class UsuarioController {
@@ -36,6 +39,8 @@ public class UsuarioController {
         if (usuarioLogueadoId == null)
             return new ModelAndView("redirect:/login");
 
+        boolean esPerfilPropio = usuarioLogueadoId.equals(id);
+
         PerfilDTO usuario = usuarioService.buscarPorId(id);
         if (usuario == null) {
             model.put("error", "Usuario no encontrado");
@@ -53,6 +58,7 @@ public class UsuarioController {
         model.put("peliculasFavoritas", usuario.getPeliculasFavoritas());
         model.put("seguidores", usuario.getSeguidores());
         model.put("siguiendo", usuario.getSeguidos());
+        model.put("esPerfilPropio", esPerfilPropio);
 
         return new ModelAndView("perfil", model);
     }
@@ -78,6 +84,23 @@ public class UsuarioController {
         Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
         usuarioService.dejarDeSeguirUsuario(usuarioLogueadoId, idSeguido);
         return "redirect:/perfil/" + idSeguido;
+    }
+
+    @RequestMapping(path = "/favoritos", method = RequestMethod.GET)
+    public ModelAndView verFavoritos(HttpServletRequest request) {
+        Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
+
+        if (usuarioLogueadoId == null) {
+            return new ModelAndView("redirect:/login");
+        }
+
+        PerfilDTO usuario = usuarioService.buscarPorId(usuarioLogueadoId);
+        List<Movie> peliculasFavoritas = usuarioService.obtenerPeliculasFavoritas(usuario.getId());
+
+        ModelMap model = new ModelMap();
+        model.put("peliculasFavoritas", peliculasFavoritas != null ? peliculasFavoritas : Collections.emptyList());
+
+        return new ModelAndView("favoritos", model);
     }
 
 }
