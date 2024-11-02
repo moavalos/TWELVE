@@ -83,6 +83,10 @@ public class MovieController {
         Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
 
         MovieDTO movie = movieService.getById(id);
+
+        long likesActualizados = usuarioService.obtenerCantidadDeLikes(movie);
+        movie.setLikes((int) likesActualizados);
+
         //lista de comentarios
         List<ComentarioDTO> comentarios = comentarioService.obtenerComentariosPorPelicula(id);
         PerfilDTO usuario = usuarioService.buscarPorId(usuarioLogueadoId);

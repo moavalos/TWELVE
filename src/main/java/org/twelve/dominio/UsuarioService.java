@@ -1,5 +1,6 @@
 package org.twelve.dominio;
 
+import org.twelve.dominio.entities.Movie;
 import org.twelve.presentacion.dto.MovieDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
 
@@ -24,5 +25,9 @@ public interface UsuarioService {
     void guardarMeGusta(PerfilDTO usuario, MovieDTO movie);
 
     boolean haDadoLike(PerfilDTO usuarioDTO, MovieDTO movieDTO);
+
+    long obtenerCantidadDeLikes(MovieDTO movieDTO);
+
+    List<Movie> obtenerPeliculasFavoritas(Integer usuarioId);
 
 }

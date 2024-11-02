@@ -108,3 +108,9 @@ footer img {
     object-fit: cover;
     margin: 0 5px;
 }
+
+.no-favorites-message {
+    height: 200px;
+    width: 100%;
+    justify-content: center;
+}

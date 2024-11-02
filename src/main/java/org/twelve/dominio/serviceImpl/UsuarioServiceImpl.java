@@ -126,10 +126,13 @@ public class UsuarioServiceImpl implements UsuarioService {
             nuevoLike.setFechaLike(LocalDate.now());
             usuarioMovieRepository.guardar(nuevoLike);
         }
-        long likesCount = usuarioMovieRepository.obtenerCantidadDeLikes(movie);
-        System.out.println("LIKES ACTUALZADOS;" + likesCount);
-        movie.setLikes((int) likesCount);
         movieRepository.actualizar(movie);
+    }
+
+    @Override
+    public long obtenerCantidadDeLikes(MovieDTO movieDTO){
+        Movie movie = MovieDTO.convertToEntity(movieDTO);
+        return this.usuarioMovieRepository.obtenerCantidadDeLikes(movie);
     }
 
     @Override
@@ -138,6 +141,12 @@ public class UsuarioServiceImpl implements UsuarioService {
         Movie movie = MovieDTO.convertToEntity(movieDTO);
         return usuarioMovieRepository.buscarMeGustaPorUsuario(usuario, movie).isPresent();
     }
+
+    @Override
+    public List<Movie> obtenerPeliculasFavoritas(Integer usuarioId){
+        return usuarioMovieRepository.obtenerPeliculasFavoritas(usuarioId);
+    }
+
 
 }
 
