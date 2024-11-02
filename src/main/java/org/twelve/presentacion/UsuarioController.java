@@ -13,6 +13,7 @@ import org.twelve.presentacion.dto.PerfilDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -97,7 +98,7 @@ public class UsuarioController {
         List<Movie> peliculasFavoritas = usuarioService.obtenerPeliculasFavoritas(usuario.getId());
 
         ModelMap model = new ModelMap();
-        model.put("peliculasFavoritas", peliculasFavoritas);
+        model.put("peliculasFavoritas", peliculasFavoritas != null ? peliculasFavoritas : Collections.emptyList());
 
         return new ModelAndView("favoritos", model);
     }

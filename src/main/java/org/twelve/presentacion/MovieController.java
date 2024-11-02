@@ -79,7 +79,7 @@ public class MovieController {
     }
 
     @RequestMapping(path = "/detalle-pelicula/{id}", method = RequestMethod.GET)
-    public ModelAndView getMovieDetails(@PathVariable("id") Integer id, HttpServletRequest request) {
+    public ModelAndView traerDetallePelicula(@PathVariable("id") Integer id, HttpServletRequest request) {
         Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
 
         MovieDTO movie = movieService.getById(id);

@@ -230,4 +230,51 @@ public class UsuarioControllerTest {
         verify(usuarioServiceMock).dejarDeSeguirUsuario(1, 3);
         assertEquals("redirect:/perfil/3", result);
     }
+
+    @Test
+    public void testVerFavoritosUsuarioNoLogueado() {
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(null);
+
+        ModelAndView modelAndView = usuarioController.verFavoritos(requestMock);
+
+        assertEquals("redirect:/login", modelAndView.getViewName());
+    }
+
+    @Test
+    public void testVerFavoritosUsuarioSinFavoritos() {
+        Integer usuarioId = 1;
+
+        PerfilDTO usuarioMock = mock(PerfilDTO.class);
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(usuarioId);
+        when(usuarioServiceMock.buscarPorId(usuarioId)).thenReturn(usuarioMock);
+        when(usuarioServiceMock.obtenerPeliculasFavoritas(usuarioId)).thenReturn(Collections.emptyList());
+
+        ModelAndView modelAndView = usuarioController.verFavoritos(requestMock);
+
+        assertEquals("favoritos", modelAndView.getViewName());
+        assertNotNull(modelAndView.getModel().get("peliculasFavoritas"));
+        assertTrue(((List<?>) modelAndView.getModel().get("peliculasFavoritas")).isEmpty());
+    }
+
+    @Test
+    public void testVerFavoritosUsuarioConFavoritosNulos() {
+        Integer usuarioId = 1;
+
+        PerfilDTO usuarioMock = mock(PerfilDTO.class);
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(usuarioId);
+        when(usuarioServiceMock.buscarPorId(usuarioId)).thenReturn(usuarioMock);
+        when(usuarioServiceMock.obtenerPeliculasFavoritas(usuarioId)).thenReturn(null);
+
+        ModelAndView modelAndView = usuarioController.verFavoritos(requestMock);
+
+        assertEquals("favoritos", modelAndView.getViewName());
+        assertNotNull(modelAndView.getModel().get("peliculasFavoritas"));
+        assertTrue(((List<?>) modelAndView.getModel().get("peliculasFavoritas")).isEmpty());
+    }
+
 }

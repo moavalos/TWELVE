@@ -111,6 +111,11 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public void guardarMeGusta(PerfilDTO usuarioDTO, MovieDTO movieDTO) {
+
+        if (usuarioDTO == null || movieDTO == null) {
+            throw new IllegalArgumentException("Usuario o película no puede ser nulo");
+        }
+
         Usuario usuario = convertToEntity(usuarioDTO);
         Movie movie = MovieDTO.convertToEntity(movieDTO);
 
@@ -130,23 +135,40 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public long obtenerCantidadDeLikes(MovieDTO movieDTO){
+    public long obtenerCantidadDeLikes(MovieDTO movieDTO) {
+        if (movieDTO == null)
+            throw new IllegalArgumentException("MovieDTO no puede ser nulo");
+
+        if (movieDTO.getId() < 0)
+            throw new IllegalArgumentException("ID de película no puede ser negativo");
+
         Movie movie = MovieDTO.convertToEntity(movieDTO);
         return this.usuarioMovieRepository.obtenerCantidadDeLikes(movie);
     }
 
     @Override
     public boolean haDadoLike(PerfilDTO usuarioDTO, MovieDTO movieDTO) {
+        if (usuarioDTO == null || movieDTO == null)
+            throw new IllegalArgumentException("Usuario o película no pueden ser nulos");
+
+        if (usuarioDTO.getId() < 0 || movieDTO.getId() < 0)
+            throw new IllegalArgumentException("ID de usuario o película no pueden ser negativos");
+
         Usuario usuario = convertToEntity(usuarioDTO);
         Movie movie = MovieDTO.convertToEntity(movieDTO);
         return usuarioMovieRepository.buscarMeGustaPorUsuario(usuario, movie).isPresent();
     }
 
     @Override
-    public List<Movie> obtenerPeliculasFavoritas(Integer usuarioId){
+    public List<Movie> obtenerPeliculasFavoritas(Integer usuarioId) {
+        if (usuarioId == null)
+            throw new IllegalArgumentException("El ID de usuario no puede ser nulo");
+
+        if (usuarioId < 0)
+            throw new IllegalArgumentException("El ID de usuario no puede ser negativo");
+
         return usuarioMovieRepository.obtenerPeliculasFavoritas(usuarioId);
     }
-
 
 }
 

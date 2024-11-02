@@ -56,6 +56,13 @@ public class UsuarioMovieRepositoryImpl implements UsuarioMovieRepository {
     @Override
     @Transactional
     public List<Movie> obtenerPeliculasFavoritas(Integer usuarioId) {
+        if (usuarioId == null) {
+            throw new IllegalArgumentException("El ID de usuario no puede ser nulo");
+        }
+        if (usuarioId < 0) {
+            throw new IllegalArgumentException("El ID de usuario no puede ser negativo");
+        }
+
         String hql = "SELECT up.pelicula FROM UsuarioMovie up WHERE up.usuario.id = :usuarioId AND up.esLike = true";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setParameter("usuarioId", usuarioId);
@@ -67,6 +74,10 @@ public class UsuarioMovieRepositoryImpl implements UsuarioMovieRepository {
     @Override
     @Transactional
     public long obtenerCantidadDeLikes(Movie movie) {
+        if (movie == null) {
+            throw new IllegalArgumentException("La película no puede ser nula");
+        }
+
         String hql = "SELECT COUNT(uml.id) FROM UsuarioMovie uml WHERE uml.pelicula = :movie AND uml.esLike = TRUE";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setParameter("movie", movie);
@@ -78,7 +89,13 @@ public class UsuarioMovieRepositoryImpl implements UsuarioMovieRepository {
     @Override
     @Transactional
     public Optional<UsuarioMovie> buscarMeGustaPorUsuario(Usuario usuario, Movie movie) {
-        String hql = "FROM UsuarioMovie uml WHERE uml.usuario = :usuario AND uml.pelicula = :movie";
+        if (usuario == null)
+            throw new IllegalArgumentException("Usuario no puede ser nulo");
+
+        if (movie == null)
+            throw new IllegalArgumentException("Película no puede ser nula");
+
+        String hql = "FROM UsuarioMovie uml WHERE uml.usuario = :usuario AND uml.pelicula = :movie AND uml.esLike = true";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setParameter("usuario", usuario);
         query.setParameter("movie", movie);
@@ -90,12 +107,27 @@ public class UsuarioMovieRepositoryImpl implements UsuarioMovieRepository {
     @Override
     @Transactional
     public void guardar(UsuarioMovie usuarioMovie) {
+        if (usuarioMovie.getUsuario() == null)
+            throw new IllegalArgumentException("El usuario no puede ser nulo");
+
+        if (usuarioMovie.getPelicula() == null)
+            throw new IllegalArgumentException("La película no puede ser nula");
+
         sessionFactory.getCurrentSession().saveOrUpdate(usuarioMovie);
     }
 
     @Override
     @Transactional
     public void borrarMeGusta(UsuarioMovie usuarioMovie) {
+        if (usuarioMovie == null)
+            throw new IllegalArgumentException("La entidad UsuarioMovie no puede ser nula");
+
+        if (usuarioMovie.getUsuario() == null)
+            throw new IllegalArgumentException("El usuario no puede ser nulo");
+
+        if (usuarioMovie.getPelicula() == null)
+            throw new IllegalArgumentException("La película no puede ser nula");
+
         sessionFactory.getCurrentSession().delete(usuarioMovie);
     }
 

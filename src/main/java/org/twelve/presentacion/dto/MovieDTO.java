@@ -49,6 +49,10 @@ public class MovieDTO {
         this.tambienConocidaComo = tambienConocidaComo;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getNombre() {
         return nombre;
     }
