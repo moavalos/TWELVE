@@ -40,7 +40,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public MovieDTO create(MovieDTO movieDTO) {
         Movie movie = convertToEntity(movieDTO);
-        Movie savedMovie = movieRepository.save(movie);
+        Movie savedMovie = movieRepository.guardar(movie);
         return convertToDTO(savedMovie);
     }
 

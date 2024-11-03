@@ -12,7 +12,9 @@ public interface MovieRepository {
 
     Movie findById(Integer id);
 
-    Movie save(Movie movie);
+    Movie guardar(Movie movie);
+
+    Movie actualizar(Movie movie);
 
     List<Movie> findByTitle(String title);
 

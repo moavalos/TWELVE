@@ -24,7 +24,7 @@
                 <p>Username: <span th:text="${usuario.username}">@username</span></p>
 
                 <div class="follow-button mt-4">
-                    <form th:action="@{${seguirODejarUrl}}" method="post">
+                    <form th:action="@{${seguirODejarUrl}}" method="post" th:if="${!esPerfilPropio}">
                         <button type="submit" class="btn" th:classappend="${estaSiguiendo ? 'btn-danger' : 'btn-primary'}" th:text="${estaSiguiendo ? 'Dejar de Seguir' : 'Seguir'}"></button>
                     </form>
                 </div>
@@ -60,7 +60,7 @@
             <li class="nav-item"><a href="#reseñas" class="nav-link">Reseñas</a></li>
             <li class="nav-item"><a href="#watchlist" class="nav-link">Watchlist</a></li>
             <li class="nav-item"><a href="#listas" class="nav-link">Listas</a></li>
-            <li class="nav-item"><a href="#favoritos" class="nav-link">Favoritos</a></li>
+            <li class="nav-item"><a th:href="@{/favoritos}" class="nav-link">Favoritos</a></li>
             <li class="nav-item"><a href="#tags" class="nav-link">Tags</a></li>
             <li class="nav-item"><a href="#amigos" class="nav-link">Amigos</a></li>
             <li class="nav-item"><a href="#invitaciones" class="nav-link">Invitaciones</a></li>
@@ -71,19 +71,18 @@
 <section class="content container my-5">
     <!-- Sección de Películas Favoritas -->
     <div class="favorite-movies mb-5">
-        <h2 class="text-center">Películas favoritas</h2>
-        <div class="movies-grid d-flex justify-content-between">
-            <div class="movie">
-                <img th:src="@{/images/el_origen.jpg}" alt="Película 1">
+        <h2 class="text-center mb-4">Películas favoritas</h2>
+
+        <div class="d-flex justify-content-center">
+            <div th:if="${peliculasFavoritas.isEmpty()}" class="no-favorites-message d-flex align-items-center justify-content-center bg-dark text-white rounded w-100" style="height: 200px;">
+                <p class="text-center m-0 fs-5">No agregaste películas favoritas todavía</p>
             </div>
-            <div class="movie">
-                <img th:src="@{/images/tiempos_violentos.jpg}" alt="Película 2">
-            </div>
-            <div class="movie">
-                <img th:src="@{/images/matrix.jpg}" alt="Película 3">
-            </div>
-            <div class="movie add-more">
-                <a href="url/a/la/nueva/pagina.html">Ver todas</a>
+
+            <div class="movies-grid d-flex justify-content-between w-100" th:unless="${peliculasFavoritas.isEmpty()}">
+                <div th:each="pelicula : ${peliculasFavoritas}" class="movie text-center mx-2">
+                    <img th:src="@{'/images/' + ${pelicula.imagen}}" th:alt="${pelicula.nombre}" class="img-fluid rounded mb-2">
+                    <p th:text="${pelicula.nombre}" class="fw-bold">Nombre de la película</p>
+                </div>
             </div>
         </div>
     </div>

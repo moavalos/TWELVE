@@ -44,6 +44,7 @@ public class ControladorLogin {
 
         PerfilDTO usuarioBuscado = servicioLogin.consultarUsuario(datosLogin.getEmail(), datosLogin.getPassword());
         if (usuarioBuscado != null) {
+            request.getSession().setAttribute("usuario", usuarioBuscado);
             request.getSession().setAttribute("ROL", usuarioBuscado.getRol());
             request.getSession().setAttribute("usuarioId", usuarioBuscado.getId());
             return new ModelAndView("redirect:/home");

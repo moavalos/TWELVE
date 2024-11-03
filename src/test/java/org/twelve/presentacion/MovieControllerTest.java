@@ -10,7 +10,9 @@ import org.twelve.dominio.MovieService;
 import org.twelve.dominio.UsuarioService;
 import org.twelve.dominio.entities.Movie;
 import org.twelve.presentacion.dto.CategoriaDTO;
+import org.twelve.presentacion.dto.ComentarioDTO;
 import org.twelve.presentacion.dto.MovieDTO;
+import org.twelve.presentacion.dto.PerfilDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -23,9 +25,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class MovieControllerTest {
 
@@ -295,26 +295,163 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testTraerDetalleDePeliculasYSeEncontro() {
-        MovieDTO movieMock = mock(MovieDTO.class);
-        when(movieMock.getNombre()).thenReturn("Coraline");
-        when(movieService.getById(anyInt())).thenReturn(movieMock);
+    public void testTraerDetallePeliculaPeliculaExistenteYUsuarioHaDadoLike() {
+        Integer movieId = 1;
+        Integer usuarioId = 1;
 
-        ModelAndView modelAndView = movieController.getMovieDetails(1);
+        // spy para guardar el estado de likes
+        MovieDTO movieMock = spy(new MovieDTO());
+        movieMock.setLikes(0);
 
-        assertThat(modelAndView.getViewName(), is("detalle-pelicula"));
+        List<ComentarioDTO> comentariosMock = Arrays.asList(mock(ComentarioDTO.class), mock(ComentarioDTO.class));
+        PerfilDTO usuarioMock = mock(PerfilDTO.class);
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(usuarioId);
+        when(movieService.getById(movieId)).thenReturn(movieMock);
+        when(usuarioService.obtenerCantidadDeLikes(movieMock)).thenReturn(10L);
+        when(comentarioService.obtenerComentariosPorPelicula(movieId)).thenReturn(comentariosMock);
+        when(usuarioService.buscarPorId(usuarioId)).thenReturn(usuarioMock);
+        when(usuarioService.haDadoLike(usuarioMock, movieMock)).thenReturn(true);
+
+        ModelAndView modelAndView = movieController.traerDetallePelicula(movieId, requestMock);
+
+        assertEquals("detalle-pelicula", modelAndView.getViewName());
         assertNotNull(modelAndView.getModel().get("movie"));
-        assertThat(((MovieDTO) modelAndView.getModel().get("movie")).getNombre(), is("Coraline"));
+        assertNotNull(modelAndView.getModel().get("comentarios"));
+        assertNotNull(modelAndView.getModel().get("usuario"));
+        assertEquals(true, modelAndView.getModel().get("haDadoLike"));
+        assertEquals(10, movieMock.getLikes());
     }
 
     @Test
-    public void testTraerDetalleDePeliculasPeroNoSeEncontro() {
-        when(movieService.getById(anyInt())).thenReturn(null);
+    public void testTraerDetallePeliculaUsuarioNoHaDadoLike() {
+        Integer movieId = 1;
+        Integer usuarioId = 2;
 
-        ModelAndView modelAndView = movieController.getMovieDetails(99);
+        MovieDTO movieMock = spy(new MovieDTO());
+        movieMock.setLikes(0);
 
-        assertThat(modelAndView.getViewName(), is("detalle-pelicula"));
+        PerfilDTO usuarioMock = mock(PerfilDTO.class);
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(usuarioId);
+        when(movieService.getById(movieId)).thenReturn(movieMock);
+        when(usuarioService.obtenerCantidadDeLikes(movieMock)).thenReturn(5L);
+        when(usuarioService.buscarPorId(usuarioId)).thenReturn(usuarioMock);
+        when(usuarioService.haDadoLike(usuarioMock, movieMock)).thenReturn(false);
+
+        ModelAndView modelAndView = movieController.traerDetallePelicula(movieId, requestMock);
+
+        assertEquals("detalle-pelicula", modelAndView.getViewName());
+        assertNotNull(modelAndView.getModel().get("movie"));
+        assertNotNull(modelAndView.getModel().get("usuario"));
+        assertEquals(false, modelAndView.getModel().get("haDadoLike"));
+        assertEquals(5, movieMock.getLikes());
     }
 
+    @Test
+    public void testTraerDetallePeliculaSinUsuarioEnSesion() {
+        Integer movieId = 1;
+
+        MovieDTO movieMock = mock(MovieDTO.class);
+        List<ComentarioDTO> comentariosMock = new ArrayList<>();
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(null);
+        when(movieService.getById(movieId)).thenReturn(movieMock);
+        when(comentarioService.obtenerComentariosPorPelicula(movieId)).thenReturn(comentariosMock);
+
+        ModelAndView modelAndView = movieController.traerDetallePelicula(movieId, requestMock);
+
+        assertEquals("detalle-pelicula", modelAndView.getViewName());
+        assertNotNull(modelAndView.getModel().get("movie"));
+        assertEquals(comentariosMock, modelAndView.getModel().get("comentarios"));
+        assertNull(modelAndView.getModel().get("usuario"));
+        assertEquals(false, modelAndView.getModel().get("haDadoLike"));
+    }
+
+    @Test
+    public void testDarMeGustaUsuarioNoEnSesion() {
+        Integer movieId = 1;
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(null);
+
+        String redirectUrl = movieController.darMeGusta(movieId, requestMock);
+
+        assertEquals("redirect:/login", redirectUrl);
+    }
+
+    @Test
+    public void testDarMeGustaPeliculaNoExistente() {
+        Integer movieId = 99;
+        Integer usuarioId = 1;
+
+        PerfilDTO usuarioMock = mock(PerfilDTO.class);
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(usuarioId);
+        when(usuarioService.buscarPorId(usuarioId)).thenReturn(usuarioMock);
+        when(movieService.getById(movieId)).thenReturn(null);
+
+        String redirectUrl = movieController.darMeGusta(movieId, requestMock);
+
+        assertEquals("redirect:/detalle-pelicula/" + movieId, redirectUrl);
+        verify(usuarioService, never()).guardarMeGusta(any(PerfilDTO.class), any(MovieDTO.class));
+    }
+
+    @Test
+    public void testDarMeGustaUsuarioYMovieExisten() {
+        Integer movieId = 1;
+        Integer usuarioId = 1;
+
+        PerfilDTO usuarioMock = mock(PerfilDTO.class);
+        MovieDTO movieMock = mock(MovieDTO.class);
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(usuarioId);
+        when(usuarioService.buscarPorId(usuarioId)).thenReturn(usuarioMock);
+        when(movieService.getById(movieId)).thenReturn(movieMock);
+
+        String redirectUrl = movieController.darMeGusta(movieId, requestMock);
+
+        assertEquals("redirect:/detalle-pelicula/" + movieId, redirectUrl);
+        verify(usuarioService, times(1)).guardarMeGusta(usuarioMock, movieMock);
+    }
+
+    @Test
+    public void testDarMeGustaUsuarioExistenteSinPelicula() {
+        Integer movieId = 1;
+        Integer usuarioId = 1;
+
+        PerfilDTO usuarioMock = mock(PerfilDTO.class);
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(usuarioId);
+        when(usuarioService.buscarPorId(usuarioId)).thenReturn(usuarioMock);
+        when(movieService.getById(movieId)).thenReturn(null);
+
+        String redirectUrl = movieController.darMeGusta(movieId, requestMock);
+
+        assertEquals("redirect:/detalle-pelicula/" + movieId, redirectUrl);
+        verify(usuarioService, never()).guardarMeGusta(usuarioMock, null);
+    }
+
+    @Test
+    public void testDarMeGustaSinUsuarioYPeliculaExistente() {
+        Integer movieId = 1;
+
+        MovieDTO movieMock = mock(MovieDTO.class);
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(null);
+        when(movieService.getById(movieId)).thenReturn(movieMock);
+
+        String redirectUrl = movieController.darMeGusta(movieId, requestMock);
+
+        assertEquals("redirect:/login", redirectUrl);
+        verify(usuarioService, never()).guardarMeGusta(any(PerfilDTO.class), any(MovieDTO.class));
+    }
 
 }
