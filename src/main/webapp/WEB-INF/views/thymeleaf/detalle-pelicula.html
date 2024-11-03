@@ -105,15 +105,21 @@
     <hr>
 
     <!-- peliculas similares/ arreglar esto con categoria -->
-    <div class="pelisSimilares">
-        <div class="row similar-movies">
-            <h4>Películas Similares</h4><br>
-
-            <div class="col-md-3"><img th:src="@{'/images/' + ${movie.imagen}}" alt="Similar Movie"></div>
-            <div class="col-md-3"><img th:src="@{'/images/' + ${movie.imagen}}" alt="Similar Movie"></div>
-            <div class="col-md-3"><img th:src="@{'/images/' + ${movie.imagen}}" alt="Similar Movie"></div>
+    <h4 class="pelisSimilares">Películas Similares</h4>
+    <div class="row similar-movies">
+        <div th:each="pelicula : ${peliculasSimilares}" class="col-md-2 col-sm-4 col-6 mb-3">
+            <div class="card h-100">
+                <a th:href="@{/detalle-pelicula/{id}(id=${pelicula.id})}">
+                    <img th:src="@{'/images/' + ${pelicula.imagen}}" alt="Similar Movie" class="card-img-top movie-image">
+                </a>
+                <div class="card-body">
+                    <h6 class="card-title" th:text="${pelicula.nombre}"></h6>
+                </div>
+            </div>
         </div>
     </div>
+
+
 </div>
 
 <!-- modal/popup comentario si esta logeado -->

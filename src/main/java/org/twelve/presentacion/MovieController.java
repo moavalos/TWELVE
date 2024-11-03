@@ -83,12 +83,14 @@ public class MovieController {
         MovieDTO movie = movieService.getById(id);
         //lista de comentarios
         List<ComentarioDTO> comentarios = comentarioService.obtenerComentariosPorPelicula(id);
+        List<MovieDTO> similarMovies = movieService.getSimilarMovies(id);
 
         //modelo
         ModelMap modelo = new ModelMap();
         modelo.put("movie", movie);
         modelo.put("comentarios", comentarios);
         modelo.put("usuario", new PerfilDTO());
+        modelo.put("peliculasSimilares", similarMovies);
 
         return new ModelAndView("detalle-pelicula", modelo);
     }
