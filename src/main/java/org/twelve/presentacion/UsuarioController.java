@@ -56,14 +56,13 @@ public class UsuarioController {
 
 ///
 
-@PostMapping("/upload-profile-picture")
+@PostMapping("/perfil/{id}")
 public ModelAndView uploadProfilePicture(@RequestParam("profilePicture") MultipartFile file,
-                                         @RequestParam("userId") Integer userId,
-                                         RedirectAttributes redirectAttributes) {
+                                         @PathVariable Integer id) {
     ModelMap model = new ModelMap();
 
     // Buscar el usuario por ID y verificar que existe
-    PerfilDTO usuario = usuarioService.buscarPorId(userId);
+    PerfilDTO usuario = usuarioService.buscarPorId(id);
     if (usuario == null) {
         model.put("error", "Usuario no encontrado");
         return new ModelAndView("perfil", model);
@@ -81,7 +80,7 @@ public ModelAndView uploadProfilePicture(@RequestParam("profilePicture") Multipa
         file.transferTo(destinationFile);
 
         // Aquí podrías guardar la ruta de la imagen en la base de datos si es necesario
-        usuarioService.actualizarFotoPerfil(userId, destinationFile.getPath());
+        usuarioService.actualizarFotoPerfil(id, destinationFile.getPath());
 
         model.put("message", "Foto de perfil actualizada exitosamente.");
     } catch (IOException e) {
