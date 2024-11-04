@@ -154,7 +154,11 @@ public class PerfilDTO {
         usuario.setPassword(perfilDTO.getPassword());
         usuario.setNombre(perfilDTO.getNombre());
         usuario.setEmail(perfilDTO.getEmail());
-        usuario.setPais(PaisDTO.convertToEntity(perfilDTO.getPais()));
+        if (perfilDTO.getPais() != null) {
+            usuario.setPais(PaisDTO.convertToEntity(perfilDTO.getPais()));
+        } else {
+            usuario.setPais(null); // o crear un nuevo Pais si prefieres
+        }
         usuario.setDescripcion(perfilDTO.getDescripcion());
         usuario.setRol(perfilDTO.getRol());
         usuario.setActivo(perfilDTO.getActivo());
@@ -170,7 +174,11 @@ public class PerfilDTO {
         perfilDTO.setPassword(usuario.getPassword());
         perfilDTO.setNombre(usuario.getNombre());
         perfilDTO.setEmail(usuario.getEmail());
-        perfilDTO.setPais(PaisDTO.convertToDTO(usuario.getPais()));
+        if (usuario.getPais() != null) {
+            perfilDTO.setPais(PaisDTO.convertToDTO(usuario.getPais()));
+        } else {
+            perfilDTO.setPais(null); // o asignar un PaisDTO vacío si prefieres
+        }
         perfilDTO.setDescripcion(usuario.getDescripcion());
         perfilDTO.setRol(usuario.getRol());
         perfilDTO.setActivo(usuario.getActivo());

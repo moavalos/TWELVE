@@ -187,6 +187,11 @@ public class MovieDTO {
             categoriasDTOs.add(categoriaDTO);
         }
 
+        PaisDTO paisDTO = null;
+        if (movie.getPais() != null) {
+            paisDTO = PaisDTO.convertToDTO(movie.getPais());
+        }
+
 
 
         return new MovieDTO(
@@ -195,7 +200,7 @@ public class MovieDTO {
                 movie.getDescripcion(),
                 movie.getFrase(),
                 movie.getDuracion(),
-                PaisDTO.convertToDTO(movie.getPais()),
+                paisDTO,
                 movie.getCantVistas(),
                 categoriasDTOs,
                 movie.getAñoLanzamiento(),
@@ -211,13 +216,15 @@ public class MovieDTO {
 
     // dto a entidad en
     public static Movie convertToEntity(MovieDTO movieDTO) {
+
+
+
         Movie movie = new Movie();
         movie.setId(movieDTO.getId());
         movie.setNombre(movieDTO.getNombre());
         movie.setDescripcion(movieDTO.getDescripcion());
         movie.setFrase(movieDTO.getFrase());
         movie.setDuracion(movieDTO.getDuracion());
-        movie.setPais(PaisDTO.convertToEntity(movieDTO.getPais()));
         movie.setCantVistas(movieDTO.getCantVistas());
         movie.setAñoLanzamiento(movieDTO.getAnioLanzamiento());
         movie.setImagen(movieDTO.getImagen());
@@ -227,6 +234,13 @@ public class MovieDTO {
         movie.setEscritor(movieDTO.getEscritor());
         movie.setIdioma(movieDTO.getIdioma());
         movie.setTambienConocidaComo(movieDTO.getTambienConocidaComo());
+
+
+        if (movieDTO.getPais() != null) {
+            movie.setPais(PaisDTO.convertToEntity(movieDTO.getPais()));
+        } else {
+            movie.setPais(null);
+        }
 
         if (movieDTO.getCategorias() != null) {
             Set<Categoria> categorias = new HashSet<>();

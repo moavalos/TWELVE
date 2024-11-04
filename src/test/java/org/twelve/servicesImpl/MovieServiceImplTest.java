@@ -8,6 +8,7 @@ import org.twelve.dominio.entities.Movie;
 import org.twelve.dominio.serviceImpl.MovieServiceImpl;
 import org.twelve.presentacion.dto.CategoriaDTO;
 import org.twelve.presentacion.dto.MovieDTO;
+import org.twelve.presentacion.dto.PaisDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -85,13 +86,15 @@ public class MovieServiceImplTest {
                 new CategoriaDTO(2, "Ciencia Ficción")
         );
 
+        PaisDTO paisDTO = new PaisDTO(1, "Pais");
+
         MovieDTO movieDTO = new MovieDTO(
                 1,
                 "Matrix",
                 "A hacker discovers...",
                 "Welcome to the real world",
                 136.8,
-                "USA",
+                paisDTO,
                 5000,
                 categoriaDTOList,
                 "1999",
