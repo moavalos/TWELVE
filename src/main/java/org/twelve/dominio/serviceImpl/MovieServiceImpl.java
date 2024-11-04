@@ -101,19 +101,15 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<MovieDTO> getSimilarMovies(Integer movieId) {
-        // Recuperar la película original para obtener sus categorías
         Movie pelicula = movieRepository.findById(movieId);
         if (pelicula == null) {
             throw new IllegalArgumentException("La película con ID " + movieId + " no existe.");
         }
 
-        // Obtener las categorías de la película original
         Set<Categoria> categorias = pelicula.getCategorias();
 
-        // Llamar al repositorio para obtener las películas similares
         List<Movie> similarMovies = movieRepository.findSimilarMovies(movieId, categorias);
 
-        // Convertir el resultado a DTOs y retornarlo
         return similarMovies.stream()
                 .map(MovieDTO::convertToDTO)
                 .collect(Collectors.toList());

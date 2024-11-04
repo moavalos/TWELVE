@@ -2,13 +2,13 @@ package org.twelve.infraestructura;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.twelve.dominio.MovieRepository;
 import org.twelve.dominio.entities.Categoria;
 import org.twelve.dominio.entities.Movie;
 
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Set;
@@ -119,7 +119,7 @@ public class MovieRepositoryImpl implements MovieRepository {
                 "GROUP BY m.id " +
                 "ORDER BY COUNT(c) DESC";
 
-        Query<Movie> query = sessionFactory.getCurrentSession().createQuery(hql, Movie.class);
+        Query query = sessionFactory.getCurrentSession().createQuery(hql, Movie.class);
 
         query.setParameter("categorias", categorias);
         query.setParameter("movieId", movieId);

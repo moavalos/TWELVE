@@ -157,7 +157,7 @@ public class PerfilDTO {
         if (perfilDTO.getPais() != null) {
             usuario.setPais(PaisDTO.convertToEntity(perfilDTO.getPais()));
         } else {
-            usuario.setPais(null); // o crear un nuevo Pais si prefieres
+            usuario.setPais(null);
         }
         usuario.setDescripcion(perfilDTO.getDescripcion());
         usuario.setRol(perfilDTO.getRol());
@@ -177,7 +177,7 @@ public class PerfilDTO {
         if (usuario.getPais() != null) {
             perfilDTO.setPais(PaisDTO.convertToDTO(usuario.getPais()));
         } else {
-            perfilDTO.setPais(null); // o asignar un PaisDTO vacío si prefieres
+            perfilDTO.setPais(null);
         }
         perfilDTO.setDescripcion(usuario.getDescripcion());
         perfilDTO.setRol(usuario.getRol());
