@@ -1,4 +1,4 @@
-package org.twelve.infraestructura.converter;
+package org.twelve.presentacion.converter;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -6,11 +6,11 @@ import org.twelve.dominio.PaisService;
 import org.twelve.presentacion.dto.PaisDTO;
 
 @Component
-public class StringToPaisConverter implements Converter<String, PaisDTO> {
+public class StringToPaisDTOConverter implements Converter<String, PaisDTO> {
 
     private final PaisService paisService;
 
-    public StringToPaisConverter(PaisService paisService) {
+    public StringToPaisDTOConverter(PaisService paisService) {
         this.paisService = paisService;
     }
 

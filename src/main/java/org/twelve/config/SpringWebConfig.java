@@ -13,7 +13,7 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
-import org.twelve.infraestructura.converter.StringToPaisConverter;
+import org.twelve.presentacion.converter.StringToPaisDTOConverter;
 
 @EnableWebMvc
 @Configuration
@@ -25,7 +25,7 @@ public class SpringWebConfig implements WebMvcConfigurer {
     private ApplicationContext applicationContext;
 
     @Autowired
-    private StringToPaisConverter stringToPaisConverter;
+    private StringToPaisDTOConverter stringToPaisDTOConverter;
 
 
     @Override
@@ -82,7 +82,7 @@ public class SpringWebConfig implements WebMvcConfigurer {
 
     @Override
     public void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(stringToPaisConverter);
+        registry.addConverter(stringToPaisDTOConverter);
     }
 
 }
