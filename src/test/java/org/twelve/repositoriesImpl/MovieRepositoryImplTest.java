@@ -16,7 +16,9 @@ import org.twelve.integracion.config.HibernateTestConfig;
 
 import javax.persistence.Query;
 import javax.transaction.Transactional;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -111,7 +113,7 @@ public class MovieRepositoryImplTest {
         Movie movie = new Movie();
         movie.setNombre("Titanic");
         movie.setAñoLanzamiento("1997");
-        movie.getCategorias().add(categoria); // Asignar categoría
+        movie.getCategorias().add(categoria);
         movieRepository.guardar(movie);
 
         movie.setAñoLanzamiento("1998");
@@ -136,7 +138,7 @@ public class MovieRepositoryImplTest {
         Movie movie1 = new Movie();
         movie1.setNombre("Coraline");
         movie1.setCantVistas(100);
-        movie1.getCategorias().add(categoria1); // Añadir categoría a la película
+        movie1.getCategorias().add(categoria1);
         movieRepository.guardar(movie1);
 
         Categoria categoria2 = new Categoria();
@@ -145,7 +147,7 @@ public class MovieRepositoryImplTest {
         Movie movie2 = new Movie();
         movie2.setNombre("Avatar");
         movie2.setCantVistas(200);
-        movie2.getCategorias().add(categoria2); // Añadir categoría a la película
+        movie2.getCategorias().add(categoria2);
         movieRepository.guardar(movie2);
 
         List<Movie> peliculasMasVistas = movieRepository.findMostViewed();
@@ -164,7 +166,7 @@ public class MovieRepositoryImplTest {
         movie1.setId(1);
         movie1.setNombre("Coraline");
         movie1.setValoracion(4.5);
-        movie1.getCategorias().add(categoria1); // Añadir categoría a la película
+        movie1.getCategorias().add(categoria1);
         movieRepository.guardar(movie1);
 
         Categoria categoria2 = new Categoria();
@@ -174,7 +176,7 @@ public class MovieRepositoryImplTest {
         movie2.setId(2);
         movie2.setNombre("Avatar");
         movie2.setValoracion(4.8);
-        movie2.getCategorias().add(categoria2); // Añadir categoría a la película
+        movie2.getCategorias().add(categoria2);
         movieRepository.guardar(movie2);
 
         List<Movie> topRatedMovies = movieRepository.findTopRated();
@@ -271,5 +273,74 @@ public class MovieRepositoryImplTest {
         List<Movie> foundMovies = query.getResultList();
         assertTrue(foundMovies.isEmpty());
     }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testFindSimilarMoviesDevuelvePeliculasSimilares() {
+        Categoria categoria1 = new Categoria();
+        categoria1.setNombre("MUSICAL");
+        categoriaRepository.save(categoria1);
+
+        Categoria categoria2 = new Categoria();
+        categoria2.setNombre("ACCIÓN");
+        categoriaRepository.save(categoria2);
+
+        Movie movie1 = new Movie();
+        movie1.setNombre("Grease");
+        movie1.getCategorias().add(categoria1);
+        movieRepository.guardar(movie1);
+
+        Movie movie2 = new Movie();
+        movie2.setNombre("High School Musical");
+        movie2.getCategorias().add(categoria1);
+        movieRepository.guardar(movie2);
+
+        Movie movie3 = new Movie();
+        movie3.setNombre("La La Land");
+        movie3.getCategorias().add(categoria1);
+        movieRepository.guardar(movie3);
+
+        Movie movie4 = new Movie();
+        movie4.setNombre("Star Wars");
+        movie4.getCategorias().add(categoria2);
+        movieRepository.guardar(movie4);
+
+        Set<Categoria> categoriasSimilares = movie1.getCategorias();
+
+        List<Movie> peliculasSimilares = movieRepository.findSimilarMovies(movie1.getId(), categoriasSimilares);
+
+        assertNotNull(peliculasSimilares);
+        assertEquals(2, peliculasSimilares.size());
+        assertTrue(peliculasSimilares.stream().anyMatch(movie -> movie.getNombre().equals("High School Musical")));
+        assertTrue(peliculasSimilares.stream().anyMatch(movie -> movie.getNombre().equals("La La Land")));
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testFindSimilarMoviesSinCoincidenciasDevuelveListaVacia() {
+        Categoria categoria1 = new Categoria();
+        categoria1.setNombre("MUSICAL");
+        categoriaRepository.save(categoria1);
+
+        Categoria categoria2 = new Categoria();
+        categoria2.setNombre("ACCION");
+        categoriaRepository.save(categoria2);
+
+        Movie movie1 = new Movie();
+        movie1.setNombre("Inception");
+        movie1.getCategorias().add(categoria2);
+        movieRepository.guardar(movie1);
+
+        Set<Categoria> categoriasSimilares = movie1.getCategorias();
+
+        List<Movie> peliculasSimilares = movieRepository.findSimilarMovies(movie1.getId(), categoriasSimilares);
+
+        assertNotNull(peliculasSimilares);
+        assertTrue(peliculasSimilares.isEmpty());
+    }
+
+
 
 }

@@ -256,5 +256,49 @@ public class MovieServiceImplTest {
         verify(movieRepository, never()).findByCategoriaIdNewest(idCategoria);
     }
 
+    @Test
+    public void testGetSimilarMoviesCuandoPeliculaNoExisteDeberiaLanzarExcepcion() {
+        when(movieRepository.findById(99)).thenReturn(null);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            movieServiceImpl.getSimilarMovies(99);
+        });
+
+        assertEquals("La película con ID 99 no existe.", exception.getMessage());
+
+        verify(movieRepository, times(1)).findById(99);
+    }
+
+
+
+    @Test
+    public void testGetSimilarMoviesCuandoExistenPeliculasSimilaresDeberiaRetornarListaDeMovieDTO() {
+        Categoria categoria1 = new Categoria(1, "Acción");
+        Categoria categoria2 = new Categoria(2, "Ciencia Ficción");
+        Set<Categoria> categorias = new HashSet<>(Arrays.asList(categoria1, categoria2));
+
+        Movie movie1 = new Movie();
+        movie1.setId(1);
+        movie1.setNombre("Matrix");
+        movie1.setCategorias(categorias);
+
+        Movie movie2 = new Movie();
+        movie2.setId(2);
+        movie2.setNombre("Blade Runner");
+        movie2.setCategorias(Collections.singleton(categoria2));
+
+        when(movieRepository.findById(1)).thenReturn(movie1);
+        when(movieRepository.findSimilarMovies(1, categorias)).thenReturn(Arrays.asList(movie2));
+
+        List<MovieDTO> result = movieServiceImpl.getSimilarMovies(1);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals("Blade Runner", result.get(0).getNombre());
+
+        verify(movieRepository, times(1)).findById(1);
+        verify(movieRepository, times(1)).findSimilarMovies(1, categorias);
+    }
+
 
 }
