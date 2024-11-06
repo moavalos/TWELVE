@@ -6,39 +6,43 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.twelve.dominio.PaisRepository;
-import org.twelve.dominio.ServicioLogin;
 import org.twelve.dominio.UsuarioService;
-import org.twelve.dominio.entities.Pais;
-import org.twelve.dominio.entities.Usuario;
+import org.twelve.dominio.entities.Movie;
 import org.twelve.presentacion.dto.PerfilDTO;
 
-import javax.transaction.Transactional;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
 public class UsuarioController {
 
-    private UsuarioService usuarioService;
+    private static final String UPLOAD_DIR = "/images/user";
 
-     private final PaisRepository paisRepository;
-
-    private final String UPLOAD_DIR = "src/main/webapp/resources/core/images/user";
+    private final UsuarioService usuarioService;
+    private HttpSession session;
 
     @Autowired
-    public UsuarioController(UsuarioService usuarioService,PaisRepository paisRepository, ServicioLogin servicioLogin) {
+    public UsuarioController(UsuarioService usuarioService, HttpSession session) {
         this.usuarioService = usuarioService;
-        this.paisRepository = paisRepository;
+        this.session = session;
     }
 
-
-
     @RequestMapping(path = "/perfil/{id}", method = RequestMethod.GET)
-    public ModelAndView buscarPorId(@PathVariable Integer id) {
+    public ModelAndView verPerfil(@PathVariable Integer id, HttpServletRequest request) {
         ModelMap model = new ModelMap();
+
+        // verifico si hay un usuario logueado
+        Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
+        System.out.println("usuario logueado; " + usuarioLogueadoId);
+
+        if (usuarioLogueadoId == null)
+            return new ModelAndView("redirect:/login");
+
+        boolean esPerfilPropio = usuarioLogueadoId.equals(id);
 
         PerfilDTO usuario = usuarioService.buscarPorId(id);
         if (usuario == null) {
@@ -61,50 +65,6 @@ public class UsuarioController {
 
         return new ModelAndView("perfil", model);
     }
-
-///
-
-@PostMapping("/perfil/{id}")
-public ModelAndView uploadProfilePicture(@RequestParam("profilePicture") MultipartFile file,
-                                         @PathVariable Integer id) {
-    ModelMap model = new ModelMap();
-
-    // Buscar el usuario por ID y verificar que existe
-    PerfilDTO usuario = usuarioService.buscarPorId(id);
-    if (usuario == null) {
-        model.put("error", "Usuario no encontrado");
-        return new ModelAndView("perfil", model);
-    }
-
-    if (file.isEmpty()) {
-        model.put("error", "Por favor selecciona una imagen.");
-        model.put("usuario", usuario);
-        return new ModelAndView("perfil", model);
-    }
-
-    try {
-        String fileName = file.getOriginalFilename();
-        File destinationFile = new File(UPLOAD_DIR + fileName);
-        file.transferTo(destinationFile);
-
-        // Aquí podrías guardar la ruta de la imagen en la base de datos si es necesario
-        usuarioService.actualizarFotoPerfil(id, destinationFile.getPath());
-
-        model.put("message", "Foto de perfil actualizada exitosamente.");
-    } catch (IOException e) {
-        model.put("error", "Error al subir la imagen.");
-    }
-
-    // Agregar información adicional al modelo
-    model.put("usuario", usuario);
-    model.put("cantidadPeliculasVistas", usuario.getCantidadPeliculasVistas());
-    model.put("cantidadPeliculasVistasEsteAno", usuario.getCantidadPeliculasVistasEsteAno());
-    model.put("peliculasFavoritas", usuario.getPeliculasFavoritas());
-
-    return new ModelAndView("perfil", model);
-}
-
-
 
     @RequestMapping(path = "/seguir/{idSeguido}", method = RequestMethod.POST)
     public String seguirUsuario(@PathVariable Integer idSeguido, HttpServletRequest request) {
@@ -146,7 +106,46 @@ public ModelAndView uploadProfilePicture(@RequestParam("profilePicture") Multipa
         return new ModelAndView("favoritos", model);
     }
 
+
+
+    @PostMapping("/perfil/{id}")
+    public ModelAndView uploadProfilePicture(@RequestParam("profilePicture") MultipartFile file,
+                                             @PathVariable Integer id) {
+        ModelMap model = new ModelMap();
+
+        // Buscar el usuario por ID y verificar que existe
+        PerfilDTO usuario = usuarioService.buscarPorId(id);
+        if (usuario == null) {
+            model.put("error", "Usuario no encontrado");
+            return new ModelAndView("perfil", model);
+        }
+
+        if (file.isEmpty()) {
+            model.put("error", "Por favor selecciona una imagen.");
+            model.put("usuario", usuario);
+            return new ModelAndView("perfil", model);
+        }
+
+        try {
+            String fileName = file.getOriginalFilename();
+            File destinationFile = new File(UPLOAD_DIR + fileName);
+            file.transferTo(destinationFile);
+
+            // Aquí podrías guardar la ruta de la imagen en la base de datos si es necesario
+            usuarioService.actualizarFotoPerfil(id, destinationFile.getPath());
+
+            model.put("message", "Foto de perfil actualizada exitosamente.");
+        } catch (IOException e) {
+            model.put("error", "Error al subir la imagen.");
+        }
+
+        // Agregar información adicional al modelo
+        model.put("usuario", usuario);
+        model.put("cantidadPeliculasVistas", usuario.getCantidadPeliculasVistas());
+        model.put("cantidadPeliculasVistasEsteAno", usuario.getCantidadPeliculasVistasEsteAno());
+        model.put("peliculasFavoritas", usuario.getPeliculasFavoritas());
+
+        return new ModelAndView("perfil", model);
+    }
+
 }
-
-
-

@@ -1,10 +1,13 @@
 package org.twelve.dominio;
 
-import org.twelve.dominio.entities.Usuario;
+import org.twelve.dominio.entities.Movie;
+import org.twelve.presentacion.dto.MovieDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
+@Transactional
 public interface UsuarioService {
 
     List<PerfilDTO> encontrarTodos();
@@ -23,12 +26,10 @@ public interface UsuarioService {
 
     boolean haDadoLike(PerfilDTO usuarioDTO, MovieDTO movieDTO);
 
-    Usuario convertToEntity(PerfilDTO perfilDTO);
-    PerfilDTO convertToDTO(Usuario tempUsuario);
-
-    void actualizarFotoPerfil(Integer userId, String path);
     long obtenerCantidadDeLikes(MovieDTO movieDTO);
 
     List<Movie> obtenerPeliculasFavoritas(Integer usuarioId);
 
+    void actualizarFotoPerfil(Integer userId, String path);
 }
+

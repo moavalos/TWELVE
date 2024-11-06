@@ -172,6 +172,8 @@ public class UsuarioServiceImpl implements UsuarioService {
         return usuarioMovieRepository.buscarMeGustaPorUsuario(usuario, movie).isPresent();
     }
 
+
+
     @Override
     public List<Movie> obtenerPeliculasFavoritas(Integer usuarioId) {
         if (usuarioId == null)
