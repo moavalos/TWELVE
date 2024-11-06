@@ -2,36 +2,47 @@ package org.twelve.dominio.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.twelve.dominio.MovieRepository;
 import org.twelve.dominio.RepositorioUsuario;
 import org.twelve.dominio.UsuarioMovieRepository;
 import org.twelve.dominio.UsuarioService;
 import org.twelve.dominio.entities.Movie;
+import org.twelve.dominio.entities.Seguidor;
 import org.twelve.dominio.entities.Usuario;
-import org.twelve.dominio.excepcion.ContrasenasNoCoinciden;
-import org.twelve.dominio.excepcion.UsuarioExistente;
+import org.twelve.dominio.entities.UsuarioMovie;
+import org.twelve.presentacion.dto.MovieDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
+import org.twelve.presentacion.dto.UsuarioMovieDTO;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Service
+import static org.twelve.presentacion.dto.PerfilDTO.convertToDTO;
+import static org.twelve.presentacion.dto.PerfilDTO.convertToEntity;
+
+@Service("usuarioService")
 public class UsuarioServiceImpl implements UsuarioService {
 
-    private RepositorioUsuario repositorioUsuario;
-    private UsuarioMovieRepository usuarioMovieRepository;
+    private final RepositorioUsuario repositorioUsuario;
+    private final UsuarioMovieRepository usuarioMovieRepository;
+    private final MovieRepository movieRepository;
 
     @Autowired
-    public UsuarioServiceImpl(RepositorioUsuario repositorioUsuario, UsuarioMovieRepository usuarioMovieRepository) {
+    public UsuarioServiceImpl(RepositorioUsuario repositorioUsuario, UsuarioMovieRepository usuarioMovieRepository, MovieRepository movieRepository) {
         this.repositorioUsuario = repositorioUsuario;
         this.usuarioMovieRepository = usuarioMovieRepository;
+        this.movieRepository = movieRepository;
     }
 
     @Override
     public List<PerfilDTO> encontrarTodos() {
         List<Usuario> usuarios = repositorioUsuario.encontrarTodos();
-        return usuarios.stream().map(this::convertToDTO).collect(Collectors.toList());
+        return usuarios.stream().map(PerfilDTO::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -47,10 +58,15 @@ public class UsuarioServiceImpl implements UsuarioService {
         int cantidadPeliculasVistasEsteAno = usuarioMovieRepository.obtenerCantidadPeliculasVistasEsteAno(id);
         List<Movie> peliculasFavoritas = usuarioMovieRepository.obtenerPeliculasFavoritas(id);
 
+        List<Seguidor> seguidores = repositorioUsuario.obtenerSeguidores(id);
+        List<Seguidor> seguidos = repositorioUsuario.obtenerSeguidos(id);
+
         PerfilDTO perfilDTO = convertToDTO(usuario);
         perfilDTO.setCantidadPeliculasVistas(cantidadPeliculasVistas);
         perfilDTO.setCantidadPeliculasVistasEsteAno(cantidadPeliculasVistasEsteAno);
         perfilDTO.setPeliculasFavoritas(peliculasFavoritas);
+        perfilDTO.setSeguidores(seguidores);
+        perfilDTO.setSeguidos(seguidos);
 
         return perfilDTO;
     }
@@ -63,39 +79,71 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public List<PerfilDTO> buscarPorUsername(String username) {
-        List<Usuario> usuarios = (List<Usuario>) repositorioUsuario.buscarPorUsername(username);
-        return usuarios.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public void seguirUsuario(Integer usuarioId, Integer seguidoId) {
+        Usuario usuario = repositorioUsuario.buscarPorId(usuarioId);
+        Usuario seguido = repositorioUsuario.buscarPorId(seguidoId);
+
+        if (usuario == null || seguido == null)
+            throw new IllegalArgumentException("Usuario o seguido no encontrado");
+
+        if (!repositorioUsuario.estaSiguiendo(usuario, seguido))
+            repositorioUsuario.seguirUsuario(usuario, seguido);
     }
 
-    public Usuario convertToEntity(PerfilDTO perfilDTO) {
-        Usuario usuario = new Usuario();
-        usuario.setNombre(perfilDTO.getNombre());
-        usuario.setDescripcion(perfilDTO.getDescripcion());
-        usuario.setPais(perfilDTO.getPais());
-        usuario.setEmail(perfilDTO.getEmail());
-        usuario.setId(perfilDTO.getId());
-        usuario.setActivo(perfilDTO.getActivo());
-        usuario.setRol(perfilDTO.getRol());
-        usuario.setPassword(perfilDTO.getPassword());
-        usuario.setUsername(perfilDTO.getUsername());
-        return usuario;
+    @Override
+    public void dejarDeSeguirUsuario(Integer usuarioId, Integer seguidoId) {
+        Usuario usuario = repositorioUsuario.buscarPorId(usuarioId);
+        Usuario seguido = repositorioUsuario.buscarPorId(seguidoId);
+
+        if (usuario == null || seguido == null)
+            throw new IllegalArgumentException("Usuario o seguido no encontrado");
+
+        if (repositorioUsuario.estaSiguiendo(usuario, seguido))
+            repositorioUsuario.dejarDeSeguirUsuario(usuario, seguido);
     }
 
-    public PerfilDTO convertToDTO(Usuario usuario) {
-        PerfilDTO perfilDTO = new PerfilDTO();
-        perfilDTO.setId(usuario.getId());
-        perfilDTO.setNombre(usuario.getNombre());
-        perfilDTO.setDescripcion(usuario.getDescripcion());
-        perfilDTO.setPais(usuario.getPais());
-        perfilDTO.setEmail(usuario.getEmail());
-        perfilDTO.setActivo(usuario.getActivo());
-        perfilDTO.setRol(usuario.getRol());
-        perfilDTO.setPassword(usuario.getPassword());
-        perfilDTO.setUsername(usuario.getUsername());
-        return perfilDTO;
+    @Override
+    public Boolean estaSiguiendo(Integer usuarioId, Integer seguidoId) {
+        Usuario usuario = repositorioUsuario.buscarPorId(usuarioId);
+        Usuario seguido = repositorioUsuario.buscarPorId(seguidoId);
+        return repositorioUsuario.estaSiguiendo(usuario, seguido);
+    }
+
+    @Override
+    public void guardarMeGusta(PerfilDTO usuarioDTO, MovieDTO movieDTO) {
+
+        if (usuarioDTO == null || movieDTO == null) {
+            throw new IllegalArgumentException("Usuario o película no puede ser nulo");
+        }
+
+        Usuario usuario = convertToEntity(usuarioDTO);
+        Movie movie = MovieDTO.convertToEntity(movieDTO);
+
+        Optional<UsuarioMovie> like = usuarioMovieRepository.buscarMeGustaPorUsuario(usuario, movie);
+
+        if (like.isPresent()) {
+            usuarioMovieRepository.borrarMeGusta(like.get());
+        } else {
+            UsuarioMovie nuevoLike = new UsuarioMovie();
+            nuevoLike.setUsuario(usuario);
+            nuevoLike.setPelicula(movie);
+            nuevoLike.setEsLike(Boolean.TRUE);
+            nuevoLike.setFechaLike(LocalDate.now());
+            usuarioMovieRepository.guardar(nuevoLike);
+        }
+        movieRepository.actualizar(movie);
+    }
+
+    @Override
+    public long obtenerCantidadDeLikes(MovieDTO movieDTO) {
+        if (movieDTO == null)
+            throw new IllegalArgumentException("MovieDTO no puede ser nulo");
+
+        if (movieDTO.getId() < 0)
+            throw new IllegalArgumentException("ID de película no puede ser negativo");
+
+        Movie movie = MovieDTO.convertToEntity(movieDTO);
+        return this.usuarioMovieRepository.obtenerCantidadDeLikes(movie);
     }
 
     @Override
@@ -110,5 +158,30 @@ public class UsuarioServiceImpl implements UsuarioService {
             throw new RuntimeException("Usuario no encontrado con ID: " + userId);
         }
     }
+
+    @Override
+    public boolean haDadoLike(PerfilDTO usuarioDTO, MovieDTO movieDTO) {
+        if (usuarioDTO == null || movieDTO == null)
+            throw new IllegalArgumentException("Usuario o película no pueden ser nulos");
+
+        if (usuarioDTO.getId() < 0 || movieDTO.getId() < 0)
+            throw new IllegalArgumentException("ID de usuario o película no pueden ser negativos");
+
+        Usuario usuario = convertToEntity(usuarioDTO);
+        Movie movie = MovieDTO.convertToEntity(movieDTO);
+        return usuarioMovieRepository.buscarMeGustaPorUsuario(usuario, movie).isPresent();
+    }
+
+    @Override
+    public List<Movie> obtenerPeliculasFavoritas(Integer usuarioId) {
+        if (usuarioId == null)
+            throw new IllegalArgumentException("El ID de usuario no puede ser nulo");
+
+        if (usuarioId < 0)
+            throw new IllegalArgumentException("El ID de usuario no puede ser negativo");
+
+        return usuarioMovieRepository.obtenerPeliculasFavoritas(usuarioId);
+    }
+
 }
 

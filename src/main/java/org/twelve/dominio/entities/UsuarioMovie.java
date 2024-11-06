@@ -1,6 +1,9 @@
 package org.twelve.dominio.entities;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -8,7 +11,6 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Entity
 @EqualsAndHashCode
 @Table(name = "UsuarioMovie")
@@ -27,7 +29,9 @@ public class UsuarioMovie {
     @JoinColumn(name = "pelicula_id")
     private Movie pelicula;
 
+    private Boolean esLike = Boolean.FALSE;
+
     private LocalDate fechaVista;
 
-    private Boolean esFavorita = false;
+    private LocalDate fechaLike;
 }

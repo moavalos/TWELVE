@@ -1,18 +1,19 @@
 package org.twelve.dominio.entities;
 
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Entity
 @EqualsAndHashCode
 @Table(name = "Pais")
-
 public class Pais {
 
     @Id

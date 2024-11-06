@@ -1,6 +1,12 @@
 package org.twelve.presentacion.dto;
 
+import org.twelve.dominio.entities.Categoria;
+import org.twelve.dominio.entities.Movie;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class MovieDTO {
 
@@ -11,7 +17,6 @@ public class MovieDTO {
     private Double duracion;
     private String pais;
     private Integer cantVistas;
-//    private Integer idCategoria;
     private List<CategoriaDTO> categorias;
     private String anioLanzamiento;
     private String imagen;
@@ -33,7 +38,7 @@ public class MovieDTO {
         this.duracion = duracion;
         this.pais = pais;
         this.cantVistas = cantVistas;
-        this.categorias= categorias;
+        this.categorias = categorias;
         this.anioLanzamiento = anioLanzamiento;
         this.imagen = imagen;
         this.likes = likes;
@@ -42,6 +47,10 @@ public class MovieDTO {
         this.escritor = escritor;
         this.idioma = idioma;
         this.tambienConocidaComo = tambienConocidaComo;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getNombre() {
@@ -169,5 +178,65 @@ public class MovieDTO {
         return tambienConocidaComo;
     }
 
+    public static MovieDTO convertToDTO(Movie movie) {
+        List<CategoriaDTO> categoriasDTOs = new ArrayList<>();
+        for (Categoria categoria : movie.getCategorias()) {
+            CategoriaDTO categoriaDTO = new CategoriaDTO();
+            categoriaDTO.setId(categoria.getId());
+            categoriaDTO.setNombre(categoria.getNombre());
+            categoriasDTOs.add(categoriaDTO);
+        }
 
+        return new MovieDTO(
+                movie.getId(),
+                movie.getNombre(),
+                movie.getDescripcion(),
+                movie.getFrase(),
+                movie.getDuracion(),
+                movie.getPais(),
+                movie.getCantVistas(),
+                categoriasDTOs,
+                movie.getAñoLanzamiento(),
+                movie.getImagen(),
+                movie.getLikes(),
+                movie.getValoracion(),
+                movie.getDirector(),
+                movie.getEscritor(),
+                movie.getIdioma(),
+                movie.getTambienConocidaComo()
+        );
+    }
+
+    // dto a entidad en
+    public static Movie convertToEntity(MovieDTO movieDTO) {
+        Movie movie = new Movie();
+        movie.setId(movieDTO.getId());
+        movie.setNombre(movieDTO.getNombre());
+        movie.setDescripcion(movieDTO.getDescripcion());
+        movie.setFrase(movieDTO.getFrase());
+        movie.setDuracion(movieDTO.getDuracion());
+        movie.setPais(movieDTO.getPais());
+        movie.setCantVistas(movieDTO.getCantVistas());
+        movie.setAñoLanzamiento(movieDTO.getAnioLanzamiento());
+        movie.setImagen(movieDTO.getImagen());
+        movie.setLikes(movieDTO.getLikes());
+        movie.setValoracion(movieDTO.getValoracion());
+        movie.setDirector(movieDTO.getDirector());
+        movie.setEscritor(movieDTO.getEscritor());
+        movie.setIdioma(movieDTO.getIdioma());
+        movie.setTambienConocidaComo(movieDTO.getTambienConocidaComo());
+
+        if (movieDTO.getCategorias() != null) {
+            Set<Categoria> categorias = new HashSet<>();
+            for (CategoriaDTO categoriaDTO : movieDTO.getCategorias()) {
+                Categoria categoria = new Categoria();
+                categoria.setId(categoriaDTO.getId());
+                categoria.setNombre(categoriaDTO.getNombre());
+                categorias.add(categoria);
+            }
+            movie.setCategorias(categorias);
+        }
+
+        return movie;
+    }
 }

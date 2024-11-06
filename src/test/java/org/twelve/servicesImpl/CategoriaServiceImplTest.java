@@ -9,7 +9,6 @@ import org.twelve.presentacion.dto.CategoriaDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,7 +35,7 @@ public class CategoriaServiceImplTest {
     }
 
     @Test
-    public void testGetAll_CuandoHayCategorias_DeberiaRetornarListaDeCategoriaDTO() {
+    public void testGetAllCuandoHayCategoriasDeberiaRetornarListaDeCategoriaDTO() {
         when(categoriaMock.getId()).thenReturn(1);
         when(categoriaMock.getNombre()).thenReturn("Tecnología");
 
@@ -56,8 +55,8 @@ public class CategoriaServiceImplTest {
     }
 
     @Test
-    public void testGetAll_CuandoNoHayCategorias_DeberiaRetornarListaVacia() {
-        when(categoriaRepository.findAll()).thenReturn(Arrays.asList());
+    public void testGetAllCuandoNoHayCategoriasDeberiaRetornarListaVacia() {
+        when(categoriaRepository.findAll()).thenReturn(List.of());
 
         List<CategoriaDTO> result = categoriaServiceImpl.getAll();
 
@@ -68,12 +67,12 @@ public class CategoriaServiceImplTest {
     }
 
     @Test
-    public void testConvertToDTO_DeberiaConvertirCategoriaCorrectamente() {
+    public void testConvertToDTODeberiaConvertirCategoriaCorrectamente() {
         Categoria categoria = new Categoria();
         categoria.setId(1);
         categoria.setNombre("Arte");
 
-        CategoriaDTO dto = categoriaServiceImpl.convertToDTO(categoria);
+        CategoriaDTO dto = CategoriaDTO.convertToDTO(categoria);
 
         assertNotNull(dto);
         assertEquals(categoria.getId(), dto.getId());

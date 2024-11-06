@@ -1,31 +1,41 @@
 package org.twelve.presentacion;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.twelve.dominio.CategoriaService;
+import org.twelve.dominio.ComentarioService;
 import org.twelve.dominio.MovieService;
+import org.twelve.dominio.UsuarioService;
 import org.twelve.presentacion.dto.CategoriaDTO;
+import org.twelve.presentacion.dto.ComentarioDTO;
 import org.twelve.presentacion.dto.MovieDTO;
+import org.twelve.presentacion.dto.PerfilDTO;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
 public class MovieController {
 
-    private MovieService movieService;
+    private final MovieService movieService;
 
-    private CategoriaService categoriaService;
+    @Lazy
+    private final CategoriaService categoriaService;
+    private final ComentarioService comentarioService;
+    private final UsuarioService usuarioService;
 
     @Autowired
-
-    public MovieController(MovieService movieService, CategoriaService categoriaService) {
+    public MovieController(MovieService movieService, CategoriaService categoriaService, ComentarioService comentarioService, UsuarioService usuarioService) {
         this.movieService = movieService;
         this.categoriaService = categoriaService;
+        this.comentarioService = comentarioService;
+        this.usuarioService = usuarioService;
     }
 
     @RequestMapping(path = "/home", method = RequestMethod.GET)
@@ -34,8 +44,11 @@ public class MovieController {
                 .limit(4) // limita 4 peli nomas
                 .collect(Collectors.toList());
 
+        List<PerfilDTO> perfiles = usuarioService.encontrarTodos();
+
         ModelMap modelo = new ModelMap();
         modelo.put("movies", topMovies);
+        modelo.put("perfiles", perfiles);
 
         return new ModelAndView("home", modelo);
     }
@@ -65,21 +78,26 @@ public class MovieController {
         return new ModelAndView("movies", modelo);
     }
 
-
-    /*
-    @RequestMapping(path = "/detalle-pelicula", method = RequestMethod.GET)
-    public ModelAndView detallePelicula() {
-        return new ModelAndView("detalle-pelicula");
-    }
-
-     */
-
     @RequestMapping(path = "/detalle-pelicula/{id}", method = RequestMethod.GET)
-    public ModelAndView getMovieDetails(@PathVariable("id") Integer id) {
+    public ModelAndView traerDetallePelicula(@PathVariable("id") Integer id, HttpServletRequest request) {
+        Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
+
         MovieDTO movie = movieService.getById(id);
 
+        long likesActualizados = usuarioService.obtenerCantidadDeLikes(movie);
+        movie.setLikes((int) likesActualizados);
+
+        //lista de comentarios
+        List<ComentarioDTO> comentarios = comentarioService.obtenerComentariosPorPelicula(id);
+        PerfilDTO usuario = usuarioService.buscarPorId(usuarioLogueadoId);
+        boolean haDadoLike = usuarioService.haDadoLike(usuario, movie);
+
+        //modelo
         ModelMap modelo = new ModelMap();
         modelo.put("movie", movie);
+        modelo.put("comentarios", comentarios);
+        modelo.put("usuario", usuario);
+        modelo.put("haDadoLike", haDadoLike);
 
         return new ModelAndView("detalle-pelicula", modelo);
     }
@@ -158,4 +176,23 @@ public class MovieController {
         modelo.addAttribute("selectedFilter", filter);
         return new ModelAndView("movies-categoria", modelo);
     }
+
+    @RequestMapping(path = "/movie/{id}/like", method = RequestMethod.POST)
+    public String darMeGusta(@PathVariable("id") Integer movieId, HttpServletRequest request) {
+        Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
+
+        if (usuarioLogueadoId == null) {
+            return "redirect:/login";
+        }
+
+        PerfilDTO usuario = usuarioService.buscarPorId(usuarioLogueadoId);
+        MovieDTO movie = movieService.getById(movieId);
+
+        if (usuario != null && movie != null) {
+            usuarioService.guardarMeGusta(usuario, movie);
+        }
+
+        return "redirect:/detalle-pelicula/" + movieId;
+    }
+
 }

@@ -16,10 +16,7 @@ import org.twelve.integracion.config.HibernateTestConfig;
 
 import javax.persistence.Query;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,51 +35,51 @@ public class MovieRepositoryImplTest {
         this.categoriaRepository = new CategoriaRepositoryImpl(sessionFactory);
     }
 
-@Test
-@Transactional
-@Rollback
-public void testGuardarPeliculaGuardaCorrectamente() {
-    Categoria categoria = new Categoria();
-    categoria.setNombre("CIENCIA_FICCION");
-    categoriaRepository.save(categoria);
+    @Test
+    @Transactional
+    @Rollback
+    public void testGuardarPeliculaGuardaCorrectamente() {
+        Categoria categoria = new Categoria();
+        categoria.setNombre("CIENCIA_FICCION");
+        categoriaRepository.save(categoria);
 
-    Movie movie = new Movie();
-    movie.setNombre("The Matrix");
-    movie.setAñoLanzamiento("1999");
-    movie.getCategorias().add(categoria); // Asignar categoría
-    movieRepository.save(movie);
+        Movie movie = new Movie();
+        movie.setNombre("The Matrix");
+        movie.setAñoLanzamiento("1999");
+        movie.getCategorias().add(categoria); // Asignar categoría
+        movieRepository.guardar(movie);
 
-    String hql = "FROM Movie WHERE nombre = :nombre";
-    Query query = sessionFactory.getCurrentSession().createQuery(hql);
-    query.setParameter("nombre", "The Matrix");
+        String hql = "FROM Movie WHERE nombre = :nombre";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("nombre", "The Matrix");
 
-    Movie foundMovie = (Movie) query.getSingleResult();
-    assertNotNull(foundMovie);
-    assertEquals("The Matrix", foundMovie.getNombre());
-    assertFalse(foundMovie.getCategorias().isEmpty()); // Verificar que tiene categorías
-}
+        Movie foundMovie = (Movie) query.getSingleResult();
+        assertNotNull(foundMovie);
+        assertEquals("The Matrix", foundMovie.getNombre());
+        assertFalse(foundMovie.getCategorias().isEmpty()); // Verificar que tiene categorías
+    }
 
-@Test
-@Transactional
-@Rollback
-public void testBuscarPeliculaPorIdDevuelveCorrectamente() {
-    Categoria categoria = new Categoria();
-    categoria.setNombre("ACCION");
-    categoriaRepository.save(categoria);
+    @Test
+    @Transactional
+    @Rollback
+    public void testBuscarPeliculaPorIdDevuelveCorrectamente() {
+        Categoria categoria = new Categoria();
+        categoria.setNombre("ACCION");
+        categoriaRepository.save(categoria);
 
-    Movie movie = new Movie();
-    movie.setNombre("Inception");
-    movie.setAñoLanzamiento("2010");
-    movie.getCategorias().add(categoria); // Asignar categoría
-    movieRepository.save(movie);
+        Movie movie = new Movie();
+        movie.setNombre("Inception");
+        movie.setAñoLanzamiento("2010");
+        movie.getCategorias().add(categoria); // Asignar categoría
+        movieRepository.guardar(movie);
 
-    Movie peliculaEncontrada = movieRepository.findById(movie.getId());
+        Movie peliculaEncontrada = movieRepository.findById(movie.getId());
 
-    assertNotNull(peliculaEncontrada);
-    assertEquals(movie.getId(), peliculaEncontrada.getId());
-    assertEquals("Inception", peliculaEncontrada.getNombre());
-    assertFalse(peliculaEncontrada.getCategorias().isEmpty());
-}
+        assertNotNull(peliculaEncontrada);
+        assertEquals(movie.getId(), peliculaEncontrada.getId());
+        assertEquals("Inception", peliculaEncontrada.getNombre());
+        assertFalse(peliculaEncontrada.getCategorias().isEmpty());
+    }
 
     @Test
     @Transactional
@@ -95,15 +92,13 @@ public void testBuscarPeliculaPorIdDevuelveCorrectamente() {
         Movie movie = new Movie();
         movie.setNombre("Avatar");
         movie.getCategorias().add(categoria); // Asignar categoría
-        movieRepository.save(movie);
+        movieRepository.guardar(movie);
 
         List<Movie> peliculasEncontradas = movieRepository.findByTitle("Avatar");
         assertFalse(peliculasEncontradas.isEmpty());
         assertEquals("Avatar", peliculasEncontradas.get(0).getNombre());
         assertFalse(peliculasEncontradas.get(0).getCategorias().isEmpty());
     }
-
-
 
     @Test
     @Transactional
@@ -117,10 +112,10 @@ public void testBuscarPeliculaPorIdDevuelveCorrectamente() {
         movie.setNombre("Titanic");
         movie.setAñoLanzamiento("1997");
         movie.getCategorias().add(categoria); // Asignar categoría
-        movieRepository.save(movie);
+        movieRepository.guardar(movie);
 
         movie.setAñoLanzamiento("1998");
-        movieRepository.save(movie);
+        movieRepository.guardar(movie);
 
         String hql = "FROM Movie WHERE nombre = :nombre";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
@@ -129,7 +124,6 @@ public void testBuscarPeliculaPorIdDevuelveCorrectamente() {
         Movie peliculaModificada = (Movie) query.getSingleResult();
         assertEquals("1998", peliculaModificada.getAñoLanzamiento());
     }
-
 
 
     @Test
@@ -143,7 +137,7 @@ public void testBuscarPeliculaPorIdDevuelveCorrectamente() {
         movie1.setNombre("Coraline");
         movie1.setCantVistas(100);
         movie1.getCategorias().add(categoria1); // Añadir categoría a la película
-        movieRepository.save(movie1);
+        movieRepository.guardar(movie1);
 
         Categoria categoria2 = new Categoria();
         categoria2.setId(3);
@@ -152,7 +146,7 @@ public void testBuscarPeliculaPorIdDevuelveCorrectamente() {
         movie2.setNombre("Avatar");
         movie2.setCantVistas(200);
         movie2.getCategorias().add(categoria2); // Añadir categoría a la película
-        movieRepository.save(movie2);
+        movieRepository.guardar(movie2);
 
         List<Movie> peliculasMasVistas = movieRepository.findMostViewed();
         assertFalse(peliculasMasVistas.isEmpty());
@@ -171,7 +165,7 @@ public void testBuscarPeliculaPorIdDevuelveCorrectamente() {
         movie1.setNombre("Coraline");
         movie1.setValoracion(4.5);
         movie1.getCategorias().add(categoria1); // Añadir categoría a la película
-        movieRepository.save(movie1);
+        movieRepository.guardar(movie1);
 
         Categoria categoria2 = new Categoria();
         categoria2.setId(5);
@@ -181,37 +175,12 @@ public void testBuscarPeliculaPorIdDevuelveCorrectamente() {
         movie2.setNombre("Avatar");
         movie2.setValoracion(4.8);
         movie2.getCategorias().add(categoria2); // Añadir categoría a la película
-        movieRepository.save(movie2);
+        movieRepository.guardar(movie2);
 
         List<Movie> topRatedMovies = movieRepository.findTopRated();
         assertFalse(topRatedMovies.isEmpty());
         assertEquals("Avatar", topRatedMovies.get(0).getNombre());
     }
-
-//
-//    @Test
-//    @Transactional
-//    @Rollback
-//    public void testBuscarPeliculasPorCategoria() {
-//        Categoria categoria = new Categoria();
-//        categoria.setNombre("ACCION");
-//        categoriaRepository.save(categoria);
-//
-//        Set<Categoria> listaCategorias = new HashSet<>();
-//        listaCategorias.add(categoria);
-//
-//        Movie movie = new Movie();
-//        movie.setNombre("Joker");
-//        movie.setCategorias(listaCategorias);
-//        movieRepository.save(movie);
-//
-//        List<Movie> peliculasEncontradas = movieRepository.findByCategoriaId(1);
-//        assertFalse(peliculasEncontradas.isEmpty());
-//        assertTrue(peliculasEncontradas.get(0).getCategorias().stream()
-//                .anyMatch(cat -> cat.getId() == 1));
-//    }
-//
-
 
     @Test
     @Transactional
@@ -224,7 +193,7 @@ public void testBuscarPeliculaPorIdDevuelveCorrectamente() {
         movie1.setNombre("pelicula vieja");
         movie1.setAñoLanzamiento("1980");
         movie1.getCategorias().add(categoria1);
-        movieRepository.save(movie1);
+        movieRepository.guardar(movie1);
 
         Categoria categoria2 = new Categoria();
         categoria2.setId(2);
@@ -233,14 +202,12 @@ public void testBuscarPeliculaPorIdDevuelveCorrectamente() {
         movie2.setNombre("pelicula nueva");
         movie2.setAñoLanzamiento("2020");
         movie2.getCategorias().add(categoria2);
-        movieRepository.save(movie2);
+        movieRepository.guardar(movie2);
 
         List<Movie> newestMovies = movieRepository.findNewestMovie();
         assertFalse(newestMovies.isEmpty());
         assertEquals("pelicula nueva", newestMovies.get(0).getNombre());
     }
-
-
 
     @Test
     @Transactional
@@ -253,7 +220,7 @@ public void testBuscarPeliculaPorIdDevuelveCorrectamente() {
         movie1.setNombre("Matrix");
         movie1.setAñoLanzamiento("1999");
         movie1.getCategorias().add(categoria1);
-        movieRepository.save(movie1);
+        movieRepository.guardar(movie1);
 
         Categoria categoria2 = new Categoria();
         categoria2.setId(4);
@@ -262,7 +229,7 @@ public void testBuscarPeliculaPorIdDevuelveCorrectamente() {
         movie2.setNombre("Toy Story");
         movie2.setAñoLanzamiento("1999");
         movie2.getCategorias().add(categoria2);
-        movieRepository.save(movie2);
+        movieRepository.guardar(movie2);
 
         String hql = "FROM Movie WHERE añoLanzamiento = :año";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
@@ -291,8 +258,8 @@ public void testBuscarPeliculaPorIdDevuelveCorrectamente() {
         Movie movie = new Movie();
         movie.setNombre("The Godfather");
         movie.setAñoLanzamiento("1972");
-        movie.getCategorias().add(categoria); // Añadir categoría a la película
-        movieRepository.save(movie);
+        movie.getCategorias().add(categoria);
+        movieRepository.guardar(movie);
 
         sessionFactory.getCurrentSession().delete(movie);
         sessionFactory.getCurrentSession().flush();
@@ -304,21 +271,5 @@ public void testBuscarPeliculaPorIdDevuelveCorrectamente() {
         List<Movie> foundMovies = query.getResultList();
         assertTrue(foundMovies.isEmpty());
     }
-
-//
-//    @Test
-//    @Transactional
-//    @Rollback
-//    public void testActualizarPeliculaInexistenteDebeFallar() {
-//        Movie movie = new Movie();
-//        movie.setId(9999);
-//        movie.setNombre("Pelicula Fantasma");
-//
-//
-//        assertThrows(Exception.class, () -> {
-//            movieRepository.save(movie);
-//            sessionFactory.getCurrentSession().flush();
-//        });
-//    }
 
 }

@@ -46,10 +46,18 @@ public class UsuarioController {
             return new ModelAndView("perfil", model);
         }
 
+        Boolean estaSiguiendo = usuarioService.estaSiguiendo(usuarioLogueadoId, id);
+        String seguirODejarUrl = estaSiguiendo ? "/dejarDeSeguir/" + id : "/seguir/" + id;
+
         model.put("usuario", usuario);
+        model.put("estaSiguiendo", estaSiguiendo);
+        model.put("seguirODejarUrl", seguirODejarUrl);
         model.put("cantidadPeliculasVistas", usuario.getCantidadPeliculasVistas());
         model.put("cantidadPeliculasVistasEsteAno", usuario.getCantidadPeliculasVistasEsteAno());
         model.put("peliculasFavoritas", usuario.getPeliculasFavoritas());
+        model.put("seguidores", usuario.getSeguidores());
+        model.put("siguiendo", usuario.getSeguidos());
+        model.put("esPerfilPropio", esPerfilPropio);
 
         return new ModelAndView("perfil", model);
     }
@@ -96,6 +104,47 @@ public ModelAndView uploadProfilePicture(@RequestParam("profilePicture") Multipa
     return new ModelAndView("perfil", model);
 }
 
+
+
+    @RequestMapping(path = "/seguir/{idSeguido}", method = RequestMethod.POST)
+    public String seguirUsuario(@PathVariable Integer idSeguido, HttpServletRequest request) {
+        Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
+
+        if (usuarioLogueadoId.equals(idSeguido)) {
+            return "redirect:/error";
+        }
+
+        try {
+            usuarioService.seguirUsuario(usuarioLogueadoId, idSeguido);
+        } catch (Exception e) {
+            return "redirect:/error";
+        }
+        return "redirect:/perfil/" + idSeguido;
+    }
+
+    @RequestMapping(path = "/dejarDeSeguir/{idSeguido}", method = RequestMethod.POST)
+    public String dejarDeSeguirUsuario(@PathVariable Integer idSeguido, HttpServletRequest request) {
+        Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
+        usuarioService.dejarDeSeguirUsuario(usuarioLogueadoId, idSeguido);
+        return "redirect:/perfil/" + idSeguido;
+    }
+
+    @RequestMapping(path = "/favoritos", method = RequestMethod.GET)
+    public ModelAndView verFavoritos(HttpServletRequest request) {
+        Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
+
+        if (usuarioLogueadoId == null) {
+            return new ModelAndView("redirect:/login");
+        }
+
+        PerfilDTO usuario = usuarioService.buscarPorId(usuarioLogueadoId);
+        List<Movie> peliculasFavoritas = usuarioService.obtenerPeliculasFavoritas(usuario.getId());
+
+        ModelMap model = new ModelMap();
+        model.put("peliculasFavoritas", peliculasFavoritas != null ? peliculasFavoritas : Collections.emptyList());
+
+        return new ModelAndView("favoritos", model);
+    }
 
 }
 

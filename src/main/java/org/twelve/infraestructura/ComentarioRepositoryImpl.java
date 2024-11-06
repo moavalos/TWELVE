@@ -3,34 +3,35 @@ package org.twelve.infraestructura;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.twelve.dominio.CategoriaRepository;
-import org.twelve.dominio.entities.Categoria;
+import org.twelve.dominio.ComentarioRepository;
+import org.twelve.dominio.entities.Comentario;
 
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.List;
 
-@Repository("categoriaRepository")
+@Repository("comentarioRepository")
 @Transactional
-public class CategoriaRepositoryImpl implements CategoriaRepository {
+public class ComentarioRepositoryImpl implements ComentarioRepository {
 
     private final SessionFactory sessionFactory;
 
     @Autowired
-    public CategoriaRepositoryImpl(SessionFactory sessionFactory) {
+    public ComentarioRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
     @Override
-    public List<Categoria> findAll() {
-        String hql = "FROM Categoria";
+    public List findByIdMovie(Integer idMovie) {
+        String hql = "FROM Comentario c WHERE c.movie.id = :idMovie";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("idMovie", idMovie);
         return query.getResultList();
     }
 
     @Override
-    public Categoria save(Categoria categoria) {
-        sessionFactory.getCurrentSession().save(categoria);
-        return categoria;
+    public void save(Comentario comentario) {
+        sessionFactory.getCurrentSession().save(comentario);
     }
+
 }

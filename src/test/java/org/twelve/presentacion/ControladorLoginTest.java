@@ -3,9 +3,10 @@ package org.twelve.presentacion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
-import org.twelve.dominio.PaisRepository;
+import org.twelve.dominio.PaisService;
 import org.twelve.dominio.ServicioLogin;
 import org.twelve.dominio.entities.Usuario;
+import org.twelve.presentacion.dto.PerfilDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -18,23 +19,20 @@ import static org.mockito.Mockito.*;
 public class ControladorLoginTest {
 
     private ControladorLogin controladorLogin;
-    private Usuario usuarioMock;
     private DatosLogin datosLoginMock;
     private HttpServletRequest requestMock;
     private HttpSession sessionMock;
     private ServicioLogin servicioLoginMock;
-    private PaisRepository paisRepositoryMock;
+    private PaisService paisServiceMock;
 
     @BeforeEach
     public void init() {
         datosLoginMock = new DatosLogin("dami@unlam.com", "123");
-        usuarioMock = mock(Usuario.class);
-        when(usuarioMock.getEmail()).thenReturn("dami@unlam.com");
         requestMock = mock(HttpServletRequest.class);
         sessionMock = mock(HttpSession.class);
         servicioLoginMock = mock(ServicioLogin.class);
-        paisRepositoryMock = mock(PaisRepository.class);
-        controladorLogin = new ControladorLogin(servicioLoginMock, paisRepositoryMock);
+        paisServiceMock = mock(PaisService.class);
+        controladorLogin = new ControladorLogin(servicioLoginMock, paisServiceMock);
     }
 
     @Test
@@ -53,23 +51,20 @@ public class ControladorLoginTest {
 
     @Test
     public void loginConUsuarioYPasswordCorrectosDeberiaLLevarAHome() {
-        // preparacion
-        Usuario usuarioEncontradoMock = mock(Usuario.class);
-        when(usuarioEncontradoMock.getRol()).thenReturn("ADMIN");
+        PerfilDTO perfilMock = mock(PerfilDTO.class);
+        when(perfilMock.getRol()).thenReturn("ADMIN");
 
         when(requestMock.getSession()).thenReturn(sessionMock);
-        when(servicioLoginMock.consultarUsuario(anyString(), anyString())).thenReturn(usuarioEncontradoMock);
+        when(servicioLoginMock.consultarUsuario(anyString(), anyString())).thenReturn(perfilMock);
 
-        // ejecucion
         ModelAndView modelAndView = controladorLogin.validarLogin(datosLoginMock, requestMock);
 
-        // validacion
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/home"));
-        verify(sessionMock, times(1)).setAttribute("ROL", usuarioEncontradoMock.getRol());
+        verify(sessionMock, times(1)).setAttribute("ROL", perfilMock.getRol());
     }
 
     @Test
-    public void irALogin_DeberiaRetornarVistaLoginYModeloConDatosLogin() {
+    public void irALoginDeberiaRetornarVistaLoginYModeloConDatosLogin() {
         ModelAndView modelAndView = controladorLogin.irALogin();
 
         assertThat(modelAndView.getViewName(), equalTo("login"));
@@ -80,7 +75,7 @@ public class ControladorLoginTest {
     }
 
     @Test
-    public void inicio_DeberiaRedirigirALogin() {
+    public void inicioDeberiaRedirigirALogin() {
         ModelAndView modelAndView = controladorLogin.inicio();
 
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/login"));
@@ -98,20 +93,19 @@ public class ControladorLoginTest {
     }
 
     @Test
-    public void nuevoUsuario_DeberiaRetornarVistaUsuarioDatosConModeloConUsuario() {
+    public void nuevoUsuarioDeberiaRetornarVistaUsuarioDatosConModeloConUsuario() {
         ModelAndView modelAndView = controladorLogin.nuevoUsuario();
 
         assertThat(modelAndView.getViewName(), equalTo("usuario-datos"));
 
         assertThat(modelAndView.getModel().containsKey("usuario"), equalTo(true));
 
-        assertThat(modelAndView.getModel().get("usuario"), instanceOf(Usuario.class));
+        assertThat(modelAndView.getModel().get("usuario"), instanceOf(PerfilDTO.class));
     }
 
     @Test
-    public void nuevoUsuarioConUsuarioExistente_DeberiaMostrarError() {
-        usuarioMock.setEmail("dami@unlam.com");
-        when(servicioLoginMock.consultarUsuario(anyString(), anyString())).thenReturn(usuarioMock);
+    public void nuevoUsuarioConUsuarioExistenteDeberiaMostrarError() {
+        when(servicioLoginMock.consultarUsuario(anyString(), anyString())).thenReturn(null);
 
         ModelAndView modelAndView = controladorLogin.nuevoUsuario();
 
