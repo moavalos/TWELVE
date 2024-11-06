@@ -14,6 +14,7 @@ public class PerfilDTO {
     private String pais;
     private String rol;
     private Boolean activo;
+    private String rutaFotoPerfil;
 
     private Integer cantidadPeliculasVistas;
     private Integer cantidadPeliculasVistasEsteAno;
@@ -115,5 +116,12 @@ public class PerfilDTO {
         this.peliculasFavoritas = peliculasFavoritas;
     }
 
+    // Getters y setters
+    public String getRutaFotoPerfil() {
+        return rutaFotoPerfil;
+    }
 
+    public void setRutaFotoPerfil(String rutaFotoPerfil) {
+        this.rutaFotoPerfil = rutaFotoPerfil;
+    }
 }

@@ -17,4 +17,6 @@ public interface UsuarioService {
 
     Usuario convertToEntity(PerfilDTO perfilDTO);
     PerfilDTO convertToDTO(Usuario tempUsuario);
+
+    void actualizarFotoPerfil(Integer userId, String path);
 }
