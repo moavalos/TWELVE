@@ -5,15 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
-import org.twelve.dominio.CategoriaService;
-import org.twelve.dominio.ComentarioService;
-import org.twelve.dominio.MovieService;
-import org.twelve.dominio.UsuarioService;
+import org.twelve.dominio.*;
 import org.twelve.dominio.entities.Movie;
-import org.twelve.presentacion.dto.CategoriaDTO;
-import org.twelve.presentacion.dto.ComentarioDTO;
-import org.twelve.presentacion.dto.MovieDTO;
-import org.twelve.presentacion.dto.PerfilDTO;
+import org.twelve.presentacion.dto.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -38,6 +32,7 @@ public class MovieControllerTest {
     private CategoriaService categoriaService;
     private ComentarioService comentarioService;
     private UsuarioService usuarioService;
+    private PaisService paisService;
 
     @BeforeEach
     public void init() {
@@ -49,7 +44,8 @@ public class MovieControllerTest {
         categoriaService = mock(CategoriaService.class);
         comentarioService = mock(ComentarioService.class);
         usuarioService = mock(UsuarioService.class);
-        movieController = new MovieController(movieService, categoriaService, comentarioService, usuarioService);
+        paisService = mock(PaisService.class);
+        movieController = new MovieController(movieService, categoriaService, comentarioService, usuarioService, paisService);
     }
 
     @Test
@@ -463,14 +459,13 @@ public class MovieControllerTest {
 
         when(movieService.getMoviesByPais(paisId, filtro)).thenReturn(mockMovies);
 
+        PaisDTO mockPaisDTO = new PaisDTO(paisId, "España");
+        when(paisService.findById(paisId)).thenReturn(mockPaisDTO);
+
         ModelAndView modelAndView = movieController.getMoviesByPaisPage(paisId, filtro);
 
         assertThat(modelAndView.getViewName(), is("movies-pais"));
-
-        ModelMap modelMap = modelAndView.getModelMap();
-        assertThat(modelMap.get("movies"), is(mockMovies));
-        assertThat(modelMap.get("selectedFilter"), is(filtro));
-        assertThat(modelMap.get("paisId"), is(paisId));
+        assertThat(modelAndView.getModel().get("nombrePais"), is("España"));
     }
 
 

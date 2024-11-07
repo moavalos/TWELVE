@@ -78,10 +78,15 @@
         <h2 class="text-center mb-4">Películas favoritas</h2>
 
         <div class="d-flex justify-content-center">
-            <div th:if="${peliculasFavoritas.isEmpty()}"
+            <div th:if="${peliculasFavoritas.isEmpty() && esPerfilPropio}"
                  class="no-favorites-message d-flex align-items-center justify-content-center bg-dark text-white rounded w-100"
                  style="height: 200px;">
                 <p class="text-center m-0 fs-5">No agregaste películas favoritas todavía</p>
+            </div>
+            <div th:if="${peliculasFavoritas.isEmpty() && !esPerfilPropio}"
+                 class="no-favorites-message d-flex align-items-center justify-content-center bg-dark text-white rounded w-100"
+                 style="height: 200px;">
+                <p class="text-center m-0 fs-5" th:text="${usuario.nombre} + ' no tiene películas favoritas todavía.'"></p>
             </div>
 
             <div class="movies-grid d-flex justify-content-between w-100" th:unless="${peliculasFavoritas.isEmpty()}">
