@@ -45,11 +45,14 @@ public class ComentarioServiceImpl implements ComentarioService {
 
     @Override
     public void agregarComentario(ComentarioDTO comentarioDTO) {
+        Usuario usuario = usuarioRepository.buscarPorId(comentarioDTO.getIdUsuario());
+        Movie movie = movieRepository.findById(comentarioDTO.getIdMovie());
         Comentario comentario = ComentarioDTO.convertToEntity(comentarioDTO);
 
+        comentario.setUsuario(usuario);
+        comentario.setMovie(movie);
         comentarioRepository.save(comentario);
 
-        Movie movie = comentario.getMovie();
         actualizarValoracionPelicula(movie);
     }
 
