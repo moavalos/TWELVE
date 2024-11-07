@@ -92,11 +92,6 @@ public class ComentarioDTO {
         comentario.setDescripcion(comentarioDTO.getDescripcion());
         comentario.setValoracion(comentarioDTO.getValoracion());
 
-        Usuario usuario = usuarioRepository.buscarPorId(comentarioDTO.getIdUsuario());
-        comentario.setUsuario(usuario);
-
-        Movie movie = movieRepository.findById(comentarioDTO.getIdMovie());
-        comentario.setMovie(movie);
         return comentario;
     }
 
