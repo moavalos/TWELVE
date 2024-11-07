@@ -13,5 +13,7 @@ public interface ComentarioService {
 
     List<ComentarioDTO> obtenerComentariosPorPelicula(Integer idMovie);
 
+    List<ComentarioDTO> obtenerUltimosTresComentarios(Integer idUsuario);
+
     void actualizarValoracionPelicula(Movie movie);
 }

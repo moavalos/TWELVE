@@ -9,7 +9,7 @@ VALUES (1, 'Argentina'),
 
 -- Inserts del Usuario
 
-INSERT INTO Usuario (email, password, nombre, username, pais, descripcion, rol, activo)
+INSERT INTO Usuario (email, password, nombre, username, pais_id, descripcion, rol, activo)
 VALUES
     ('admin@example.com', 'password123', 'Admin User', 'admin', 1, 'Administrador del sistema', 'ADMIN', TRUE),
     ('juan.perez@example.com', 'pass1234', 'Juan Perez', 'juanperez', 2, 'Cinéfilo amateur', 'USER', FALSE),

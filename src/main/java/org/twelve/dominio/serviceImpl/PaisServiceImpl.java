@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 
 import static org.twelve.presentacion.dto.PaisDTO.convertToDTO;
 
-
 @Service("paisService")
 public class PaisServiceImpl implements PaisService {
 
