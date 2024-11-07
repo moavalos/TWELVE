@@ -34,4 +34,12 @@ public class PaisDTO {
                 pais.getNombre()
         );
     }
+
+    public static Pais convertToEntity(PaisDTO paisDTO) {
+        Pais pais = new Pais();
+        pais.setId(paisDTO.getId());
+        pais.setNombre(paisDTO.getNombre());
+        return pais;
+    }
+
 }

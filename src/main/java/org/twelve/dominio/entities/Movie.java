@@ -29,7 +29,9 @@ public class Movie {
 
     private Double duracion;
 
-    private String pais;
+    @ManyToOne
+    @JoinColumn(name = "pais")
+    private Pais pais;
 
     private Integer cantVistas;
 

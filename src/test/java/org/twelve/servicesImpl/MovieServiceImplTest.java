@@ -8,6 +8,7 @@ import org.twelve.dominio.entities.Movie;
 import org.twelve.dominio.serviceImpl.MovieServiceImpl;
 import org.twelve.presentacion.dto.CategoriaDTO;
 import org.twelve.presentacion.dto.MovieDTO;
+import org.twelve.presentacion.dto.PaisDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -85,13 +86,15 @@ public class MovieServiceImplTest {
                 new CategoriaDTO(2, "Ciencia Ficción")
         );
 
+        PaisDTO paisDTO = new PaisDTO(1, "Pais");
+
         MovieDTO movieDTO = new MovieDTO(
                 1,
                 "Matrix",
                 "A hacker discovers...",
                 "Welcome to the real world",
                 136.8,
-                "USA",
+                paisDTO,
                 5000,
                 categoriaDTOList,
                 "1999",
@@ -251,6 +254,50 @@ public class MovieServiceImplTest {
         verify(movieRepository).findByCategoriaId(idCategoria);
         verify(movieRepository, never()).findByCategoriaIdTopRated(idCategoria);
         verify(movieRepository, never()).findByCategoriaIdNewest(idCategoria);
+    }
+
+    @Test
+    public void testGetSimilarMoviesCuandoPeliculaNoExisteDeberiaLanzarExcepcion() {
+        when(movieRepository.findById(99)).thenReturn(null);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            movieServiceImpl.getSimilarMovies(99);
+        });
+
+        assertEquals("La película con ID 99 no existe.", exception.getMessage());
+
+        verify(movieRepository, times(1)).findById(99);
+    }
+
+
+
+    @Test
+    public void testGetSimilarMoviesCuandoExistenPeliculasSimilaresDeberiaRetornarListaDeMovieDTO() {
+        Categoria categoria1 = new Categoria(1, "Acción");
+        Categoria categoria2 = new Categoria(2, "Ciencia Ficción");
+        Set<Categoria> categorias = new HashSet<>(Arrays.asList(categoria1, categoria2));
+
+        Movie movie1 = new Movie();
+        movie1.setId(1);
+        movie1.setNombre("Matrix");
+        movie1.setCategorias(categorias);
+
+        Movie movie2 = new Movie();
+        movie2.setId(2);
+        movie2.setNombre("Blade Runner");
+        movie2.setCategorias(Collections.singleton(categoria2));
+
+        when(movieRepository.findById(1)).thenReturn(movie1);
+        when(movieRepository.findSimilarMovies(1, categorias)).thenReturn(Arrays.asList(movie2));
+
+        List<MovieDTO> result = movieServiceImpl.getSimilarMovies(1);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals("Blade Runner", result.get(0).getNombre());
+
+        verify(movieRepository, times(1)).findById(1);
+        verify(movieRepository, times(1)).findSimilarMovies(1, categorias);
     }
 
 

@@ -27,4 +27,12 @@ public class PaisRepositoryImpl implements PaisRepository {
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         return query.getResultList();
     }
+
+    @Override
+    public Pais findById(Integer id) {
+        String hql = "FROM Pais WHERE id = :id";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("id", id);
+        return (Pais) query.getSingleResult();
+    }
 }

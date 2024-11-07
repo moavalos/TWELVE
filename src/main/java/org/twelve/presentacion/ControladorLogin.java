@@ -61,6 +61,8 @@ public class ControladorLogin {
         ModelMap model = new ModelMap();
 
         try {
+            System.out.println(usuario);
+
             servicioLogin.verificarUsuarioExistente(usuario);
             PerfilDTO usuarioGuardado = servicioLogin.registrar(usuario, confirmPassword);
 

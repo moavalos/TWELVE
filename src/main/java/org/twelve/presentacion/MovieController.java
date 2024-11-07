@@ -89,6 +89,7 @@ public class MovieController {
 
         //lista de comentarios
         List<ComentarioDTO> comentarios = comentarioService.obtenerComentariosPorPelicula(id);
+        List<MovieDTO> similarMovies = movieService.getSimilarMovies(id);
         PerfilDTO usuario = usuarioService.buscarPorId(usuarioLogueadoId);
         boolean haDadoLike = usuarioService.haDadoLike(usuario, movie);
 
@@ -96,6 +97,8 @@ public class MovieController {
         ModelMap modelo = new ModelMap();
         modelo.put("movie", movie);
         modelo.put("comentarios", comentarios);
+        // modelo.put("usuario", new PerfilDTO());
+        modelo.put("peliculasSimilares", similarMovies);
         modelo.put("usuario", usuario);
         modelo.put("haDadoLike", haDadoLike);
 

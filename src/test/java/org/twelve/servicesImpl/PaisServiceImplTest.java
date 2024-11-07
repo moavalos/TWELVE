@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -70,5 +71,27 @@ public class PaisServiceImplTest {
         assertNotNull(result);
         assertEquals(pais1.getId(), result.getId());
         assertEquals(pais1.getNombre(), result.getNombre());
+    }
+
+    @Test
+    public void testFindByIdCuandoPaisExisteDeberiaRetornarPaisDTO() {
+        Integer id = 1;
+        when(paisRepository.findById(id)).thenReturn(pais1);
+
+        PaisDTO result = paisServiceImpl.findById(id);
+
+        assertNotNull(result);
+        assertEquals("Argentina", result.getNombre());
+        verify(paisRepository, times(1)).findById(id);
+    }
+
+    @Test
+    public void testFindByIdCuandoPaisNoExisteDeberiaLanzarNullPointerException() {
+        Integer idInexistente = 999;
+        when(paisRepository.findById(idInexistente)).thenReturn(null);
+
+        assertThrows(NullPointerException.class, () -> paisServiceImpl.findById(idInexistente));
+
+        verify(paisRepository, times(1)).findById(idInexistente);
     }
 }
