@@ -3,6 +3,7 @@ package org.twelve.presentacion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
 import org.twelve.dominio.CategoriaService;
 import org.twelve.dominio.ComentarioService;
@@ -453,5 +454,24 @@ public class MovieControllerTest {
         assertEquals("redirect:/login", redirectUrl);
         verify(usuarioService, never()).guardarMeGusta(any(PerfilDTO.class), any(MovieDTO.class));
     }
+
+    @Test
+    public void testGetMoviesByPaisPageDevuelveVistaDePais() {
+        Integer paisId = 1;
+        String filtro = "accion";
+        List<MovieDTO> mockMovies = Arrays.asList(mock(MovieDTO.class), mock(MovieDTO.class));
+
+        when(movieService.getMoviesByPais(paisId, filtro)).thenReturn(mockMovies);
+
+        ModelAndView modelAndView = movieController.getMoviesByPaisPage(paisId, filtro);
+
+        assertThat(modelAndView.getViewName(), is("movies-pais"));
+
+        ModelMap modelMap = modelAndView.getModelMap();
+        assertThat(modelMap.get("movies"), is(mockMovies));
+        assertThat(modelMap.get("selectedFilter"), is(filtro));
+        assertThat(modelMap.get("paisId"), is(paisId));
+    }
+
 
 }

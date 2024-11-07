@@ -170,6 +170,7 @@ public class MovieController {
             return ResponseEntity.notFound().build();
     }
 
+
     @RequestMapping(path = "/categoria/{id}", method = RequestMethod.GET)
     public ModelAndView getMovieCategoryPage(@PathVariable Integer id, @RequestParam(required = false) String filter) {
         ModelMap modelo = new ModelMap();
@@ -177,6 +178,7 @@ public class MovieController {
 
         modelo.addAttribute("movies", movies);
         modelo.addAttribute("selectedFilter", filter);
+        modelo.addAttribute("categoryId", id);
         return new ModelAndView("movies-categoria", modelo);
     }
 
@@ -196,6 +198,17 @@ public class MovieController {
         }
 
         return "redirect:/detalle-pelicula/" + movieId;
+    }
+
+    @RequestMapping(path = "/pais/{id}", method = RequestMethod.GET)
+    public ModelAndView getMoviesByPaisPage(@PathVariable Integer id, @RequestParam(required = false) String filter) {
+        ModelMap modelo = new ModelMap();
+        List<MovieDTO> movies = movieService.getMoviesByPais(id, filter);
+
+        modelo.addAttribute("movies", movies);
+        modelo.addAttribute("selectedFilter", filter);
+        modelo.addAttribute("paisId", id);
+        return new ModelAndView("movies-pais", modelo);
     }
 
 }

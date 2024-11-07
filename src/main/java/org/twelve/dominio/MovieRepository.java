@@ -31,4 +31,10 @@ public interface MovieRepository {
     List<Movie> findNewestMovie();
 
     List<Movie> findSimilarMovies(Integer movieId, Set<Categoria> categorias);
+
+    List<Movie> findByPaisId(Integer idPais);
+
+    List<Movie> findByPaisIdTopRated(Integer idPais);
+
+    List<Movie> findByPaisIdNewest(Integer idPais);
 }
