@@ -29,9 +29,8 @@ public class Usuario {
 
     private String username;
 
-
     @ManyToOne
-    @JoinColumn(name = "pais")
+    @JoinColumn(name = "pais_id")
     private Pais pais;
 
     private String descripcion;
