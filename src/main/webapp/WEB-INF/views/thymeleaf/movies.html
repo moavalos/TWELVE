@@ -17,48 +17,56 @@
 
 <div th:insert="fragments/header :: header"></div>
 
-<main role="main" class="container">
-    <div class="container mt-5">
-        <h1 class="mb-4">Listado de Películas</h1>
+<main role="main" class="container my-5">
+    <h1 class="mb-4 text-center text-primary">Listado de Películas</h1>
 
-        <!-- Acá puedo seleccionar categoría -->
-        <div class="mb-4">
-            <form action="#" method="get" id="categoryForm">
-                <div class="form-group">
-                    <label for="idCategoria">Filtrar por categoría:</label>
-                    <select class="form-control" id="idCategoria" name="idCategoria" onchange="submitCategoryForm()">
+    <!-- Filtros -->
+    <div class="mb-4 p-3 bg-light rounded shadow-sm">
+        <form action="#" method="get" id="categoryForm">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="idCategoria" class="form-label">Filtrar por categoría:</label>
+                    <select class="form-select" id="idCategoria" name="idCategoria" onchange="submitCategoryForm()">
                         <option value="">Todas</option>
-                        <option th:each="category : ${categorias}" th:value="${category.id}"
-                                th:text="${category.nombre}"></option>
+                        <option th:each="category : ${categorias}" th:value="${category.id}" th:text="${category.nombre}"></option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="filter">Otros filtros:</label>
-                    <select class="form-control" id="filter" name="filter" onchange="submitCategoryForm()">
+                <div class="col-md-6">
+                    <label for="filter" class="form-label">Otros filtros:</label>
+                    <select class="form-select" id="filter" name="filter" onchange="submitCategoryForm()">
                         <option value="">Ninguno</option>
                         <option value="topRated" th:selected="${selectedFilter == 'topRated'}">Mejor valoradas</option>
                         <option value="newest" th:selected="${selectedFilter == 'newest'}">Más recientes</option>
                     </select>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
+    </div>
 
-        <div th:if="${#lists.isEmpty(movies)}">
-            <p>No hay películas disponibles en este momento.</p>
-        </div>
+    <!-- Mensaje de no hay películas -->
+    <div th:if="${#lists.isEmpty(movies)}" class="alert alert-warning text-center mt-4">
+        <p>No hay películas disponibles en este momento.</p>
+    </div>
 
-        <div th:if="${!#lists.isEmpty(movies)}">
-            <div class="row">
-                <div class="col-md-3 mb-4" th:each="movie : ${movies}">
+    <!-- Listado de películas -->
+    <div th:if="${!#lists.isEmpty(movies)}">
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            <div class="col" th:each="movie : ${movies}">
+                <div class="card h-100 shadow-sm">
                     <a th:href="@{/detalle-pelicula/{id}(id=${movie.id})}">
-                        <img th:src="@{'/images/' + ${movie.imagen}}" class="img-fluid" alt="Imagen de la película">
+                        <img th:src="@{'/images/' + ${movie.imagen}}" class="card-img-top rounded-top" alt="Imagen de la película" style="object-fit: cover; height: 300px;">
                     </a>
-                    <h5 th:text="${movie.nombre}"></h5>
+                    <div class="card-body">
+                        <h5 class="card-title text-center fw-bold" th:text="${movie.nombre}"></h5>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <a href="home.html" class="btn btn-lg btn-primary">Volver</a>
+    <!-- Botón de regreso -->
+    <div class="text-center mt-5">
+        <a href="home.html" class="btn btn-lg btn-outline-primary rounded-pill">Volver</a>
     </div>
 </main>
 

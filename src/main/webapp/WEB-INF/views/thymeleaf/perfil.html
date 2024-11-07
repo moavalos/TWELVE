@@ -4,58 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil de Usuario</title>
-    <link rel="stylesheet" th:href="@{/css/perfil.css}"/>
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/perfil.css}"/>
 </head>
 <body>
 
 <div th:insert="fragments/header :: header"></div>
 
 <section class="profile container mt-5">
-    <div class="profile-info row">
-        <div class="profile-left col-md-8 d-flex">
+    <div class="profile-info row mb-4">
+        <div class="profile-left col-md-8 d-flex align-items-start bg-light p-4 rounded shadow">
             <div class="avatar">
-                <img th:src="@{/images/user/foto-perfil.jpg}" alt="User Avatar">
+                <img th:src="@{/images/user/foto-perfil.jpg}" alt="User Avatar" class="img-fluid rounded-circle shadow" style="width: 150px; height: 150px;">
             </div>
             <div class="info ms-4">
-                <h1 th:text="${usuario.username}">Nombre del Usuario</h1>
-                <p class="mt-3" th:text="${usuario.descripcion}">Descripción del perfil</p>
-                <p>Nombre: <span th:text="${usuario.nombre}">@username</span></p>
-                <p>Ubicación: <span th:text="${usuario.pais.nombre}">Ubicación</span></p>
-
+                <h1 th:text="${usuario.username}" class="text-primary">Nombre del Usuario</h1>
+                <p class="mt-3 text-muted" th:text="${usuario.descripcion}">Descripción del perfil</p>
+                <p><strong>Nombre:</strong> <span th:text="${usuario.nombre}">@username</span></p>
+                <p><strong>Ubicación:</strong> <span th:text="${usuario.pais.nombre}">Ubicación</span></p>
 
                 <div class="follow-button mt-4">
                     <form th:action="@{${seguirODejarUrl}}" method="post" th:if="${!esPerfilPropio}">
-                        <button type="submit" class="btn"
+                        <button type="submit" class="btn rounded-pill"
                                 th:classappend="${estaSiguiendo ? 'btn-danger' : 'btn-primary'}"
                                 th:text="${estaSiguiendo ? 'Dejar de Seguir' : 'Seguir'}"></button>
                     </form>
                 </div>
-
             </div>
         </div>
-        <div class="stats col-md-4 d-flex justify-content-around">
-            <div class="stat-item">
-                <p class="stat-title">Películas</p>
-                <p class="stat-number" th:text="${cantidadPeliculasVistas}"></p>
+        <div class="stats col-md-4 d-flex justify-content-around bg-light p-4 rounded shadow">
+            <div class="stat-item text-center">
+                <p class="stat-title text-muted">Películas</p>
+                <p class="stat-number fs-4 fw-bold" th:text="${cantidadPeliculasVistas}"></p>
             </div>
-            <div class="stat-item">
-                <p class="stat-title">Vistas este año</p>
-                <p class="stat-number" th:text="${cantidadPeliculasVistasEsteAno}"></p>
+            <div class="stat-item text-center">
+                <p class="stat-title text-muted">Vistas este año</p>
+                <p class="stat-number fs-4 fw-bold" th:text="${cantidadPeliculasVistasEsteAno}"></p>
             </div>
-            <div class="stat-item">
-                <p class="stat-title">Seguidores</p>
-                <p class="stat-number" th:text="${seguidores.size()}"></p>
+            <div class="stat-item text-center">
+                <p class="stat-title text-muted">Seguidores</p>
+                <p class="stat-number fs-4 fw-bold" th:text="${seguidores.size()}"></p>
             </div>
-            <div class="stat-item">
-                <p class="stat-title">Siguiendo</p>
-                <p class="stat-number" th:text="${siguiendo.size()}"></p>
+            <div class="stat-item text-center">
+                <p class="stat-title text-muted">Siguiendo</p>
+                <p class="stat-number fs-4 fw-bold" th:text="${siguiendo.size()}"></p>
             </div>
         </div>
     </div>
 
     <nav class="menu mt-5">
-        <ul class="nav justify-content-center">
+        <ul class="nav nav-tabs justify-content-center">
             <li class="nav-item"><a href="#perfil" class="nav-link">Perfil</a></li>
             <li class="nav-item"><a href="#actividad" class="nav-link">Actividad</a></li>
             <li class="nav-item"><a href="#peliculas" class="nav-link">Películas</a></li>
@@ -72,31 +70,29 @@
 </section>
 
 <section class="content container my-5">
-    <!-- pelis favs -->
-
+    <!-- Películas favoritas -->
     <div class="favorite-movies mb-5">
-        <h2 class="text-center mb-4">Películas favoritas</h2>
+        <h2 class="text-center mb-4 text-primary">Películas favoritas</h2>
 
         <div class="d-flex justify-content-center">
             <div th:if="${peliculasFavoritas.isEmpty() && esPerfilPropio}"
-                 class="no-favorites-message d-flex align-items-center justify-content-center bg-dark text-white rounded w-100"
+                 class="no-favorites-message d-flex align-items-center justify-content-center bg-secondary text-white rounded w-100 shadow"
                  style="height: 200px;">
                 <p class="text-center m-0 fs-5">No agregaste películas favoritas todavía</p>
             </div>
             <div th:if="${peliculasFavoritas.isEmpty() && !esPerfilPropio}"
-                 class="no-favorites-message d-flex align-items-center justify-content-center bg-dark text-white rounded w-100"
+                 class="no-favorites-message d-flex align-items-center justify-content-center bg-secondary text-white rounded w-100 shadow"
                  style="height: 200px;">
                 <p class="text-center m-0 fs-5" th:text="${usuario.nombre} + ' no tiene películas favoritas todavía.'"></p>
             </div>
 
-            <div class="movies-grid d-flex justify-content-between w-100" th:unless="${peliculasFavoritas.isEmpty()}">
-                <div th:each="pelicula : ${peliculasFavoritas}" class="movie text-center mx-2">
-
+            <div class="movies-grid d-flex justify-content-start flex-wrap w-100" th:unless="${peliculasFavoritas.isEmpty()}">
+                <div th:each="pelicula : ${peliculasFavoritas}" class="movie text-center mx-2 mb-4">
                     <a th:href="@{/detalle-pelicula/{id}(id=${pelicula.id})}" class="no-link">
                         <img th:src="@{'/images/' + ${pelicula.imagen}}" th:alt="${pelicula.nombre}"
-                             class="img-fluid rounded mb-2">
+                             class="img-fluid rounded shadow mb-2">
                     </a>
-                    <p th:text="${pelicula.nombre}" class="fw-bold">Nombre de la película</p>
+                    <p th:text="${pelicula.nombre}" class="fw-bold text-dark">Nombre de la película</p>
                 </div>
             </div>
         </div>
@@ -104,51 +100,47 @@
 
     <!-- Watchlist -->
     <div class="watchlist mb-5">
-        <h2 class="text-center">Watchlist</h2>
-        <div class="movies-grid d-flex justify-content-between">
-            <div class="movie">
-                <img th:src="@{/images/parasitos.jpg}" alt="Película 4">
+        <h2 class="text-center text-primary">Watchlist</h2>
+        <div class="movies-grid d-flex justify-content-start flex-wrap">
+            <div th:each="pelicula : ${watchlist}" class="movie text-center mx-2 mb-4">
+                <img th:src="@{'/images/' + ${pelicula.imagen}}" alt="Película" class="img-fluid rounded shadow">
             </div>
-            <div class="movie">
-                <img th:src="@{/images/interestelar.jpg}" alt="Película 5">
-            </div>
-            <div class="movie add-more">
-                <a href="url/a/la/nueva/pagina.html">Ver todas</a>
+            <div class="movie add-more mt-3">
+                <a href="#" class="btn btn-outline-primary rounded-pill">Ver todas</a>
             </div>
         </div>
     </div>
 
     <!-- Actividad reciente -->
     <div class="recent-activity mb-5">
-        <h2>Actividad reciente</h2>
+        <h2 class="text-primary">Actividad reciente</h2>
 
         <div class="d-flex justify-content-center">
             <!-- Mensaje de "sin comentarios" -->
             <div th:if="${comentariosRecientes.isEmpty()}"
-                 class="no-favorites-message d-flex align-items-center justify-content-center bg-dark text-white rounded w-100"
+                 class="no-comments-message d-flex align-items-center justify-content-center bg-secondary text-white rounded w-100 shadow"
                  style="height: 200px;">
                 <p class="text-center m-0 fs-5">No hay comentarios que mostrar.</p>
             </div>
 
             <!-- Lista de comentarios -->
             <div class="w-100" th:unless="${comentariosRecientes.isEmpty()}">
-                <div th:each="comentario : ${comentariosRecientes}" class="card mb-3">
+                <div th:each="comentario : ${comentariosRecientes}" class="card mb-3 shadow-sm">
                     <div class="card-body">
                         <div class="d-flex align-items-start">
-                            <!-- Enlace solo envuelve la foto de la película -->
                             <a th:href="@{/detalle-pelicula/{id}(id=${comentario.getIdMovie()})}">
                                 <img th:src="@{'/images/' + ${comentario.imagenPelicula}}" alt="Imagen de la película"
                                      class="rounded me-3" width="100">
                             </a>
                             <div>
-                                <h6>
+                                <h6 class="mb-1 text-dark">
                                     Película:
                                     <span th:text="${comentario.nombrePelicula}">Nombre de la película</span>
                                     <span class="text-success">Puntaje:
-                                    <span th:text="${comentario.valoracion}">Valoración</span>/10
-                                </span>
+                                        <span th:text="${comentario.valoracion}">Valoración</span>/10
+                                    </span>
                                 </h6>
-                                <p th:text="${comentario.descripcion}">Descripción del comentario</p>
+                                <p th:text="${comentario.descripcion}" class="text-muted">Descripción del comentario</p>
                             </div>
                         </div>
                     </div>
@@ -160,6 +152,6 @@
 
 <div th:insert="fragments/footer :: footer"></div>
 
-<script th:src="@{/js/perfil.js}"></script>
+<script th:src="@{/webjars/bootstrap/5.2.0/js/bootstrap.min.js}"></script>
 </body>
 </html>
