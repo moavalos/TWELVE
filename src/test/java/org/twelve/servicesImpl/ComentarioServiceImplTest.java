@@ -30,10 +30,12 @@ public class ComentarioServiceImplTest {
 
     private Movie movie1;
     private Movie movie2;
+    private Movie movie3;
     private Usuario usuario1;
     private Usuario usuario2;
     private Comentario comentario1;
     private Comentario comentario2;
+    private Comentario comentario3;
 
     @BeforeEach
     public void init() {
@@ -43,10 +45,12 @@ public class ComentarioServiceImplTest {
         this.comentarioServiceImpl = new ComentarioServiceImpl(comentarioRepository, movieRepository, repositorioUsuario);
         this.movie1 = mock(Movie.class);
         this.movie2 = mock(Movie.class);
+        this.movie3 = mock(Movie.class);
         this.usuario1 = mock(Usuario.class);
         this.usuario2 = mock(Usuario.class);
         this.comentario1 = mock(Comentario.class);
         this.comentario2 = mock(Comentario.class);
+        this.comentario3 = mock(Comentario.class);
 
     }
 
@@ -157,5 +161,62 @@ public class ComentarioServiceImplTest {
         //validacion
         verify(movie1).setValoracion(8.0);
         verify(movieRepository, times(1)).guardar(movie1);
+    }
+
+
+    @Test
+    public void testObtenerUltimosTresComentarios() {
+        //preparacion
+        Integer usuarioId = 1;
+
+
+        when(comentarioRepository.findTop3ByUsuarioId(usuarioId)).thenReturn(Arrays.asList(comentario1, comentario2, comentario3));
+
+        when(comentario1.getDescripcion()).thenReturn("comentario1");
+        when(comentario1.getValoracion()).thenReturn(8.0);
+        when(comentario1.getLikes()).thenReturn(5);
+        when(comentario1.getUsuario()).thenReturn(usuario1);
+        when(comentario1.getMovie()).thenReturn(movie1);
+
+        when(comentario2.getDescripcion()).thenReturn("comentario2");
+        when(comentario2.getValoracion()).thenReturn(9.0);
+        when(comentario2.getLikes()).thenReturn(3);
+        when(comentario2.getUsuario()).thenReturn(usuario1);
+        when(comentario2.getMovie()).thenReturn(movie2);
+
+        when(comentario3.getDescripcion()).thenReturn("comentario3");
+        when(comentario3.getValoracion()).thenReturn(7.0);
+        when(comentario3.getLikes()).thenReturn(4);
+        when(comentario3.getUsuario()).thenReturn(usuario1);
+        when(comentario3.getMovie()).thenReturn(movie3);
+
+        when(movie1.getId()).thenReturn(1);
+        when(movie2.getId()).thenReturn(2);
+        when(movie3.getId()).thenReturn(3);
+        when(movie1.getNombre()).thenReturn("pelicula1");
+        when(movie2.getNombre()).thenReturn("pelicula2");
+        when(movie3.getNombre()).thenReturn("pelicula3");
+        when(movie1.getImagen()).thenReturn("pelicula1.jpg");
+        when(movie2.getImagen()).thenReturn("pelicula2.jpg");
+        when(movie3.getImagen()).thenReturn("pelicula3.jpg");
+
+        //ejecucion
+        List<ComentarioDTO> listaComentarioDTO = comentarioServiceImpl.obtenerUltimosTresComentarios(usuarioId);
+
+        //validacion
+        assertEquals(3, listaComentarioDTO.size());
+        assertEquals("comentario1", listaComentarioDTO.get(0).getDescripcion());
+        assertEquals("comentario2", listaComentarioDTO.get(1).getDescripcion());
+        assertEquals("comentario3", listaComentarioDTO.get(2).getDescripcion());
+
+        assertEquals("pelicula1", listaComentarioDTO.get(0).getNombrePelicula());
+        assertEquals("pelicula2", listaComentarioDTO.get(1).getNombrePelicula());
+        assertEquals("pelicula3", listaComentarioDTO.get(2).getNombrePelicula());
+
+        assertEquals("pelicula1.jpg", listaComentarioDTO.get(0).getImagenPelicula());
+        assertEquals("pelicula2.jpg", listaComentarioDTO.get(1).getImagenPelicula());
+        assertEquals("pelicula3.jpg", listaComentarioDTO.get(2).getImagenPelicula());
+
+        verify(comentarioRepository, times(1)).findTop3ByUsuarioId(usuarioId);
     }
 }

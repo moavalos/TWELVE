@@ -1,11 +1,12 @@
-/*
 package org.twelve.presentacion;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
+import org.twelve.dominio.ComentarioService;
 import org.twelve.dominio.UsuarioService;
 import org.twelve.dominio.entities.Movie;
+import org.twelve.presentacion.dto.ComentarioDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +22,7 @@ public class UsuarioControllerTest {
 
     private UsuarioController usuarioController;
     private UsuarioService usuarioServiceMock;
+    private ComentarioService comentarioServiceMock;
     private PerfilDTO perfilMock;
     private HttpSession sessionMock;
     private HttpServletRequest requestMock;
@@ -31,7 +33,8 @@ public class UsuarioControllerTest {
         perfilMock = mock(PerfilDTO.class);
         sessionMock = mock(HttpSession.class);
         requestMock = mock(HttpServletRequest.class);
-        usuarioController = new UsuarioController(usuarioServiceMock, sessionMock);
+        comentarioServiceMock = mock(ComentarioService.class);
+        usuarioController = new UsuarioController(usuarioServiceMock, sessionMock, comentarioServiceMock);
     }
 
     @Test
@@ -277,7 +280,5 @@ public class UsuarioControllerTest {
         assertNotNull(modelAndView.getModel().get("peliculasFavoritas"));
         assertTrue(((List<?>) modelAndView.getModel().get("peliculasFavoritas")).isEmpty());
     }
-
+    
 }
-
- */
