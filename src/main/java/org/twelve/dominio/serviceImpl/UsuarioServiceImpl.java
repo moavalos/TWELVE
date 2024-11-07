@@ -129,6 +129,7 @@ public class UsuarioServiceImpl implements UsuarioService {
             nuevoLike.setPelicula(movie);
             nuevoLike.setEsLike(Boolean.TRUE);
             nuevoLike.setFechaLike(LocalDate.now());
+            nuevoLike.setFechaVista(LocalDate.now());
             usuarioMovieRepository.guardar(nuevoLike);
         }
         movieRepository.actualizar(movie);
