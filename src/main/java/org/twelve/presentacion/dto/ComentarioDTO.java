@@ -3,8 +3,6 @@ package org.twelve.presentacion.dto;
 import org.twelve.dominio.MovieRepository;
 import org.twelve.dominio.RepositorioUsuario;
 import org.twelve.dominio.entities.Comentario;
-import org.twelve.dominio.entities.Movie;
-import org.twelve.dominio.entities.Usuario;
 
 public class ComentarioDTO {
 
@@ -16,16 +14,19 @@ public class ComentarioDTO {
     private Double valoracion = 0.0;
     private PerfilDTO usuario;
 
-    private static RepositorioUsuario usuarioRepository;
-    private static MovieRepository movieRepository;
+    private String nombrePelicula;
+    private String imagenPelicula;
 
-    public ComentarioDTO(Integer idUsuario, Integer idMovie, String descripcion, Double valoracion, Integer likes, PerfilDTO usuario) {
+    public ComentarioDTO(Integer idUsuario, Integer idMovie, String descripcion, Double valoracion, Integer likes,
+                         PerfilDTO usuario, String nombrePelicula, String imagenPelicula) {
         this.idUsuario = idUsuario;
         this.idMovie = idMovie;
         this.descripcion = descripcion;
         this.valoracion = valoracion;
         this.likes = likes;
         this.usuario = usuario;
+        this.nombrePelicula = nombrePelicula;
+        this.imagenPelicula = imagenPelicula;
     }
 
     public ComentarioDTO() {
@@ -85,6 +86,22 @@ public class ComentarioDTO {
 
     public void setUsuario(PerfilDTO usuario) {
         this.usuario = usuario;
+    }
+
+    public String getNombrePelicula() {
+        return nombrePelicula;
+    }
+
+    public void setNombrePelicula(String nombrePelicula) {
+        this.nombrePelicula = nombrePelicula;
+    }
+
+    public String getImagenPelicula() {
+        return imagenPelicula;
+    }
+
+    public void setImagenPelicula(String imagenPelicula) {
+        this.imagenPelicula = imagenPelicula;
     }
 
     public static Comentario convertToEntity(ComentarioDTO comentarioDTO) {

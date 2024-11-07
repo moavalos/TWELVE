@@ -25,7 +25,9 @@
 
                 <div class="follow-button mt-4">
                     <form th:action="@{${seguirODejarUrl}}" method="post" th:if="${!esPerfilPropio}">
-                        <button type="submit" class="btn" th:classappend="${estaSiguiendo ? 'btn-danger' : 'btn-primary'}" th:text="${estaSiguiendo ? 'Dejar de Seguir' : 'Seguir'}"></button>
+                        <button type="submit" class="btn"
+                                th:classappend="${estaSiguiendo ? 'btn-danger' : 'btn-primary'}"
+                                th:text="${estaSiguiendo ? 'Dejar de Seguir' : 'Seguir'}"></button>
                     </form>
                 </div>
 
@@ -74,13 +76,16 @@
         <h2 class="text-center mb-4">Películas favoritas</h2>
 
         <div class="d-flex justify-content-center">
-            <div th:if="${peliculasFavoritas.isEmpty()}" class="no-favorites-message d-flex align-items-center justify-content-center bg-dark text-white rounded w-100" style="height: 200px;">
+            <div th:if="${peliculasFavoritas.isEmpty()}"
+                 class="no-favorites-message d-flex align-items-center justify-content-center bg-dark text-white rounded w-100"
+                 style="height: 200px;">
                 <p class="text-center m-0 fs-5">No agregaste películas favoritas todavía</p>
             </div>
 
             <div class="movies-grid d-flex justify-content-between w-100" th:unless="${peliculasFavoritas.isEmpty()}">
                 <div th:each="pelicula : ${peliculasFavoritas}" class="movie text-center mx-2">
-                    <img th:src="@{'/images/' + ${pelicula.imagen}}" th:alt="${pelicula.nombre}" class="img-fluid rounded mb-2">
+                    <img th:src="@{'/images/' + ${pelicula.imagen}}" th:alt="${pelicula.nombre}"
+                         class="img-fluid rounded mb-2">
                     <p th:text="${pelicula.nombre}" class="fw-bold">Nombre de la película</p>
                 </div>
             </div>
@@ -105,26 +110,36 @@
 
     <!-- Actividad Reciente -->
     <div class="recent-activity mb-5">
-        <h2 class="text-center">Actividad reciente</h2>
-        <div class="review d-flex mb-3">
-            <img th:src="@{/images/venom.jpg}" alt="Venom 2" class="review-image">
-            <div class="review-content ms-3">
-                <h3>Venom 2 (2021)</h3>
-                <p>Es la mejor peli que vi en mi vida</p>
+        <h2>Actividad reciente</h2>
+
+        <div class="d-flex justify-content-center flex-column w-100">
+            <!-- Mensaje cuando no hay comentarios -->
+            <div th:if="${comentariosRecientes.isEmpty()}"
+                 class="no-favorites-message d-flex align-items-center justify-content-center bg-dark text-white rounded w-100"
+                 style="height: 200px;">
+                <p class="text-center m-0 fs-5">No hay comentarios que mostrar.</p>
             </div>
-        </div>
-        <div class="review d-flex mb-3">
-            <img th:src="@{/images/orgulloyprejuicio.jpg}" alt="Orgullo y Prejuicio" class="review-image">
-            <div class="review-content ms-3">
-                <h3>Orgullo y Prejuicio (2008)</h3>
-                <p>Muy buena la adaptación</p>
-            </div>
-        </div>
-        <div class="review d-flex mb-3">
-            <img th:src="@{/images/nowyouseeme.jpg}" alt="Now you see me" class="review-image">
-            <div class="review-content ms-3">
-                <h3>Now you see me (2013)</h3>
-                <p>No me gustó mucho</p>
+
+            <!-- Iteración sobre los comentarios -->
+            <div th:each="comentario : ${comentariosRecientes}" class="card mb-3"
+                 th:unless="${comentariosRecientes.isEmpty()}">
+                <div class="card-body">
+                    <div class="d-flex align-items-start">
+                        <!-- Imagen de la película -->
+                        <img th:src="@{'/images/' + ${comentario.imagenPelicula}}" alt="Imagen de la película"
+                             class="me-3" width="100">
+                        <div>
+                            <h6>
+                                Película:
+                                <span th:text="${comentario.nombrePelicula}">Nombre de la película</span>
+                                <span class="text-success">Puntaje:
+                                <span th:text="${comentario.valoracion}">Valoración</span>/10
+                            </span>
+                            </h6>
+                            <p th:text="${comentario.descripcion}">Descripción del comentario</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

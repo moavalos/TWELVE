@@ -1,5 +1,6 @@
 package org.twelve.infraestructura;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -26,6 +27,16 @@ public class ComentarioRepositoryImpl implements ComentarioRepository {
         String hql = "FROM Comentario c WHERE c.movie.id = :idMovie";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setParameter("idMovie", idMovie);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Comentario> findTop3ByUsuarioId(Integer idUsuario) {
+        String hql = "FROM Comentario c WHERE c.usuario.id = :idUsuario ORDER BY c.id DESC ";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql, Comentario.class);
+        query.setParameter("idUsuario", idUsuario);
+        query.setMaxResults(3);
+
         return query.getResultList();
     }
 
