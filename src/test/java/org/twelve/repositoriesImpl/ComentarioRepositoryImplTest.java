@@ -112,5 +112,70 @@ public class ComentarioRepositoryImplTest {
         assertThat(comentarios.get(1).getDescripcion(), equalTo("comentario2"));
     }
 
+    @Test
+    @Transactional
+    public void testDadoQueBuscoLosUltimosTresComentariosPorUsuarioCuandoExistenComentariosEntoncesDevuelveLosTresUltimos() {
+        //preparacion
+        Usuario usuario = new Usuario();
+        usuario.setId(1);
+        usuario.setNombre("Jose");
+        sessionFactory.getCurrentSession().save(usuario);
+        //peliculas
+        Movie movie1 = new Movie();
+        movie1.setId(1);
+        movie1.setNombre("pelicula1");
+        sessionFactory.getCurrentSession().save(movie1);
+
+        Movie movie2 = new Movie();
+        movie2.setId(2);
+        movie2.setNombre("pelicula2");
+        sessionFactory.getCurrentSession().save(movie2);
+
+        Movie movie3 = new Movie();
+        movie3.setId(3);
+        movie3.setNombre("pelicula3");
+        sessionFactory.getCurrentSession().save(movie3);
+
+        Movie movie4 = new Movie();
+        movie4.setId(4);
+        movie4.setNombre("pelicula4");
+        sessionFactory.getCurrentSession().save(movie4);
+
+        //comentarios
+        Comentario comentario1 = new Comentario();
+        comentario1.setDescripcion("comentario1");
+        comentario1.setUsuario(usuario);
+        comentario1.setMovie(movie1);
+        sessionFactory.getCurrentSession().save(comentario1);
+
+        Comentario comentario2 = new Comentario();
+        comentario2.setDescripcion("comentario2");
+        comentario2.setUsuario(usuario);
+        comentario2.setMovie(movie2);
+        sessionFactory.getCurrentSession().save(comentario2);
+
+        Comentario comentario3 = new Comentario();
+        comentario3.setDescripcion("comentario3");
+        comentario3.setUsuario(usuario);
+        comentario3.setMovie(movie3);
+        sessionFactory.getCurrentSession().save(comentario3);
+
+        Comentario comentario4 = new Comentario();
+        comentario4.setDescripcion("comentario4");
+        comentario4.setUsuario(usuario);
+        comentario4.setMovie(movie4);
+        sessionFactory.getCurrentSession().save(comentario4);
+
+        //ejecucion
+        List<Comentario> comentarios = comentarioRepository.findTop3ByUsuarioId(usuario.getId());
+
+        //validacion
+        assertNotNull(comentarios);
+        assertThat(comentarios.size(), equalTo(3));
+        assertThat(comentarios.get(0).getDescripcion(), equalTo("comentario4"));
+        assertThat(comentarios.get(1).getDescripcion(), equalTo("comentario3"));
+        assertThat(comentarios.get(2).getDescripcion(), equalTo("comentario2"));
+    }
+
 
 }
