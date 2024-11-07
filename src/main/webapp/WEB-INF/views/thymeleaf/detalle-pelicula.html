@@ -55,9 +55,9 @@
                 &nbsp; Duración: <span th:text="${movie.duracion}"></span> |
                 Categorías:
                 <span th:each="categoria, iterStat : ${movie.categorias}">
-                    <a th:href="@{/categoria/{id}(id=${categoria.id})}" th:text="${categoria.nombre}"></a><span
+                        <a th:href="@{/categoria/{id}(id=${categoria.id})}" th:text="${categoria.nombre}"></a><span
                         th:if="${!iterStat.last}"> · </span>
-                </span> |
+                    </span> |
                 &nbsp; <span th:text="${movie.anioLanzamiento}"></span>
                 |
                 &nbsp; Likes: <span th:text="${movie.likes}"></span>
@@ -70,10 +70,11 @@
                     <h4>Detalles</h4>
                     <p><strong>Director: </strong><span th:text="${movie.director}"></span></p>
                     <p><strong>Escritores: </strong><span th:text="${movie.escritor}"></span></p>
-                    <p><strong>País:</strong> <span th:text="${movie.pais}"></span></p>
+                    <p><strong>País:</strong> <span th:text="${movie.pais.nombre}"></span></p>
                     <p><strong>Idioma: </strong> <span th:text="${movie.idioma}"></span></p>
                     <p><strong>Datos de lanzamiento:</strong><a href="#">Ver más</a></p>
-                    <p><strong>También conocido como: </strong><span th:text="${movie.tambienConocidaComo}"></span></p>
+                    <p><strong>También conocido como: </strong><span th:text="${movie.tambienConocidaComo}"></span>
+                    </p>
                 </div>
                 <hr>
                 <!-- sec historia -->
@@ -111,6 +112,7 @@
         </div>
 
         <hr>
+    <hr>
 
         <!-- peliculas similares/ arreglar esto con categoria -->
         <div class="pelisSimilares">
@@ -125,6 +127,22 @@
     </div>
 
 </div>
+    <!-- peliculas similares/ arreglar esto con categoria -->
+    <h4 class="pelisSimilares">Películas Similares</h4>
+    <div class="row similar-movies">
+        <div th:each="pelicula : ${peliculasSimilares}" class="col-md-2 col-sm-4 col-6 mb-3">
+            <div class="card h-100">
+                <a th:href="@{/detalle-pelicula/{id}(id=${pelicula.id})}">
+                    <img th:src="@{'/images/' + ${pelicula.imagen}}" alt="Similar Movie"
+                         class="card-img-top movie-image">
+                </a>
+                <div class="card-body">
+                    <h6 class="card-title" th:text="${pelicula.nombre}"></h6>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 </div>
 </div>

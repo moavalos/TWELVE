@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.twelve.dominio.MovieRepository;
 import org.twelve.dominio.MovieService;
+import org.twelve.dominio.entities.Categoria;
 import org.twelve.dominio.entities.Movie;
 import org.twelve.presentacion.dto.MovieDTO;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.twelve.presentacion.dto.MovieDTO.convertToDTO;
@@ -95,6 +97,22 @@ public class MovieServiceImpl implements MovieService {
     public List<MovieDTO> getMovieByAnio() {
         List<Movie> newestMovies = movieRepository.findNewestMovie();
         return newestMovies.stream().map(MovieDTO::convertToDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MovieDTO> getSimilarMovies(Integer movieId) {
+        Movie pelicula = movieRepository.findById(movieId);
+        if (pelicula == null) {
+            throw new IllegalArgumentException("La película con ID " + movieId + " no existe.");
+        }
+
+        Set<Categoria> categorias = pelicula.getCategorias();
+
+        List<Movie> similarMovies = movieRepository.findSimilarMovies(movieId, categorias);
+
+        return similarMovies.stream()
+                .map(MovieDTO::convertToDTO)
+                .collect(Collectors.toList());
     }
 }
 

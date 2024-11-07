@@ -9,5 +9,6 @@ import java.util.List;
 public interface PaisService {
 
     List<PaisDTO> findAll();
+    PaisDTO findById(Integer id);
 
 }

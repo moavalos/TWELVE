@@ -28,4 +28,5 @@ public interface MovieService {
 
     List<MovieDTO> getMovieByAnio();
 
+    List<MovieDTO> getSimilarMovies(Integer movieId);
 }

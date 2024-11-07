@@ -1,6 +1,7 @@
 package org.twelve.presentacion.dto;
 
 import org.twelve.dominio.entities.Movie;
+import org.twelve.dominio.entities.Pais;
 import org.twelve.dominio.entities.Seguidor;
 import org.twelve.dominio.entities.Usuario;
 
@@ -15,7 +16,7 @@ public class PerfilDTO {
     private String descripcion;
     private String password;
     private String username;
-    private String pais;
+    private PaisDTO pais;
     private String rol;
     private Boolean activo;
 
@@ -50,11 +51,11 @@ public class PerfilDTO {
         this.password = password;
     }
 
-    public String getPais() {
+    public PaisDTO getPais() {
         return pais;
     }
 
-    public void setPais(String pais) {
+    public void setPais(PaisDTO pais) {
         this.pais = pais;
     }
 
@@ -153,7 +154,11 @@ public class PerfilDTO {
         usuario.setPassword(perfilDTO.getPassword());
         usuario.setNombre(perfilDTO.getNombre());
         usuario.setEmail(perfilDTO.getEmail());
-        usuario.setPais(perfilDTO.getPais());
+        if (perfilDTO.getPais() != null) {
+            usuario.setPais(PaisDTO.convertToEntity(perfilDTO.getPais()));
+        } else {
+            usuario.setPais(null);
+        }
         usuario.setDescripcion(perfilDTO.getDescripcion());
         usuario.setRol(perfilDTO.getRol());
         usuario.setActivo(perfilDTO.getActivo());
@@ -169,7 +174,11 @@ public class PerfilDTO {
         perfilDTO.setPassword(usuario.getPassword());
         perfilDTO.setNombre(usuario.getNombre());
         perfilDTO.setEmail(usuario.getEmail());
-        perfilDTO.setPais(usuario.getPais());
+        if (usuario.getPais() != null) {
+            perfilDTO.setPais(PaisDTO.convertToDTO(usuario.getPais()));
+        } else {
+            perfilDTO.setPais(null);
+        }
         perfilDTO.setDescripcion(usuario.getDescripcion());
         perfilDTO.setRol(usuario.getRol());
         perfilDTO.setActivo(usuario.getActivo());

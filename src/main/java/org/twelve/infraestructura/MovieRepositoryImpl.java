@@ -5,11 +5,13 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.twelve.dominio.MovieRepository;
+import org.twelve.dominio.entities.Categoria;
 import org.twelve.dominio.entities.Movie;
 
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Set;
 
 @Repository("movieRepository")
 @Transactional
@@ -106,6 +108,24 @@ public class MovieRepositoryImpl implements MovieRepository {
         String hql = "FROM Movie ORDER BY añoLanzamiento DESC";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setMaxResults(10);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Movie> findSimilarMovies(Integer movieId, Set<Categoria> categorias) {
+        String hql = "SELECT m FROM Movie m " +
+                "JOIN m.categorias c " +
+                "WHERE c IN :categorias AND m.id <> :movieId " +
+                "GROUP BY m.id " +
+                "ORDER BY COUNT(c) DESC";
+
+        Query query = sessionFactory.getCurrentSession().createQuery(hql, Movie.class);
+
+        query.setParameter("categorias", categorias);
+        query.setParameter("movieId", movieId);
+
+        query.setMaxResults(5);
+
         return query.getResultList();
     }
 

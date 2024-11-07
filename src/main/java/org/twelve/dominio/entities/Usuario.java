@@ -29,7 +29,10 @@ public class Usuario {
 
     private String username;
 
-    private String pais;
+
+    @ManyToOne
+    @JoinColumn(name = "pais")
+    private Pais pais;
 
     private String descripcion;
 

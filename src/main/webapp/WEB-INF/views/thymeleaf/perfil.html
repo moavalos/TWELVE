@@ -23,6 +23,8 @@
                 <p>Nombre: <span th:text="${usuario.nombre}">@Nombre</span></p>
                 <p>Ubicación: <span th:text="${usuario.pais}">Ubicación</span></p>
 
+                <p>Ubicación: <span th:text="${usuario.pais.nombre}">Ubicación</span></p>
+                <p>Username: <span th:text="${usuario.username}">@username</span></p>
 
                 <div class="follow-button mt-4">
                     <form th:action="@{${seguirODejarUrl}}" method="post" th:if="${!esPerfilPropio}">

@@ -21,8 +21,28 @@
 }
 
 .similar-movies img {
-    width: 150px;
-    height: 200px;
+    width: 100%;
+    height: auto;
+    background-color: #d8c078;
+}
+
+
+.similar-movies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.similar-movies .card {
+    width: 100%;
+    max-width: 200px;
+}
+
+.similar-movies .card-img-top {
+    width: 100%;
+    height: 300px;
     background-color: #d8c078;
 }
 
@@ -32,19 +52,6 @@
     text-align: center;
 }
 
-
-.similar-movies {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    /* Espacio entre las imágenes */
-}
-
-.similar-movies img {
-    width: 150px;
-    height: 200px;
-    background-color: #d8c078;
-}
 
 .review-section .card-body {
     padding: 15px;
