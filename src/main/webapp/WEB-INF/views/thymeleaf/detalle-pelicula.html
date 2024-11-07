@@ -70,7 +70,7 @@
                     <h4>Detalles</h4>
                     <p><strong>Director: </strong><span th:text="${movie.director}"></span></p>
                     <p><strong>Escritores: </strong><span th:text="${movie.escritor}"></span></p>
-                    <p><strong>País:</strong> <span th:text="${movie.pais.nombre}"></span></p>
+                    <p><strong>País:</strong> <a th:href="@{/pais/{id}(id=${movie.pais.id})}" th:text="${movie.pais.nombre}"></a></span></p>
                     <p><strong>Idioma: </strong> <span th:text="${movie.idioma}"></span></p>
                     <p><strong>Datos de lanzamiento:</strong><a href="#">Ver más</a></p>
                     <p><strong>También conocido como: </strong><span th:text="${movie.tambienConocidaComo}"></span>

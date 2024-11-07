@@ -1,9 +1,11 @@
 package org.twelve.dominio;
 
+import org.twelve.dominio.entities.Movie;
 import org.twelve.presentacion.dto.MovieDTO;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.function.Function;
 
 @Transactional
 public interface MovieService {
@@ -26,7 +28,13 @@ public interface MovieService {
 
     List<MovieDTO> getMoviesByCategory(Integer idCategoria, String filter);
 
+    List<MovieDTO> getMoviesByFilter(Integer id, String filter, Function<Integer, List<Movie>> findMoviesById,
+                                     Function<Integer, List<Movie>> findMoviesByIdTopRated,
+                                     Function<Integer, List<Movie>> findMoviesByIdNewest);
+
     List<MovieDTO> getMovieByAnio();
 
     List<MovieDTO> getSimilarMovies(Integer movieId);
+
+    List<MovieDTO> getMoviesByPais(Integer idPais, String filter);
 }

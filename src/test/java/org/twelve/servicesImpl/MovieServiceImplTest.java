@@ -300,5 +300,55 @@ public class MovieServiceImplTest {
         verify(movieRepository, times(1)).findSimilarMovies(1, categorias);
     }
 
+    @Test
+    public void testGetMoviesByPaisSinFiltroDeberiaRetornarPeliculasPorPais() {
+        Integer idPais = 1;
+
+        when(movieRepository.findByPaisId(idPais)).thenReturn(Arrays.asList(movie1, movie2));
+
+        List<MovieDTO> result = movieServiceImpl.getMoviesByPais(idPais, null);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+
+        verify(movieRepository, times(1)).findByPaisId(idPais);
+    }
+
+    @Test
+    public void testGetMoviesByPaisConFilterTopRatedLlamaAlMetodoCorrecto() {
+        Integer idPais = 1;
+        String filter = "topRated";
+
+        movieServiceImpl.getMoviesByPais(idPais, filter);
+
+        verify(movieRepository).findByPaisIdTopRated(idPais);
+        verify(movieRepository, never()).findByPaisIdNewest(idPais);
+        verify(movieRepository, never()).findByPaisId(idPais);
+    }
+
+    @Test
+    public void testGetMoviesByPaisConFilterNewestLlamaAlMetodoCorrecto() {
+        Integer idPais = 1;
+        String filter = "newest";
+
+        movieServiceImpl.getMoviesByPais(idPais, filter);
+
+        verify(movieRepository).findByPaisIdNewest(idPais);
+        verify(movieRepository, never()).findByPaisIdTopRated(idPais);
+        verify(movieRepository, never()).findByPaisId(idPais);
+    }
+
+    @Test
+    public void testGetMoviesByPaisSinFiltroLlamaAlMetodoCorrecto() {
+        Integer idPais = 1;
+        String filter = null;
+
+        movieServiceImpl.getMoviesByPais(idPais, filter);
+
+        verify(movieRepository).findByPaisId(idPais);
+        verify(movieRepository, never()).findByPaisIdTopRated(idPais);
+        verify(movieRepository, never()).findByPaisIdNewest(idPais);
+    }
+
 
 }

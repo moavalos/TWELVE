@@ -129,6 +129,31 @@ public class MovieRepositoryImpl implements MovieRepository {
         return query.getResultList();
     }
 
+    @Override
+    public List<Movie> findByPaisId(Integer idPais) {
+        String hql = "SELECT m FROM Movie m WHERE m.pais.id = :idPais";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("idPais", idPais);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Movie> findByPaisIdTopRated(Integer idPais) {
+        String hql = "SELECT m FROM Movie m WHERE m.pais.id = :idPais ORDER BY m.valoracion DESC";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql, Movie.class);
+        query.setParameter("idPais", idPais);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Movie> findByPaisIdNewest(Integer idPais) {
+        String hql = "SELECT m FROM Movie m WHERE m.pais.id = :idPais ORDER BY m.añoLanzamiento DESC";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql, Movie.class);
+        query.setParameter("idPais", idPais);
+        return query.getResultList();
+    }
+
+
 }
 
 

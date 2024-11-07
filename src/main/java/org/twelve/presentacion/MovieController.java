@@ -7,14 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.twelve.dominio.CategoriaService;
-import org.twelve.dominio.ComentarioService;
-import org.twelve.dominio.MovieService;
-import org.twelve.dominio.UsuarioService;
-import org.twelve.presentacion.dto.CategoriaDTO;
-import org.twelve.presentacion.dto.ComentarioDTO;
-import org.twelve.presentacion.dto.MovieDTO;
-import org.twelve.presentacion.dto.PerfilDTO;
+import org.twelve.dominio.*;
+import org.twelve.presentacion.dto.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -29,13 +23,15 @@ public class MovieController {
     private final CategoriaService categoriaService;
     private final ComentarioService comentarioService;
     private final UsuarioService usuarioService;
+    private final PaisService paisService;
 
     @Autowired
-    public MovieController(MovieService movieService, CategoriaService categoriaService, ComentarioService comentarioService, UsuarioService usuarioService) {
+    public MovieController(MovieService movieService, CategoriaService categoriaService, ComentarioService comentarioService, UsuarioService usuarioService, PaisService paisService) {
         this.movieService = movieService;
         this.categoriaService = categoriaService;
         this.comentarioService = comentarioService;
         this.usuarioService = usuarioService;
+        this.paisService = paisService;
     }
 
     @RequestMapping(path = "/home", method = RequestMethod.GET)
@@ -170,6 +166,7 @@ public class MovieController {
             return ResponseEntity.notFound().build();
     }
 
+
     @RequestMapping(path = "/categoria/{id}", method = RequestMethod.GET)
     public ModelAndView getMovieCategoryPage(@PathVariable Integer id, @RequestParam(required = false) String filter) {
         ModelMap modelo = new ModelMap();
@@ -177,6 +174,7 @@ public class MovieController {
 
         modelo.addAttribute("movies", movies);
         modelo.addAttribute("selectedFilter", filter);
+        modelo.addAttribute("categoryId", id);
         return new ModelAndView("movies-categoria", modelo);
     }
 
@@ -196,6 +194,18 @@ public class MovieController {
         }
 
         return "redirect:/detalle-pelicula/" + movieId;
+    }
+
+    @RequestMapping(path = "/pais/{id}", method = RequestMethod.GET)
+    public ModelAndView getMoviesByPaisPage(@PathVariable Integer id, @RequestParam(required = false) String filter) {
+        ModelMap modelo = new ModelMap();
+        List<MovieDTO> movies = movieService.getMoviesByPais(id, filter);
+        String nombrePais = paisService.findById(id).getNombre();
+
+        modelo.addAttribute("movies", movies);
+        modelo.addAttribute("selectedFilter", filter);
+        modelo.addAttribute("nombrePais", nombrePais);
+        return new ModelAndView("movies-pais", modelo);
     }
 
 }
