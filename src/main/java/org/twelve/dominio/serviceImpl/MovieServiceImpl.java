@@ -10,6 +10,7 @@ import org.twelve.presentacion.dto.MovieDTO;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.twelve.presentacion.dto.MovieDTO.convertToDTO;
@@ -71,27 +72,30 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MovieDTO> getMoviesByCategory(Integer idCategoria, String filter) {
+    public List<MovieDTO> getMoviesByFilter(Integer id, String filter, Function<Integer, List<Movie>> findMoviesById,
+                                            Function<Integer, List<Movie>> findMoviesByIdTopRated,
+                                            Function<Integer, List<Movie>> findMoviesByIdNewest) {
         List<Movie> movies;
 
         if (filter != null) {
             switch (filter) {
                 case "topRated":
-                    movies = movieRepository.findByCategoriaIdTopRated(idCategoria);
+                    movies = findMoviesByIdTopRated.apply(id);
                     break;
                 case "newest":
-                    movies = movieRepository.findByCategoriaIdNewest(idCategoria);
+                    movies = findMoviesByIdNewest.apply(id);
                     break;
                 default:
-                    movies = movieRepository.findByCategoriaId(idCategoria);
+                    movies = findMoviesById.apply(id);
                     break;
             }
         } else {
-            movies = movieRepository.findByCategoriaId(idCategoria);
+            movies = findMoviesById.apply(id);
         }
 
         return movies.stream().map(MovieDTO::convertToDTO).collect(Collectors.toList());
     }
+
 
     @Override
     public List<MovieDTO> getMovieByAnio() {
@@ -114,5 +118,28 @@ public class MovieServiceImpl implements MovieService {
                 .map(MovieDTO::convertToDTO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<MovieDTO> getMoviesByCategory(Integer idCategoria, String filter) {
+        return getMoviesByFilter(
+                idCategoria,
+                filter,
+                movieRepository::findByCategoriaId,
+                movieRepository::findByCategoriaIdTopRated,
+                movieRepository::findByCategoriaIdNewest
+        );
+    }
+
+    @Override
+    public List<MovieDTO> getMoviesByPais(Integer idPais, String filter) {
+        return getMoviesByFilter(
+                idPais,
+                filter,
+                movieRepository::findByPaisId,
+                movieRepository::findByPaisIdTopRated,
+                movieRepository::findByPaisIdNewest
+        );
+    }
+
 }
 

@@ -10,8 +10,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.twelve.dominio.entities.Categoria;
 import org.twelve.dominio.entities.Movie;
+import org.twelve.dominio.entities.Pais;
 import org.twelve.infraestructura.CategoriaRepositoryImpl;
 import org.twelve.infraestructura.MovieRepositoryImpl;
+import org.twelve.infraestructura.PaisRepositoryImpl;
 import org.twelve.integracion.config.HibernateTestConfig;
 
 import javax.persistence.Query;
@@ -340,6 +342,59 @@ public class MovieRepositoryImplTest {
         assertNotNull(peliculasSimilares);
         assertTrue(peliculasSimilares.isEmpty());
     }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testBuscarPeliculasPorCategoriaTopRated() {
+        Categoria categoria = new Categoria();
+        categoria.setNombre("COMEDIA");
+        categoriaRepository.save(categoria);
+
+        Movie movie1 = new Movie();
+        movie1.setNombre("Movie A");
+        movie1.setValoracion(4.5);
+        movie1.getCategorias().add(categoria);
+        movieRepository.guardar(movie1);
+
+        Movie movie2 = new Movie();
+        movie2.setNombre("Movie B");
+        movie2.setValoracion(4.8);
+        movie2.getCategorias().add(categoria);
+        movieRepository.guardar(movie2);
+
+        List<Movie> topRatedMovies = movieRepository.findByCategoriaIdTopRated(categoria.getId());
+        assertFalse(topRatedMovies.isEmpty());
+        assertEquals("Movie B", topRatedMovies.get(0).getNombre());
+    }
+    @Test
+    @Transactional
+    @Rollback
+    public void testBuscarPeliculasPorCategoriaMasNuevas() {
+        Categoria categoria = new Categoria();
+        categoria.setNombre("CIENCIA FICCION");
+        categoriaRepository.save(categoria);
+
+        Movie movie1 = new Movie();
+        movie1.setNombre("Old Movie");
+        movie1.setAñoLanzamiento("1995");
+        movie1.getCategorias().add(categoria);
+        movieRepository.guardar(movie1);
+
+        Movie movie2 = new Movie();
+        movie2.setNombre("New Movie");
+        movie2.setAñoLanzamiento("2022");
+        movie2.getCategorias().add(categoria);
+        movieRepository.guardar(movie2);
+
+        List<Movie> newestMovies = movieRepository.findByCategoriaIdNewest(categoria.getId());
+        assertFalse(newestMovies.isEmpty());
+        assertEquals("New Movie", newestMovies.get(0).getNombre());
+    }
+
+
+
+
 
 
 
