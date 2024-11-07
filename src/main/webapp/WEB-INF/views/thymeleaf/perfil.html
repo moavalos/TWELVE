@@ -20,11 +20,9 @@
             <div class="info ms-4">
                 <h1 th:text="${usuario.username}">Nombre del Usuario</h1>
                 <p class="mt-3" th:text="${usuario.descripcion}">Descripción del perfil</p>
-                <p>Nombre: <span th:text="${usuario.nombre}">@Nombre</span></p>
-                <p>Ubicación: <span th:text="${usuario.pais}">Ubicación</span></p>
-
+                <p>Nombre: <span th:text="${usuario.nombre}">@username</span></p>
                 <p>Ubicación: <span th:text="${usuario.pais.nombre}">Ubicación</span></p>
-                <p>Username: <span th:text="${usuario.username}">@username</span></p>
+
 
                 <div class="follow-button mt-4">
                     <form th:action="@{${seguirODejarUrl}}" method="post" th:if="${!esPerfilPropio}">

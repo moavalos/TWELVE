@@ -100,10 +100,6 @@
                                         th:text="${comentario.valoracion}"></span>/10</span>
                             </h6>
                             <p th:text="${comentario.descripcion}"></p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span><i class="bi bi-heart"></i> <span
-                                        th:text="${comentario.likes}"></span> likes</span>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -112,21 +108,9 @@
         </div>
 
         <hr>
-    <hr>
+        <hr>
 
-        <!-- peliculas similares/ arreglar esto con categoria -->
-        <div class="pelisSimilares">
-            <div class="row similar-movies">
-                <h4>Películas Similares</h4><br>
-
-                <div class="col-md-3"><img th:src="@{'/images/' + ${movie.imagen}}" alt="Similar Movie"></div>
-                <div class="col-md-3"><img th:src="@{'/images/' + ${movie.imagen}}" alt="Similar Movie"></div>
-                <div class="col-md-3"><img th:src="@{'/images/' + ${movie.imagen}}" alt="Similar Movie"></div>
-            </div>
-        </div>
     </div>
-
-</div>
     <!-- peliculas similares/ arreglar esto con categoria -->
     <h4 class="pelisSimilares">Películas Similares</h4>
     <div class="row similar-movies">
