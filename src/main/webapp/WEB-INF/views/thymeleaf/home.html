@@ -67,7 +67,7 @@
         <div class="row">
             <div th:each="perfil : ${perfiles}" class="col-md-3 mb-4 d-flex align-items-stretch">
                 <div class="card text-center shadow-sm w-100">
-                    <img th:src="@{/images/user/foto-perfil.jpg}" class="card-img-top rounded-circle mx-auto mt-3" style="width: 80px; height: 80px;" alt="Avatar de usuario">
+                    <img th:src="@{/images/user/icono-perfil.jpg}" class="card-img-top rounded-circle mx-auto mt-3" style="width: 80px; height: 80px;" alt="Avatar de usuario">
                     <div class="card-body">
                         <h5 class="card-title" th:text="${perfil.nombre}">Nombre del Perfil</h5>
                         <a th:href="@{'/perfil/' + ${perfil.id}}" class="btn btn-outline-primary rounded-pill">Ver Perfil</a>
