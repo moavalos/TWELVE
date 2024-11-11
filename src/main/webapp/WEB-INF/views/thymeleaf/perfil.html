@@ -23,6 +23,45 @@
                 <p class="mt-3 text-muted" th:text="${usuario.descripcion}">Descripción del perfil</p>
                 <p><strong>Nombre:</strong> <span th:text="${usuario.nombre}">@username</span></p>
                 <p><strong>Ubicación:</strong> <span th:text="${usuario.pais.nombre}">Ubicación</span></p>
+                <div th:if="${esPerfilPropio}">
+                    <button class="btn rounded-pill btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">Editar perfil</button>
+                </div>
+
+                <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form th:action="@{/editarPerfil}" method="post">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editProfileModalLabel">Editar Perfil</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="username" class="form-label">Nombre de Usuario</label>
+                                        <input type="text" class="form-control" id="username" name="username" th:value="${usuario.username}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="descripcion" class="form-label">Descripción</label>
+                                        <textarea class="form-control" id="descripcion" name="descripcion" rows="3" th:text="${usuario.descripcion}" required></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="nombre" class="form-label">Nombre Completo</label>
+                                        <input type="text" class="form-control" id="nombre" name="nombre" th:value="${usuario.nombre}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="pais" class="form-label">Ubicación</label>
+                                        <input type="text" class="form-control" id="pais" name="pais" th:value="${usuario.pais.nombre}" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
 
                 <div class="follow-button mt-4">
                     <form th:action="@{${seguirODejarUrl}}" method="post" th:if="${!esPerfilPropio}">
