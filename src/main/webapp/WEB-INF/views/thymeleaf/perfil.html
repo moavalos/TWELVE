@@ -37,6 +37,10 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="mb-3">
+                                        <label for="fotoPerfil" class="form-label">Foto de Perfil</label>
+                                        <input type="file" class="form-control" id="fotoPerfil" name="fotoPerfil" accept="image/*">
+                                    </div>
+                                    <div class="mb-3">
                                         <label for="username" class="form-label">Nombre de Usuario</label>
                                         <input type="text" class="form-control" id="username" name="username" th:value="${usuario.username}" required>
                                     </div>
