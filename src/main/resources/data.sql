@@ -15,7 +15,9 @@ VALUES
     ('juan.perez@example.com', 'pass1234', 'Juan Perez', 'juanperez', 2, 'Cinéfilo amateur', 'USER', FALSE),
     ('moderador@example.com', 'modpass456', 'Moderador Uno', 'moduser', 4, 'Encargado de moderar reseñas', 'MOD', TRUE),
     ('ana.gomez@example.com', 'ana123', 'Ana Gomez', 'anagomez', 3, 'Amante de películas de acción', 'USER', TRUE),
-    ('carlos.lopez@example.com', 'carlospass', 'Carlos Lopez', 'carlosl', 5, 'Fanático del cine clásico', 'USER', FALSE);
+    ('carlos.lopez@example.com', 'carlospass', 'Carlos Lopez', 'carlosl', 5, 'Fanático del cine clásico', 'USER', FALSE),
+    ('mora@gmail.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Mora', 'moras', 5, 'user para pruebas', 'USER', TRUE),
+    ('morae2e@gmail.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Mora E2E', 'morae2e', 5, 'user para pruebas e2e', 'USER', TRUE);
 
 
 INSERT INTO Categoria (id, nombre)
