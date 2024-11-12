@@ -19,6 +19,7 @@ public class PerfilDTO {
     private PaisDTO pais;
     private String rol;
     private Boolean activo;
+    private String fotoDePerfil;
 
     private Integer cantidadPeliculasVistas;
     private Integer cantidadPeliculasVistasEsteAno;
@@ -147,6 +148,14 @@ public class PerfilDTO {
         this.seguidos = seguidos;
     }
 
+    public String getFotoDePerfil() {
+        return fotoDePerfil;
+    }
+
+    public void setFotoDePerfil(String fotoDePerfil) {
+        this.fotoDePerfil = fotoDePerfil;
+    }
+
     public static Usuario convertToEntity(PerfilDTO perfilDTO) {
         Usuario usuario = new Usuario();
         usuario.setId(perfilDTO.getId());
@@ -187,5 +196,6 @@ public class PerfilDTO {
 
         return perfilDTO;
     }
+
 
 }

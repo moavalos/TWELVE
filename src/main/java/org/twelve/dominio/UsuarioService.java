@@ -1,5 +1,6 @@
 package org.twelve.dominio;
 
+import org.springframework.web.multipart.MultipartFile;
 import org.twelve.dominio.entities.Movie;
 import org.twelve.presentacion.dto.MovieDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
@@ -30,4 +31,8 @@ public interface UsuarioService {
 
     List<Movie> obtenerPeliculasFavoritas(Integer usuarioId);
 
+    void actualizarPerfil(Integer userId, String username, String descripcion, String nombre, String pais, MultipartFile fotoPerfil);
+
+
+    String guardarFoto(MultipartFile fotoPerfil);
 }

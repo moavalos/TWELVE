@@ -2,6 +2,7 @@ package org.twelve.dominio.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.twelve.dominio.MovieRepository;
 import org.twelve.dominio.RepositorioUsuario;
 import org.twelve.dominio.UsuarioMovieRepository;
@@ -16,10 +17,16 @@ import org.twelve.presentacion.dto.UsuarioMovieDTO;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.twelve.presentacion.dto.PerfilDTO.convertToDTO;
@@ -170,6 +177,36 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         return usuarioMovieRepository.obtenerPeliculasFavoritas(usuarioId);
     }
+
+
+    @Override
+    public void actualizarPerfil(Integer userId, String username, String descripcion, String nombre, String pais, MultipartFile fotoPerfil) {
+        Usuario usuario = repositorioUsuario.buscarPorId(userId);
+        usuario.setUsername(username);
+        usuario.setDescripcion(descripcion);
+        usuario.setNombre(nombre);
+//        usuario.setPais(pais);
+
+//        if (fotoPerfil != null && !fotoPerfil.isEmpty()) {
+//            String nombreArchivo = guardarFoto(fotoPerfil);
+//            usuarioDTO.setFotoDePerfil(nombreArchivo); // Actualiza la ruta o nombre del archivo en el perfil
+//        }
+
+        repositorioUsuario.guardar(usuario);
+    }
+
+    public String guardarFoto(MultipartFile fotoPerfil) {
+        String nombreArchivo = UUID.randomUUID() + "_" + fotoPerfil.getOriginalFilename();
+        Path rutaArchivo = Paths.get("ruta/donde/guardar/imagenes", nombreArchivo);
+
+        try {
+            Files.copy(fotoPerfil.getInputStream(), rutaArchivo, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException("Error al guardar la foto de perfil", e);
+        }
+        return nombreArchivo;
+    }
+
 
 }
 
