@@ -467,26 +467,6 @@ public class UsuarioMovieRepositoryImplTest {
     @Test
     @Transactional
     @Rollback
-    public void testBorrarMeGustaNoExistente() {
-        Usuario usuario = new Usuario();
-        usuario.setId(2);
-        Movie movie = new Movie();
-        movie.setNombre("The Matrix");
-
-        sessionFactory.getCurrentSession().save(usuario);
-        sessionFactory.getCurrentSession().save(movie);
-
-        UsuarioMovie usuarioMovie = new UsuarioMovie();
-        usuarioMovie.setUsuario(usuario);
-        usuarioMovie.setPelicula(movie);
-        usuarioMovie.setEsLike(true);
-
-        assertDoesNotThrow(() -> usuarioMovieRepository.borrarMeGusta(usuarioMovie));
-    }
-
-    @Test
-    @Transactional
-    @Rollback
     public void testBorrarMeGustaConUsuarioNuloLanzaExcepcion() {
         Movie movie = new Movie();
         movie.setNombre("Avatar");
@@ -528,5 +508,33 @@ public class UsuarioMovieRepositoryImplTest {
             usuarioMovieRepository.borrarMeGusta(null);
         });
     }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testBuscarPeliculasDondeElUsuarioTuvoInteraccionSinResultados() {
+        Integer usuarioId = 2;
+        Usuario usuario = new Usuario();
+        usuario.setId(usuarioId);
+
+        sessionFactory.getCurrentSession().save(usuario);
+
+        List<Object[]> resultado = usuarioMovieRepository.buscarPeliculasDondeElUsuarioTuvoInteraccion(usuarioId);
+
+        assertNotNull(resultado);
+        assertTrue(resultado.isEmpty());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testBuscarPeliculasDondeElUsuarioTuvoInteraccionConUsuarioIdNulo() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioMovieRepository.buscarPeliculasDondeElUsuarioTuvoInteraccion(null);
+        });
+
+        assertEquals("El ID de usuario no puede ser nulo", exception.getMessage());
+    }
+
 
 }

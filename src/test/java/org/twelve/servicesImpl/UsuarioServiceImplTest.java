@@ -12,6 +12,7 @@ import org.twelve.dominio.entities.UsuarioMovie;
 import org.twelve.dominio.serviceImpl.UsuarioServiceImpl;
 import org.twelve.presentacion.dto.MovieDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
+import org.twelve.presentacion.dto.UsuarioMovieDTO;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Collections;
@@ -510,6 +511,79 @@ public class UsuarioServiceImplTest {
 
         assertEquals("El ID de usuario no puede ser negativo", exception.getMessage());
         verify(usuarioMovieRepository, never()).obtenerPeliculasFavoritas(any());
+    }
+
+    @Test
+    public void testObtenerHistorialDePeliculasVistasConResultados() {
+        Integer usuarioId = 1;
+        Usuario usuario = new Usuario();
+        usuario.setId(usuarioId);
+
+        UsuarioMovie usuarioMovie1 = new UsuarioMovie();
+        usuarioMovie1.setId(1);
+        usuarioMovie1.setUsuario(usuario);
+        usuarioMovie1.setEsLike(true);
+        usuarioMovie1.setVistaPorUsuario(true);
+
+        UsuarioMovie usuarioMovie2 = new UsuarioMovie();
+        usuarioMovie2.setId(2);
+        usuarioMovie2.setUsuario(usuario);
+        usuarioMovie2.setEsLike(false);
+        usuarioMovie2.setVistaPorUsuario(true);
+
+        List<Object[]> results = List.of(
+                new Object[]{usuarioMovie1, 8.5},
+                new Object[]{usuarioMovie2, 9.0}
+        );
+
+        when(repositorioUsuario.buscarPorId(usuarioId)).thenReturn(usuario);
+        when(usuarioMovieRepository.buscarPeliculasDondeElUsuarioTuvoInteraccion(usuarioId)).thenReturn(results);
+
+        List<UsuarioMovieDTO> historial = usuarioServiceImpl.obtenerHistorialDePeliculasVistas(usuarioId);
+
+        assertNotNull(historial);
+        assertEquals(2, historial.size());
+        assertEquals(1, historial.get(0).getId());
+        assertEquals(8.5, historial.get(0).getValoracion());
+        assertEquals(2, historial.get(1).getId());
+        assertEquals(9.0, historial.get(1).getValoracion());
+    }
+
+    @Test
+    public void testObtenerHistorialDePeliculasVistasUsuarioNoTieneInteracciones() {
+        Integer usuarioId = 1;
+        Usuario usuario = new Usuario();
+        usuario.setId(usuarioId);
+
+        when(repositorioUsuario.buscarPorId(usuarioId)).thenReturn(usuario);
+        when(usuarioMovieRepository.buscarPeliculasDondeElUsuarioTuvoInteraccion(usuarioId)).thenReturn(Collections.emptyList());
+
+        List<UsuarioMovieDTO> historial = usuarioServiceImpl.obtenerHistorialDePeliculasVistas(usuarioId);
+
+        assertNotNull(historial);
+        assertTrue(historial.isEmpty());
+    }
+
+    @Test
+    public void testObtenerHistorialDePeliculasVistasUsuarioNoEncontrado() {
+        Integer usuarioId = 999;
+
+        when(repositorioUsuario.buscarPorId(usuarioId)).thenReturn(null);
+
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
+            usuarioServiceImpl.obtenerHistorialDePeliculasVistas(usuarioId);
+        });
+
+        assertEquals("Usuario no encontrado", exception.getMessage());
+    }
+
+    @Test
+    public void testObtenerHistorialDePeliculasVistasConUsuarioIdNulo() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.obtenerHistorialDePeliculasVistas(null);
+        });
+
+        assertEquals("El ID de usuario no puede ser nulo", exception.getMessage());
     }
 
 }

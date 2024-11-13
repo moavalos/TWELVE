@@ -17,7 +17,7 @@ import org.twelve.presentacion.dto.UsuarioMovieDTO;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -130,6 +130,7 @@ public class UsuarioServiceImpl implements UsuarioService {
             nuevoLike.setEsLike(Boolean.TRUE);
             nuevoLike.setFechaLike(LocalDate.now());
             nuevoLike.setFechaVista(LocalDate.now());
+            nuevoLike.setVistaPorUsuario(Boolean.TRUE);
             usuarioMovieRepository.guardar(nuevoLike);
         }
         movieRepository.actualizar(movie);
@@ -171,5 +172,38 @@ public class UsuarioServiceImpl implements UsuarioService {
         return usuarioMovieRepository.obtenerPeliculasFavoritas(usuarioId);
     }
 
+    @Override
+    public List<UsuarioMovieDTO> obtenerHistorialDePeliculasVistas(Integer usuarioId) {
+        if (usuarioId == null) {
+            throw new IllegalArgumentException("El ID de usuario no puede ser nulo");
+        }
+
+        Usuario usuario = repositorioUsuario.buscarPorId(usuarioId);
+        if (usuario == null) {
+            throw new EntityNotFoundException("Usuario no encontrado");
+        }
+
+        List<Object[]> results = usuarioMovieRepository.buscarPeliculasDondeElUsuarioTuvoInteraccion(usuarioId);
+        List<UsuarioMovieDTO> historialDTO = new ArrayList<>();
+
+        for (Object[] row : results) {
+            UsuarioMovie usuarioMovie = (UsuarioMovie) row[0];
+            Double valoracion = (Double) row[1];
+
+            UsuarioMovieDTO dto = new UsuarioMovieDTO();
+            dto.setId(usuarioMovie.getId());
+            dto.setUsuario(usuarioMovie.getUsuario());
+            dto.setPelicula(usuarioMovie.getPelicula());
+            dto.setEsLike(usuarioMovie.getEsLike());
+            dto.setFechaVista(usuarioMovie.getFechaVista());
+            dto.setFechaLike(usuarioMovie.getFechaLike());
+            dto.setValoracion(valoracion);
+            dto.setVistaPorUsuario(usuarioMovie.getVistaPorUsuario());
+
+            historialDTO.add(dto);
+        }
+
+        return historialDTO;
+    }
 }
 

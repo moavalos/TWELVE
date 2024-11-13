@@ -55,7 +55,7 @@
     <nav class="menu mt-5">
         <ul class="nav nav-tabs justify-content-center">
             <li class="nav-item"><a href="#actividad" class="nav-link">Actividad</a></li>
-            <li class="nav-item"><a href="#historial" class="nav-link">Historial</a></li>
+            <li class="nav-item"><a th:href="@{/historial}" class="nav-link">Historial</a></li>
             <li class="nav-item"><a href="#reseñas" class="nav-link">Reseñas</a></li>
             <li class="nav-item"><a href="#watchlist" class="nav-link">Watchlist</a></li>
             <li class="nav-item"><a href="#listas" class="nav-link">Listas</a></li>
@@ -103,6 +103,34 @@
             </div>
             <div class="movie add-more mt-3">
                 <a href="#" class="btn btn-outline-primary rounded-pill">Ver todas</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- historial -->
+    <div class="favorite-movies mb-5">
+        <h2 class="text-center mb-4 text-primary">Historial</h2>
+
+        <div class="d-flex justify-content-center">
+            <div th:if="${historial.isEmpty() && esPerfilPropio}"
+                 class="no-favorites-message d-flex align-items-center justify-content-center bg-secondary text-white rounded w-100 shadow"
+                 style="height: 200px;">
+                <p class="text-center m-0 fs-5">No tienes actividad todavia</p>
+            </div>
+            <div th:if="${historial.isEmpty() && !esPerfilPropio}"
+                 class="no-favorites-message d-flex align-items-center justify-content-center bg-secondary text-white rounded w-100 shadow"
+                 style="height: 200px;">
+                <p class="text-center m-0 fs-5" th:text="${usuario.nombre} + ' no tiene actividad todavia.'"></p>
+            </div>
+
+            <div class="movies-grid d-flex justify-content-start flex-wrap w-100" th:unless="${historial.isEmpty()}">
+                <div th:each="pelicula : ${peliculasFavoritas}" class="movie text-center mx-2 mb-4">
+                    <a th:href="@{/detalle-pelicula/{id}(id=${pelicula.id})}" class="no-link">
+                        <img th:src="@{'/images/' + ${pelicula.imagen}}" th:alt="${pelicula.nombre}"
+                             class="img-fluid rounded shadow mb-2">
+                    </a>
+                    <p th:text="${pelicula.nombre}" class="fw-bold text-dark">Nombre de la película</p>
+                </div>
             </div>
         </div>
     </div>

@@ -23,4 +23,6 @@ public interface UsuarioMovieRepository {
     void guardar(UsuarioMovie usuarioMovie);
 
     void borrarMeGusta(UsuarioMovie usuarioMovie);
+
+    List<Object[]> buscarPeliculasDondeElUsuarioTuvoInteraccion(Integer usuarioId);
 }

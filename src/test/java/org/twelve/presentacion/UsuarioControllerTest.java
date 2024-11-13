@@ -8,6 +8,7 @@ import org.twelve.dominio.UsuarioService;
 import org.twelve.dominio.entities.Movie;
 import org.twelve.presentacion.dto.ComentarioDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
+import org.twelve.presentacion.dto.UsuarioMovieDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -23,6 +24,8 @@ public class UsuarioControllerTest {
     private UsuarioController usuarioController;
     private UsuarioService usuarioServiceMock;
     private ComentarioService comentarioServiceMock;
+    private UsuarioMovieDTO usuarioMovieDTO;
+    private UsuarioMovieDTO usuarioMovieDTO2;
     private PerfilDTO perfilMock;
     private HttpSession sessionMock;
     private HttpServletRequest requestMock;
@@ -31,6 +34,8 @@ public class UsuarioControllerTest {
     public void setUp() {
         usuarioServiceMock = mock(UsuarioService.class);
         perfilMock = mock(PerfilDTO.class);
+        usuarioMovieDTO = mock(UsuarioMovieDTO.class);
+        usuarioMovieDTO2 = mock(UsuarioMovieDTO.class);
         sessionMock = mock(HttpSession.class);
         requestMock = mock(HttpServletRequest.class);
         comentarioServiceMock = mock(ComentarioService.class);
@@ -280,5 +285,32 @@ public class UsuarioControllerTest {
         assertNotNull(modelAndView.getModel().get("peliculasFavoritas"));
         assertTrue(((List<?>) modelAndView.getModel().get("peliculasFavoritas")).isEmpty());
     }
-    
+
+    @Test
+    public void testVerHistorialUsuarioNoLogueado() {
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(null);
+
+        ModelAndView modelAndView = usuarioController.verHistorial(requestMock);
+
+        assertEquals("redirect:/login", modelAndView.getViewName());
+    }
+
+    @Test
+    public void testVerHistorialUsuarioLogueadoSinHistorial() {
+        Integer usuarioId = 1;
+        PerfilDTO usuarioMock = mock(PerfilDTO.class);
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(usuarioId);
+        when(usuarioServiceMock.buscarPorId(usuarioId)).thenReturn(usuarioMock);
+        when(usuarioServiceMock.obtenerHistorialDePeliculasVistas(usuarioId)).thenReturn(Collections.emptyList());
+
+        ModelAndView modelAndView = usuarioController.verHistorial(requestMock);
+
+        assertEquals("historial", modelAndView.getViewName());
+        assertNotNull(modelAndView.getModel().get("historial"));
+        assertTrue(((List<?>) modelAndView.getModel().get("historial")).isEmpty());
+    }
+
 }

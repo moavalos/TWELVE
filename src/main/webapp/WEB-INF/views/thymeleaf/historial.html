@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Películas</title>
+    <link rel="stylesheet" th:href="@{/css/perfil.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+</head>
+<body>
+
+<div th:insert="fragments/header :: header"></div>
+
+<section class="container my-5">
+    <h2 class="text-center mb-4">Historial de Películas Vistas</h2>
+
+    <div th:if="${historial.isEmpty()}" class="no-history-message d-flex align-items-center justify-content-center bg-dark text-white rounded w-100" style="height: 200px;">
+        <p class="text-center m-0 fs-5">No tienes películas vistas todavía</p>
+    </div>
+
+    <div class="table-responsive" th:unless="${historial.isEmpty()}">
+        <table class="table table-hover align-middle">
+            <thead>
+            <tr>
+                <th scope="col">Fecha de Vista</th>
+                <th scope="col">Fecha de Like</th>
+                <th scope="col">Imagen</th>
+                <th scope="col">Película</th>
+                <th scope="col">Valoración</th>
+                <th scope="col">Favorita</th>
+                <th scope="col">Vista</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="entry : ${historial}">
+                <!-- Fecha de Vista -->
+                <td class="text-center" th:text="${entry.fechaVista != null ? entry.fechaVista : 'N/A'}">N/A</td>
+
+                <!-- Fecha de Like -->
+                <td class="text-center" th:text="${entry.fechaLike != null ? entry.fechaLike : 'N/A'}">N/A</td>
+
+                <!-- Imagen de la película -->
+                <td class="text-center">
+                    <a th:href="@{/detalle-pelicula/{id}(id=${entry.pelicula.id})}">
+                        <img th:src="@{'/images/' + ${entry.pelicula.imagen}}" th:alt="${entry.pelicula.nombre}" class="rounded" style="width: 50px; height: auto;">
+                    </a>
+                </td>
+
+                <!-- Nombre de la Película -->
+                <td>
+                    <a th:href="@{/detalle-pelicula/{id}(id=${entry.pelicula.id})}" class="text-black" th:text="${entry.pelicula.nombre}">Nombre de la película</a>
+                </td>
+
+                <!-- Valoración -->
+                <td class="text-center">
+                    <span th:if="${entry.valoracion != null}" th:text="${entry.valoracion} + '/10'"></span>
+                    <span th:if="${entry.valoracion == null}">N/A</span>
+                </td>
+
+                <!-- Icono de Favorita -->
+                <td class="text-center">
+                    <i class="fas fa-heart text-danger" th:if="${entry.esLike}"></i>
+                </td>
+
+                <!-- Icono de Vista -->
+                <td class="text-center">
+                    <i class="fas fa-eye text-success" th:if="${entry.vistaPorUsuario}"></i>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<div th:insert="fragments/footer :: footer"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+<script th:src="@{/js/perfil.js}"></script>
+</body>
+</html>

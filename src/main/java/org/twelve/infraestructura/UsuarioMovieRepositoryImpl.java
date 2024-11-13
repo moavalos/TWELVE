@@ -29,7 +29,7 @@ public class UsuarioMovieRepositoryImpl implements UsuarioMovieRepository {
     @Override
     @Transactional
     public Integer obtenerCantidadPeliculasVistas(Integer usuarioId) {
-        String hql = "SELECT COUNT(up.id) FROM UsuarioMovie up WHERE up.usuario.id = :usuarioId";
+        String hql = "SELECT COUNT(up.id) FROM UsuarioMovie up WHERE up.usuario.id = :usuarioId AND up.vistaPorUsuario = true";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setParameter("usuarioId", usuarioId);
         Long cantidad = (Long) query.uniqueResult();
@@ -39,7 +39,7 @@ public class UsuarioMovieRepositoryImpl implements UsuarioMovieRepository {
     @Override
     @Transactional
     public Integer obtenerCantidadPeliculasVistasEsteAno(Integer usuarioId) {
-        String hql = "SELECT COUNT(up.id) FROM UsuarioMovie up WHERE up.usuario.id = :usuarioId AND up.fechaVista BETWEEN :inicioAno AND :finAno";
+        String hql = "SELECT COUNT(up.id) FROM UsuarioMovie up WHERE up.usuario.id = :usuarioId AND up.vistaPorUsuario = true AND up.fechaVista BETWEEN :inicioAno AND :finAno";
 
         LocalDate inicioAno = LocalDate.of(LocalDate.now().getYear(), 1, 1);
         LocalDate finAno = LocalDate.of(LocalDate.now().getYear(), 12, 31);
@@ -119,16 +119,40 @@ public class UsuarioMovieRepositoryImpl implements UsuarioMovieRepository {
     @Override
     @Transactional
     public void borrarMeGusta(UsuarioMovie usuarioMovie) {
-        if (usuarioMovie == null)
+        if (usuarioMovie == null) {
             throw new IllegalArgumentException("La entidad UsuarioMovie no puede ser nula");
+        }
 
-        if (usuarioMovie.getUsuario() == null)
+        if (usuarioMovie.getUsuario() == null) {
             throw new IllegalArgumentException("El usuario no puede ser nulo");
+        }
 
-        if (usuarioMovie.getPelicula() == null)
+        if (usuarioMovie.getPelicula() == null) {
             throw new IllegalArgumentException("La película no puede ser nula");
+        }
 
-        sessionFactory.getCurrentSession().delete(usuarioMovie);
+        usuarioMovie.setEsLike(Boolean.FALSE);
+        usuarioMovie.setFechaLike(null);
+
+        sessionFactory.getCurrentSession().update(usuarioMovie);
+    }
+
+    @Override
+    @Transactional
+    public List<Object[]> buscarPeliculasDondeElUsuarioTuvoInteraccion(Integer usuarioId) {
+        if (usuarioId == null) {
+            throw new IllegalArgumentException("El ID de usuario no puede ser nulo");
+        }
+
+        String hql = "SELECT um, m.valoracion FROM UsuarioMovie um " +
+                "JOIN um.pelicula m WHERE um.usuario.id = :usuarioId " +
+                "AND (um.esLike = true OR um.vistaPorUsuario = true) " +
+                "AND m.valoracion IS NOT NULL AND um.pelicula.id IN " +
+                "(SELECT DISTINCT umSub.pelicula.id FROM UsuarioMovie umSub WHERE umSub.usuario.id = :usuarioId)";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("usuarioId", usuarioId);
+
+        return query.getResultList();
     }
 
 }

@@ -31,7 +31,9 @@ public class UsuarioMovie {
 
     private Boolean esLike = Boolean.FALSE;
 
-    private LocalDate fechaVista;
-
     private LocalDate fechaLike;
+
+    private Boolean vistaPorUsuario = Boolean.FALSE;
+
+    private LocalDate fechaVista;
 }
