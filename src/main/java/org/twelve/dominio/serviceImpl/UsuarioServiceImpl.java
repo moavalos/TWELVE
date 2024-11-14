@@ -185,19 +185,19 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuario.setUsername(username);
         usuario.setDescripcion(descripcion);
         usuario.setNombre(nombre);
-//        usuario.setPais(pais);
+        usuario.getPais().setNombre(pais);
 
-//        if (fotoPerfil != null && !fotoPerfil.isEmpty()) {
-//            String nombreArchivo = guardarFoto(fotoPerfil);
-//            usuarioDTO.setFotoDePerfil(nombreArchivo); // Actualiza la ruta o nombre del archivo en el perfil
-//        }
+        if (fotoPerfil != null && !fotoPerfil.isEmpty()) {
+            String nombreArchivo = guardarFoto(fotoPerfil);
+            usuario.setFotoDePerfil(nombreArchivo); // Actualiza la ruta o nombre del archivo en el perfil
+        }
 
         repositorioUsuario.guardar(usuario);
     }
 
     public String guardarFoto(MultipartFile fotoPerfil) {
         String nombreArchivo = UUID.randomUUID() + "_" + fotoPerfil.getOriginalFilename();
-        Path rutaArchivo = Paths.get("ruta/donde/guardar/imagenes", nombreArchivo);
+        Path rutaArchivo = Paths.get("/images/user", nombreArchivo);
 
         try {
             Files.copy(fotoPerfil.getInputStream(), rutaArchivo, StandardCopyOption.REPLACE_EXISTING);

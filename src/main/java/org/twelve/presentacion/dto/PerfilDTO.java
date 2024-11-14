@@ -163,6 +163,7 @@ public class PerfilDTO {
         usuario.setPassword(perfilDTO.getPassword());
         usuario.setNombre(perfilDTO.getNombre());
         usuario.setEmail(perfilDTO.getEmail());
+        usuario.setFotoDePerfil(perfilDTO.getFotoDePerfil());
         if (perfilDTO.getPais() != null) {
             usuario.setPais(PaisDTO.convertToEntity(perfilDTO.getPais()));
         } else {
@@ -193,6 +194,7 @@ public class PerfilDTO {
         perfilDTO.setActivo(usuario.getActivo());
         perfilDTO.setSeguidores(usuario.getSeguidores());
         perfilDTO.setSeguidos(usuario.getSeguidos());
+        perfilDTO.setFotoDePerfil(usuario.getFotoDePerfil());
 
         return perfilDTO;
     }
