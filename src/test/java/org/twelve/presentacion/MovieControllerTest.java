@@ -214,39 +214,6 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testAgregarPelicula() {
-        MovieDTO movieMock = mock(MovieDTO.class);
-        when(movieService.create(any(MovieDTO.class))).thenReturn(movieMock);
-
-        ResponseEntity<MovieDTO> response = movieController.addMovie(movieMock);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertNotNull(response.getBody());
-    }
-
-    @Test
-    public void testActualizarPeliculaIdValido() {
-        MovieDTO movieMock = mock(MovieDTO.class);
-        when(movieService.getById(1)).thenReturn(movieMock);
-        when(movieService.create(any(MovieDTO.class))).thenReturn(movieMock);
-
-        ResponseEntity<MovieDTO> response = movieController.updateMovie(1, movieMock);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertNotNull(response.getBody());
-    }
-
-    @Test
-    public void testActualizarPeliculaIdInvalido() {
-        MovieDTO movieMock = mock(MovieDTO.class);
-        when(movieService.getById(99)).thenReturn(null);
-
-        ResponseEntity<MovieDTO> response = movieController.updateMovie(99, movieMock);
-
-        assertEquals(404, response.getStatusCodeValue());
-    }
-
-    @Test
     public void testObtenerPeliculasPorCategoriaNoSeEncontraronPeliculas() {
         List<MovieDTO> emptyMoviesList = new ArrayList<>();
         when(movieService.getMoviesByCategory(1)).thenReturn(emptyMoviesList);

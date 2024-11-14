@@ -112,12 +112,6 @@ public class MovieController {
             return ResponseEntity.notFound().build();
     }
 
-    @RequestMapping(path = "/agregar]", method = RequestMethod.POST)
-    public ResponseEntity<MovieDTO> addMovie(@RequestBody MovieDTO movie) {
-        MovieDTO createdMovie = movieService.create(movie);
-        return ResponseEntity.ok(createdMovie);
-    }
-
     @RequestMapping(path = "/search", method = RequestMethod.GET)
     public ModelAndView searchMovies(@RequestParam("title") String title) {
         List<MovieDTO> movies = movieService.searchByTitle(title);
@@ -136,26 +130,6 @@ public class MovieController {
     public ResponseEntity<List<MovieDTO>> getMostViewedMovies() {
         List<MovieDTO> movies = movieService.getMovieMasVista();
         return ResponseEntity.ok(movies);
-    }
-
-    @RequestMapping(path = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<MovieDTO> updateMovie(@PathVariable Integer id, @RequestBody MovieDTO movie) {
-        MovieDTO existingMovie = movieService.getById(id);
-        if (existingMovie != null) {
-            existingMovie.setNombre(movie.getNombre());
-            existingMovie.setDescripcion(movie.getDescripcion());
-            existingMovie.setFrase(movie.getFrase());
-            existingMovie.setDuracion(movie.getDuracion());
-            existingMovie.setPais(movie.getPais());
-            existingMovie.setCantVistas(movie.getCantVistas());
-            existingMovie.setAnioLanzamiento(movie.getAnioLanzamiento());
-            existingMovie.setImagen(movie.getImagen());
-            existingMovie.setLikes(movie.getLikes());
-            existingMovie.setValoracion(movie.getValoracion());
-            MovieDTO updatedMovie = movieService.create(existingMovie);
-            return ResponseEntity.ok(updatedMovie);
-        } else
-            return ResponseEntity.notFound().build();
     }
 
     // GET /movies/category?idCategoria=ID_CATEGORIA
