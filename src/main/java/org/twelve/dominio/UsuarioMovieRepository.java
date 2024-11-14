@@ -25,4 +25,10 @@ public interface UsuarioMovieRepository {
     void borrarMeGusta(UsuarioMovie usuarioMovie);
 
     List<Object[]> buscarPeliculasDondeElUsuarioTuvoInteraccion(Integer usuarioId);
+
+    Optional<UsuarioMovie> buscarVerMasTardePorUsuario(Usuario usuario, Movie movie);
+
+    void borrarVerMasTarde(UsuarioMovie usuarioMovie);
+
+    List<UsuarioMovie> obtenerPeliculasVerMasTarde(Integer usuarioId);
 }

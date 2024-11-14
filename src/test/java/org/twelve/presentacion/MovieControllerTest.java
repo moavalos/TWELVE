@@ -26,6 +26,8 @@ public class MovieControllerTest {
 
     private MovieController movieController;
     private Movie movie;
+    private MovieDTO movieDTO;
+    private PerfilDTO perfilDTOMock;
     private HttpServletRequest requestMock;
     private HttpSession sessionMock;
     private MovieService movieService;
@@ -38,6 +40,9 @@ public class MovieControllerTest {
     public void init() {
         movie = mock(Movie.class);
         when(movie.getDescripcion()).thenReturn("Coraline");
+
+        movieDTO  = mock(MovieDTO.class);
+        perfilDTOMock = mock(PerfilDTO.class);
         requestMock = mock(HttpServletRequest.class);
         sessionMock = mock(HttpSession.class);
         movieService = mock(MovieService.class);
@@ -466,6 +471,60 @@ public class MovieControllerTest {
 
         assertThat(modelAndView.getViewName(), is("movies-pais"));
         assertThat(modelAndView.getModel().get("nombrePais"), is("España"));
+    }
+
+    @Test
+    public void testVerMasTardeUsuarioNoLogueadoRedirigeALogin() {
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(null);
+
+        String result = movieController.verMasTarde(1, requestMock);
+
+        assertThat(result, is("redirect:/login"));
+    }
+
+    @Test
+    public void testVerMasTardePeliculaNoEncontradaRedirigeADetallePelicula() {
+        Integer movieId = 1;
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(1);
+        when(movieService.getById(movieId)).thenReturn(null);
+        when(usuarioService.buscarPorId(1)).thenReturn(perfilDTOMock);
+
+        String result = movieController.verMasTarde(movieId, requestMock);
+
+        assertThat(result, is("redirect:/detalle-pelicula/" + movieId));
+        verify(usuarioService, never()).agregarEnVerMasTarde(any(PerfilDTO.class), any(MovieDTO.class));
+    }
+
+    @Test
+    public void testVerMasTardeUsuarioNoEncontradoRedirigeADetallePelicula() {
+        Integer movieId = 1;
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(1);
+        when(movieService.getById(movieId)).thenReturn(movieDTO);
+        when(usuarioService.buscarPorId(1)).thenReturn(null);
+
+        String result = movieController.verMasTarde(movieId, requestMock);
+
+        assertThat(result, is("redirect:/detalle-pelicula/" + movieId));
+        verify(usuarioService, never()).agregarEnVerMasTarde(any(PerfilDTO.class), any(MovieDTO.class));
+    }
+
+    @Test
+    public void testVerMasTardeUsuarioYMovieExisten() {
+        Integer movieId = 1;
+        Integer usuarioId = 1;
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(usuarioId);
+        when(movieService.getById(movieId)).thenReturn(movieDTO);
+        when(usuarioService.buscarPorId(usuarioId)).thenReturn(perfilDTOMock);
+
+        String result = movieController.verMasTarde(movieId, requestMock);
+
+        assertThat(result, is("redirect:/detalle-pelicula/" + movieId));
+        verify(usuarioService, times(1)).agregarEnVerMasTarde(perfilDTOMock, movieDTO);
     }
 
 

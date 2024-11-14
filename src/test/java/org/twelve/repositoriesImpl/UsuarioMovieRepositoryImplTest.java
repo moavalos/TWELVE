@@ -536,5 +536,271 @@ public class UsuarioMovieRepositoryImplTest {
         assertEquals("El ID de usuario no puede ser nulo", exception.getMessage());
     }
 
+    @Test
+    @Transactional
+    @Rollback
+    public void testBuscarVerMasTardePorUsuarioCuandoExisteRelacion() {
+        Usuario usuario = new Usuario();
+        usuario.setId(1);
+        Movie movie = new Movie();
+        movie.setNombre("Inception");
+
+        sessionFactory.getCurrentSession().save(usuario);
+        sessionFactory.getCurrentSession().save(movie);
+
+        UsuarioMovie usuarioMovie = new UsuarioMovie();
+        usuarioMovie.setUsuario(usuario);
+        usuarioMovie.setPelicula(movie);
+        usuarioMovie.setEsVerMasTarde(true);
+
+        sessionFactory.getCurrentSession().save(usuarioMovie);
+
+        Optional<UsuarioMovie> resultado = usuarioMovieRepository.buscarVerMasTardePorUsuario(usuario, movie);
+
+        assertTrue(resultado.isPresent());
+        assertEquals(usuario, resultado.get().getUsuario());
+        assertEquals(movie, resultado.get().getPelicula());
+        assertTrue(resultado.get().getEsVerMasTarde());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testBuscarVerMasTardePorUsuarioCuandoNoExisteRelacion() {
+        Usuario usuario = new Usuario();
+        usuario.setId(2);
+        Movie movie = new Movie();
+        movie.setNombre("The Matrix");
+
+        sessionFactory.getCurrentSession().save(usuario);
+        sessionFactory.getCurrentSession().save(movie);
+
+        Optional<UsuarioMovie> resultado = usuarioMovieRepository.buscarVerMasTardePorUsuario(usuario, movie);
+
+        assertFalse(resultado.isPresent());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testBuscarVerMasTardePorUsuarioConUsuarioNulo() {
+        Movie movie = new Movie();
+        movie.setNombre("Inception");
+
+        sessionFactory.getCurrentSession().save(movie);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioMovieRepository.buscarVerMasTardePorUsuario(null, movie);
+        });
+
+        assertEquals("Usuario no puede ser nulo", exception.getMessage());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testBuscarVerMasTardePorUsuarioConMovieNulo() {
+        Usuario usuario = new Usuario();
+        usuario.setId(1);
+
+        sessionFactory.getCurrentSession().save(usuario);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioMovieRepository.buscarVerMasTardePorUsuario(usuario, null);
+        });
+
+        assertEquals("Película no puede ser nula", exception.getMessage());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testBuscarVerMasTardePorUsuarioConRelacionNoEsVerMasTarde() {
+        Usuario usuario = new Usuario();
+        usuario.setId(1);
+        Movie movie = new Movie();
+        movie.setNombre("Avatar");
+
+        sessionFactory.getCurrentSession().save(usuario);
+        sessionFactory.getCurrentSession().save(movie);
+
+        UsuarioMovie usuarioMovie = new UsuarioMovie();
+        usuarioMovie.setUsuario(usuario);
+        usuarioMovie.setPelicula(movie);
+        usuarioMovie.setEsVerMasTarde(false);
+
+        sessionFactory.getCurrentSession().save(usuarioMovie);
+
+        Optional<UsuarioMovie> resultado = usuarioMovieRepository.buscarVerMasTardePorUsuario(usuario, movie);
+
+        assertFalse(resultado.isPresent());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testBorrarVerMasTardeCuandoExisteRelacion() {
+        Usuario usuario = new Usuario();
+        usuario.setId(1);
+        Movie movie = new Movie();
+        movie.setNombre("Inception");
+
+        sessionFactory.getCurrentSession().save(usuario);
+        sessionFactory.getCurrentSession().save(movie);
+
+        UsuarioMovie usuarioMovie = new UsuarioMovie();
+        usuarioMovie.setUsuario(usuario);
+        usuarioMovie.setPelicula(movie);
+        usuarioMovie.setEsVerMasTarde(true);
+
+        sessionFactory.getCurrentSession().save(usuarioMovie);
+
+        // verifico si existe esa relacion antes de eliminarla
+        Optional<UsuarioMovie> beforeDelete = usuarioMovieRepository.buscarVerMasTardePorUsuario(usuario, movie);
+        assertTrue(beforeDelete.isPresent());
+
+        usuarioMovieRepository.borrarVerMasTarde(usuarioMovie);
+
+        Optional<UsuarioMovie> afterDelete = usuarioMovieRepository.buscarVerMasTardePorUsuario(usuario, movie);
+        assertFalse(afterDelete.isPresent());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testBorrarVerMasTardeConUsuarioMovieNulo() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioMovieRepository.borrarVerMasTarde(null);
+        });
+
+        assertEquals("La entidad UsuarioMovie no puede ser nula", exception.getMessage());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testBorrarVerMasTardeConUsuarioNulo() {
+        Movie movie = new Movie();
+        movie.setNombre("Inception");
+        sessionFactory.getCurrentSession().save(movie);
+
+        UsuarioMovie usuarioMovie = new UsuarioMovie();
+        usuarioMovie.setUsuario(null);
+        usuarioMovie.setPelicula(movie);
+        usuarioMovie.setEsVerMasTarde(true);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioMovieRepository.borrarVerMasTarde(usuarioMovie);
+        });
+
+        assertEquals("El usuario no puede ser nulo", exception.getMessage());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testBorrarVerMasTardeConPeliculaNula() {
+        Usuario usuario = new Usuario();
+        usuario.setId(1);
+        sessionFactory.getCurrentSession().save(usuario);
+
+        UsuarioMovie usuarioMovie = new UsuarioMovie();
+        usuarioMovie.setUsuario(usuario);
+        usuarioMovie.setPelicula(null);
+        usuarioMovie.setEsVerMasTarde(true);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioMovieRepository.borrarVerMasTarde(usuarioMovie);
+        });
+
+        assertEquals("La película no puede ser nula", exception.getMessage());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testObtenerPeliculasVerMasTardeCuandoExistenPeliculas() {
+        Usuario usuario = new Usuario();
+        usuario.setId(1);
+        sessionFactory.getCurrentSession().save(usuario);
+
+        Movie movie1 = new Movie();
+        movie1.setNombre("Inception");
+        Movie movie2 = new Movie();
+        movie2.setNombre("The Matrix");
+
+        sessionFactory.getCurrentSession().save(movie1);
+        sessionFactory.getCurrentSession().save(movie2);
+
+        UsuarioMovie usuarioMovie1 = new UsuarioMovie();
+        usuarioMovie1.setUsuario(usuario);
+        usuarioMovie1.setPelicula(movie1);
+        usuarioMovie1.setEsVerMasTarde(true);
+
+        UsuarioMovie usuarioMovie2 = new UsuarioMovie();
+        usuarioMovie2.setUsuario(usuario);
+        usuarioMovie2.setPelicula(movie2);
+        usuarioMovie2.setEsVerMasTarde(true);
+
+        sessionFactory.getCurrentSession().save(usuarioMovie1);
+        sessionFactory.getCurrentSession().save(usuarioMovie2);
+
+        List<UsuarioMovie> peliculasVerMasTarde = usuarioMovieRepository.obtenerPeliculasVerMasTarde(usuario.getId());
+
+        assertNotNull(peliculasVerMasTarde);
+        assertEquals(2, peliculasVerMasTarde.size());
+        assertTrue(peliculasVerMasTarde.stream().anyMatch(um -> um.getPelicula().getNombre().equals("Inception")));
+        assertTrue(peliculasVerMasTarde.stream().anyMatch(um -> um.getPelicula().getNombre().equals("The Matrix")));
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testObtenerPeliculasVerMasTardeCuandoNoExistenPeliculas() {
+        Usuario usuario = new Usuario();
+        usuario.setId(2);
+        sessionFactory.getCurrentSession().save(usuario);
+
+        List<UsuarioMovie> peliculasVerMasTarde = usuarioMovieRepository.obtenerPeliculasVerMasTarde(usuario.getId());
+
+        assertNotNull(peliculasVerMasTarde);
+        assertTrue(peliculasVerMasTarde.isEmpty());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testObtenerPeliculasVerMasTardeConUsuarioIdNulo() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioMovieRepository.obtenerPeliculasVerMasTarde(null);
+        });
+
+        assertEquals("El ID de usuario no puede ser nulo", exception.getMessage());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testObtenerPeliculasVerMasTardeConPeliculasNoMarcadasComoVerMasTarde() {
+        Usuario usuario = new Usuario();
+        usuario.setId(3);
+        sessionFactory.getCurrentSession().save(usuario);
+
+        Movie movie = new Movie();
+        movie.setNombre("Interstellar");
+        sessionFactory.getCurrentSession().save(movie);
+
+        UsuarioMovie usuarioMovie = new UsuarioMovie();
+        usuarioMovie.setUsuario(usuario);
+        usuarioMovie.setPelicula(movie);
+        usuarioMovie.setEsVerMasTarde(false);
+
+        sessionFactory.getCurrentSession().save(usuarioMovie);
+
+        List<UsuarioMovie> peliculasVerMasTarde = usuarioMovieRepository.obtenerPeliculasVerMasTarde(usuario.getId());
+
+        assertNotNull(peliculasVerMasTarde);
+        assertTrue(peliculasVerMasTarde.isEmpty());
+    }
 
 }

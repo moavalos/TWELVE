@@ -88,21 +88,21 @@ VALUES ('Volver al Futuro',
 
 -- Inserta registros en UsuarioMovie
 -- Nota: Se deben conocer los ids de las peliculas
-INSERT INTO UsuarioMovie (usuario_id, pelicula_id, fechaLike, fechaVista, esLike, vistaPorUsuario)
-VALUES (1, 1, '2023-10-10','2023-10-10', true, true),  -- Usuario 1 ve "Volver al Futuro"
-       (1, 2, '2023-10-11','2023-10-10', true, true), -- Usuario 1 ve "Apocalypse Now"
-       (1, 3, '2023-10-12','2023-10-10', false, true),  -- Usuario 1 ve "El Bueno, el Malo y el Feo"
-       (1, 4, '2023-10-13','2023-10-10', true, true), -- Usuario 1 ve "El Viaje de Chihiro"
-       (1, 5, '2023-10-14','2023-10-10', true, true),  -- Usuario 1 ve "Sin Novedades en el Frente"
-       (1, 6, '2023-10-15','2023-10-10', true, true), -- Usuario 1 ve "El Origen"
-       (1, 7, '2023-10-16','2023-10-09', true, true),  -- Usuario 1 ve "El Caballero de la Noche"
-       (6, 1, '2020-07-17','2024-05-10', true, true),
-       (6, 2, '2023-10-01','2024-03-29', true, true),
-       (6, 3, '2024-03-1','2024-10-21', false, true),
-       (6, 4, '2024-04-18','2023-11-22', false, false),
-       (6, 5, '2024-01-22','2023-12-04', true, true),
-       (6, 6, null ,'2023-01-10', true, true),
-       (6, 7, '2023-01-14', null, true, true);
+INSERT INTO UsuarioMovie (usuario_id, pelicula_id, fechaLike, fechaVista, esLike, vistaPorUsuario, esVerMasTarde)
+VALUES (1, 1, '2023-10-10','2023-10-10', true, true, false),  -- Usuario 1 ve "Volver al Futuro"
+       (1, 2, '2023-10-11','2023-10-10', true, true, false), -- Usuario 1 ve "Apocalypse Now"
+       (1, 3, '2023-10-12','2023-10-10', false, true, false),  -- Usuario 1 ve "El Bueno, el Malo y el Feo"
+       (1, 4, '2023-10-13','2023-10-10', true, true, false), -- Usuario 1 ve "El Viaje de Chihiro"
+       (1, 5, '2023-10-14','2023-10-10', true, true, false),  -- Usuario 1 ve "Sin Novedades en el Frente"
+       (1, 6, '2023-10-15','2023-10-10', true, true, false), -- Usuario 1 ve "El Origen"
+       (1, 7, '2023-10-16','2023-10-09', true, true, false),  -- Usuario 1 ve "El Caballero de la Noche"
+       (6, 1, '2020-07-17','2024-05-10', true, true, false),
+       (6, 2, '2023-10-01','2024-03-29', true, true, false),
+       (6, 3, '2024-03-1','2024-10-21', false, true, false),
+       (6, 4, '2024-04-18','2023-11-22', false, false, true),
+       (6, 5, '2024-01-22','2023-12-04', true, true, false),
+       (6, 6, null ,'2023-01-10', true, true, false),
+       (6, 7, '2023-01-14', null, true, true, false);
 
 -- Inserts Comentarios
 INSERT INTO Comentario (id, descripcion, likes, valoracion, idMovie, idUsuario)

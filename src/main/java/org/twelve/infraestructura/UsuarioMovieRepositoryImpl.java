@@ -155,4 +155,56 @@ public class UsuarioMovieRepositoryImpl implements UsuarioMovieRepository {
         return query.getResultList();
     }
 
+    @Override
+    @Transactional
+    public Optional<UsuarioMovie> buscarVerMasTardePorUsuario(Usuario usuario, Movie movie) {
+        if (usuario == null) {
+            throw new IllegalArgumentException("Usuario no puede ser nulo");
+        }
+
+        if (movie == null) {
+            throw new IllegalArgumentException("Película no puede ser nula");
+        }
+
+        String hql = "FROM UsuarioMovie um WHERE um.usuario = :usuario AND um.pelicula = :movie AND um.esVerMasTarde = TRUE";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("usuario", usuario);
+        query.setParameter("movie", movie);
+
+        UsuarioMovie result = (UsuarioMovie) query.uniqueResult();
+        return Optional.ofNullable(result);
+    }
+
+    @Override
+    @Transactional
+    public void borrarVerMasTarde(UsuarioMovie usuarioMovie) {
+        if (usuarioMovie == null) {
+            throw new IllegalArgumentException("La entidad UsuarioMovie no puede ser nula");
+        }
+
+        if (usuarioMovie.getUsuario() == null) {
+            throw new IllegalArgumentException("El usuario no puede ser nulo");
+        }
+
+        if (usuarioMovie.getPelicula() == null) {
+            throw new IllegalArgumentException("La película no puede ser nula");
+        }
+
+        sessionFactory.getCurrentSession().delete(usuarioMovie);
+    }
+
+    @Override
+    @Transactional
+    public List<UsuarioMovie> obtenerPeliculasVerMasTarde(Integer usuarioId) {
+        if (usuarioId == null) {
+            throw new IllegalArgumentException("El ID de usuario no puede ser nulo");
+        }
+
+        String hql = "FROM UsuarioMovie um WHERE um.usuario.id = :usuarioId AND um.esVerMasTarde = TRUE";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("usuarioId", usuarioId);
+
+        return query.getResultList();
+    }
+
 }

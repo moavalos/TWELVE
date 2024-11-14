@@ -205,5 +205,52 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         return historialDTO;
     }
+
+    @Override
+    public boolean estaEnListaVerMasTarde(PerfilDTO usuarioDTO, MovieDTO movieDTO) {
+        if (usuarioDTO == null || movieDTO == null) {
+            throw new IllegalArgumentException("Usuario o película no pueden ser nulos");
+        }
+
+        Usuario usuario = convertToEntity(usuarioDTO);
+        Movie movie = MovieDTO.convertToEntity(movieDTO);
+
+        return usuarioMovieRepository.buscarVerMasTardePorUsuario(usuario, movie).isPresent();
+    }
+
+    @Override
+    public void agregarEnVerMasTarde(PerfilDTO usuarioDTO, MovieDTO movieDTO) {
+        if (usuarioDTO == null || movieDTO == null) {
+            throw new IllegalArgumentException("Usuario o película no pueden ser nulos");
+        }
+
+        Usuario usuario = convertToEntity(usuarioDTO);
+        Movie movie = MovieDTO.convertToEntity(movieDTO);
+
+        Optional<UsuarioMovie> verMasTarde = usuarioMovieRepository.buscarVerMasTardePorUsuario(usuario, movie);
+
+        if (verMasTarde.isPresent()) {
+            usuarioMovieRepository.borrarVerMasTarde(verMasTarde.get());
+        } else {
+            UsuarioMovie usuarioMovie = new UsuarioMovie();
+            usuarioMovie.setUsuario(usuario);
+            usuarioMovie.setPelicula(movie);
+            usuarioMovie.setEsVerMasTarde(Boolean.TRUE);
+            usuarioMovieRepository.guardar(usuarioMovie);
+        }
+    }
+
+    @Override
+    public List<UsuarioMovieDTO> obtenerListaVerMasTarde(Integer usuarioId) {
+        if (usuarioId == null) {
+            throw new IllegalArgumentException("El ID de usuario no puede ser nulo");
+        }
+
+        List<UsuarioMovie> verMasTardeMovies = usuarioMovieRepository.obtenerPeliculasVerMasTarde(usuarioId);
+
+        return verMasTardeMovies.stream()
+                .map(UsuarioMovieDTO::convertToDTO)
+                .collect(Collectors.toList());
+    }
 }
 

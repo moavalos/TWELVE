@@ -57,6 +57,7 @@ public class UsuarioController {
         String seguirODejarUrl = estaSiguiendo ? "/dejarDeSeguir/" + id : "/seguir/" + id;
 
         List<UsuarioMovieDTO> historial = usuarioService.obtenerHistorialDePeliculasVistas(usuario.getId());
+        List<UsuarioMovieDTO> verMasTarde = usuarioService.obtenerListaVerMasTarde(usuario.getId());
 
         //agrego comentarios
         List<ComentarioDTO> comentariosRecientes = comentarioService.obtenerUltimosTresComentarios(id);
@@ -68,6 +69,7 @@ public class UsuarioController {
         model.put("cantidadPeliculasVistasEsteAno", usuario.getCantidadPeliculasVistasEsteAno());
         model.put("peliculasFavoritas", usuario.getPeliculasFavoritas());
         model.put("historial", historial);
+        model.put("verMasTarde", verMasTarde);
         model.put("seguidores", usuario.getSeguidores());
         model.put("siguiendo", usuario.getSeguidos());
         model.put("esPerfilPropio", esPerfilPropio);
@@ -131,6 +133,23 @@ public class UsuarioController {
         model.put("historial", historial);
 
         return new ModelAndView("historial", model);
+    }
+
+    @RequestMapping(path = "/verMasTarde", method = RequestMethod.GET)
+    public ModelAndView verMasTarde(HttpServletRequest request) {
+        Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
+
+        if (usuarioLogueadoId == null) {
+            return new ModelAndView("redirect:/login");
+        }
+
+        PerfilDTO usuario = usuarioService.buscarPorId(usuarioLogueadoId);
+        List<UsuarioMovieDTO> verMasTarde = usuarioService.obtenerListaVerMasTarde(usuario.getId());
+
+        ModelMap model = new ModelMap();
+        model.put("verMasTarde", verMasTarde);
+
+        return new ModelAndView("verMasTarde", model);
     }
 
 }

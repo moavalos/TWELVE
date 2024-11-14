@@ -36,4 +36,6 @@ public class UsuarioMovie {
     private Boolean vistaPorUsuario = Boolean.FALSE;
 
     private LocalDate fechaVista;
+
+    private Boolean esVerMasTarde = Boolean.FALSE;
 }

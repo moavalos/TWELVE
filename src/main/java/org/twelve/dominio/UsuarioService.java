@@ -32,4 +32,11 @@ public interface UsuarioService {
     List<Movie> obtenerPeliculasFavoritas(Integer usuarioId);
 
     List<UsuarioMovieDTO> obtenerHistorialDePeliculasVistas(Integer usuarioId);
+
+    boolean estaEnListaVerMasTarde(PerfilDTO usuarioDTO, MovieDTO movieDTO);
+
+    void agregarEnVerMasTarde(PerfilDTO usuarioDTO, MovieDTO movieDTO);
+
+    List<UsuarioMovieDTO> obtenerListaVerMasTarde(Integer usuarioId);
+
 }

@@ -27,6 +27,8 @@ public class UsuarioServiceImplTest {
 
     private Usuario usuarioMock;
     private Usuario seguidoMock;
+    private PerfilDTO perfilMock;
+    private MovieDTO movieMock;
     private UsuarioServiceImpl usuarioServiceImpl;
     private RepositorioUsuario repositorioUsuario;
     private UsuarioMovieRepository usuarioMovieRepository;
@@ -36,6 +38,8 @@ public class UsuarioServiceImplTest {
     public void init() {
         usuarioMock = mock(Usuario.class);
         seguidoMock = mock(Usuario.class);
+        perfilMock = mock(PerfilDTO.class);
+        movieMock = mock(MovieDTO.class);
         repositorioUsuario = mock(RepositorioUsuario.class);
         usuarioMovieRepository = mock(UsuarioMovieRepository.class);
         movieRepository = mock(MovieRepository.class);
@@ -584,6 +588,168 @@ public class UsuarioServiceImplTest {
         });
 
         assertEquals("El ID de usuario no puede ser nulo", exception.getMessage());
+    }
+
+    @Test
+    public void testEstaEnListaVerMasTardeCuandoEstaEnLista() {
+        perfilMock.setId(1);
+        movieMock.setId(10);
+
+        Usuario usuario = PerfilDTO.convertToEntity(perfilMock);
+        Movie movie = MovieDTO.convertToEntity(movieMock);
+
+        when(usuarioMovieRepository.buscarVerMasTardePorUsuario(usuario, movie)).thenReturn(Optional.of(new UsuarioMovie()));
+
+        boolean resultado = usuarioServiceImpl.estaEnListaVerMasTarde(perfilMock, movieMock);
+
+        assertTrue(resultado);
+        verify(usuarioMovieRepository, times(1)).buscarVerMasTardePorUsuario(usuario, movie);
+    }
+
+    @Test
+    public void testEstaEnListaVerMasTardeCuandoNoEstaEnLista() {
+        movieMock.setId(20);
+
+        Usuario usuario = PerfilDTO.convertToEntity(perfilMock);
+        Movie movie = MovieDTO.convertToEntity(movieMock);
+
+        when(usuarioMovieRepository.buscarVerMasTardePorUsuario(usuario, movie)).thenReturn(Optional.empty());
+
+        boolean resultado = usuarioServiceImpl.estaEnListaVerMasTarde(perfilMock, movieMock);
+
+        assertFalse(resultado);
+        verify(usuarioMovieRepository, times(1)).buscarVerMasTardePorUsuario(usuario, movie);
+    }
+
+    @Test
+    public void testEstaEnListaVerMasTardeConUsuarioNuloDeberiaLanzarExcepcion() {
+        movieMock.setId(1);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.estaEnListaVerMasTarde(null, movieMock);
+        });
+
+        assertEquals("Usuario o película no pueden ser nulos", exception.getMessage());
+        verify(usuarioMovieRepository, never()).buscarVerMasTardePorUsuario(any(), any());
+    }
+
+    @Test
+    public void testEstaEnListaVerMasTardeConMovieDTONuloDeberiaLanzarExcepcion() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.estaEnListaVerMasTarde(perfilMock, null);
+        });
+
+        assertEquals("Usuario o película no pueden ser nulos", exception.getMessage());
+        verify(usuarioMovieRepository, never()).buscarVerMasTardePorUsuario(any(), any());
+    }
+
+    @Test
+    public void testAgregarEnVerMasTardeCuandoNoEstaEnLista() {
+        perfilMock.setId(1);
+        movieMock.setId(10);
+
+        Usuario usuario = PerfilDTO.convertToEntity(perfilMock);
+        Movie movie = MovieDTO.convertToEntity(movieMock);
+
+        when(usuarioMovieRepository.buscarVerMasTardePorUsuario(usuario, movie)).thenReturn(Optional.empty());
+
+        usuarioServiceImpl.agregarEnVerMasTarde(perfilMock, movieMock);
+
+        verify(usuarioMovieRepository, times(1)).guardar(any(UsuarioMovie.class));
+        verify(usuarioMovieRepository, never()).borrarVerMasTarde(any(UsuarioMovie.class));
+    }
+
+    @Test
+    public void testAgregarEnVerMasTardeCuandoYaEstaEnLista() {
+        perfilMock.setId(2);
+        movieMock.setId(20);
+
+        Usuario usuario = PerfilDTO.convertToEntity(perfilMock);
+        Movie movie = MovieDTO.convertToEntity(movieMock);
+
+        UsuarioMovie usuarioMovie = new UsuarioMovie();
+        usuarioMovie.setUsuario(usuario);
+        usuarioMovie.setPelicula(movie);
+        usuarioMovie.setEsVerMasTarde(true);
+
+        when(usuarioMovieRepository.buscarVerMasTardePorUsuario(usuario, movie)).thenReturn(Optional.of(usuarioMovie));
+
+        usuarioServiceImpl.agregarEnVerMasTarde(perfilMock, movieMock);
+
+        verify(usuarioMovieRepository, times(1)).borrarVerMasTarde(usuarioMovie);
+        verify(usuarioMovieRepository, never()).guardar(any(UsuarioMovie.class));
+    }
+
+    @Test
+    public void testAgregarEnVerMasTardeConUsuarioNuloDeberiaLanzarExcepcion() {
+        movieMock.setId(1);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.agregarEnVerMasTarde(null, movieMock);
+        });
+
+        assertEquals("Usuario o película no pueden ser nulos", exception.getMessage());
+        verify(usuarioMovieRepository, never()).guardar(any(UsuarioMovie.class));
+        verify(usuarioMovieRepository, never()).borrarVerMasTarde(any(UsuarioMovie.class));
+    }
+
+    @Test
+    public void testAgregarEnVerMasTardeConMovieDTONuloDeberiaLanzarExcepcion() {
+        perfilMock.setId(1);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.agregarEnVerMasTarde(perfilMock, null);
+        });
+
+        assertEquals("Usuario o película no pueden ser nulos", exception.getMessage());
+        verify(usuarioMovieRepository, never()).guardar(any(UsuarioMovie.class));
+        verify(usuarioMovieRepository, never()).borrarVerMasTarde(any(UsuarioMovie.class));
+    }
+
+    @Test
+    public void testObtenerListaVerMasTardeCuandoExistenPeliculas() {
+        Integer usuarioId = 1;
+
+        UsuarioMovie usuarioMovie1 = new UsuarioMovie();
+        usuarioMovie1.setId(1);
+        UsuarioMovie usuarioMovie2 = new UsuarioMovie();
+        usuarioMovie2.setId(2);
+
+        List<UsuarioMovie> verMasTardeMovies = List.of(usuarioMovie1, usuarioMovie2);
+        when(usuarioMovieRepository.obtenerPeliculasVerMasTarde(usuarioId)).thenReturn(verMasTardeMovies);
+
+        List<UsuarioMovieDTO> resultado = usuarioServiceImpl.obtenerListaVerMasTarde(usuarioId);
+
+        assertNotNull(resultado);
+        assertEquals(2, resultado.size());
+        assertEquals(1, resultado.get(0).getId());
+        assertEquals(2, resultado.get(1).getId());
+
+        verify(usuarioMovieRepository, times(1)).obtenerPeliculasVerMasTarde(usuarioId);
+    }
+
+    @Test
+    public void testObtenerListaVerMasTardeCuandoNoExistenPeliculas() {
+        Integer usuarioId = 2;
+
+        when(usuarioMovieRepository.obtenerPeliculasVerMasTarde(usuarioId)).thenReturn(Collections.emptyList());
+
+        List<UsuarioMovieDTO> resultado = usuarioServiceImpl.obtenerListaVerMasTarde(usuarioId);
+
+        assertNotNull(resultado);
+        assertTrue(resultado.isEmpty());
+
+        verify(usuarioMovieRepository, times(1)).obtenerPeliculasVerMasTarde(usuarioId);
+    }
+
+    @Test
+    public void testObtenerListaVerMasTardeConUsuarioIdNuloDeberiaLanzarExcepcion() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.obtenerListaVerMasTarde(null);
+        });
+
+        assertEquals("El ID de usuario no puede ser nulo", exception.getMessage());
+        verify(usuarioMovieRepository, never()).obtenerPeliculasVerMasTarde(any());
     }
 
 }
