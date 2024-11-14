@@ -31,7 +31,16 @@
                     </form>
                 </div>
 
-                <button class="btn btn-warning w-100 mb-2 rounded-pill">+ Plan to Watch</button>
+                <!-- Botón ver más tarde -->
+                <div th:if="${session.usuario != null}">
+                    <form th:action="@{/movie/{id}/verMasTarde(id=${movie.id})}" method="post">
+                        <button type="submit" class="btn w-100 mb-2 rounded-pill"
+                                th:classappend="${enListaVerMasTarde ? 'btn-primary' : 'btn-warning'}">
+                            <i th:classappend="${enListaVerMasTarde ? 'fa-solid fa-clock' : 'fa-regular fa-clock'}"></i>
+                            <span th:text="${enListaVerMasTarde ? 'Quitar de Ver más tarde' : 'Ver más tarde'}"></span>
+                        </button>
+                    </form>
+                </div>
 
                 <!-- Botón de comentar -->
                 <div th:if="${session.usuario != null}">

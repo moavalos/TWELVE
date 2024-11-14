@@ -11,11 +11,13 @@ VALUES (1, 'Argentina'),
 
 INSERT INTO Usuario (email, password, nombre, username, pais_id, descripcion, rol, activo)
 VALUES
-    ('admin@example.com', 'password123', 'Admin User', 'admin', 1, 'Administrador del sistema', 'ADMIN', TRUE),
-    ('juan.perez@example.com', 'pass1234', 'Juan Perez', 'juanperez', 2, 'Cinéfilo amateur', 'USER', FALSE),
-    ('moderador@example.com', 'modpass456', 'Moderador Uno', 'moduser', 4, 'Encargado de moderar reseñas', 'MOD', TRUE),
-    ('ana.gomez@example.com', 'ana123', 'Ana Gomez', 'anagomez', 3, 'Amante de películas de acción', 'USER', TRUE),
-    ('carlos.lopez@example.com', 'carlospass', 'Carlos Lopez', 'carlosl', 5, 'Fanático del cine clásico', 'USER', FALSE);
+    ('admin@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Admin User', 'admin', 1, 'Administrador del sistema', 'ADMIN', TRUE),
+    ('juan.perez@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Juan Perez', 'juanperez', 2, 'Cinéfilo amateur', 'USER', FALSE),
+    ('moderador@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Moderador Uno', 'moduser', 4, 'Encargado de moderar reseñas', 'MOD', TRUE),
+    ('ana.gomez@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Ana Gomez', 'anagomez', 3, 'Amante de películas de acción', 'USER', TRUE),
+    ('carlos.lopez@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Carlos Lopez', 'carlosl', 5, 'Fanático del cine clásico', 'USER', FALSE),
+    ('mora@gmail.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Mora', 'moras', 5, 'user para pruebas', 'USER', TRUE),
+    ('morae2e@gmail.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Mora E2E', 'morae2e', 5, 'user para pruebas e2e', 'USER', TRUE);
 
 
 INSERT INTO Categoria (id, nombre)
@@ -86,15 +88,21 @@ VALUES ('Volver al Futuro',
 
 -- Inserta registros en UsuarioMovie
 -- Nota: Se deben conocer los ids de las peliculas
-INSERT INTO UsuarioMovie (usuario_id, pelicula_id, fechaLike, esLike)
-VALUES (1, 1, '2023-10-10', true),  -- Usuario 1 ve "Volver al Futuro"
-       (1, 2, '2023-10-11', true), -- Usuario 1 ve "Apocalypse Now"
-       (1, 3, '2023-10-12', true),  -- Usuario 1 ve "El Bueno, el Malo y el Feo"
-       (1, 4, '2023-10-13', true), -- Usuario 1 ve "El Viaje de Chihiro"
-       (1, 5, '2023-10-14', true),  -- Usuario 1 ve "Sin Novedades en el Frente"
-       (1, 6, '2023-10-15', true), -- Usuario 1 ve "El Origen"
-       (1, 7, '2023-10-16', true),  -- Usuario 1 ve "El Caballero de la Noche"
-       (1, 8, '2023-10-17', true); -- Usuario 1 ve "Matrix"
+INSERT INTO UsuarioMovie (usuario_id, pelicula_id, fechaLike, fechaVista, esLike, vistaPorUsuario, esVerMasTarde)
+VALUES (1, 1, '2023-10-10','2023-10-10', true, true, false),  -- Usuario 1 ve "Volver al Futuro"
+       (1, 2, '2023-10-11','2023-10-10', true, true, false), -- Usuario 1 ve "Apocalypse Now"
+       (1, 3, '2023-10-12','2023-10-10', false, true, false),  -- Usuario 1 ve "El Bueno, el Malo y el Feo"
+       (1, 4, '2023-10-13','2023-10-10', true, true, false), -- Usuario 1 ve "El Viaje de Chihiro"
+       (1, 5, '2023-10-14','2023-10-10', true, true, false),  -- Usuario 1 ve "Sin Novedades en el Frente"
+       (1, 6, '2023-10-15','2023-10-10', true, true, false), -- Usuario 1 ve "El Origen"
+       (1, 7, '2023-10-16','2023-10-09', true, true, false),  -- Usuario 1 ve "El Caballero de la Noche"
+       (6, 1, '2020-07-17','2024-05-10', true, true, false),
+       (6, 2, '2023-10-01','2024-03-29', true, true, false),
+       (6, 3, '2024-03-1','2024-10-21', false, true, false),
+       (6, 4, '2024-04-18','2023-11-22', false, false, true),
+       (6, 5, '2024-01-22','2023-12-04', true, true, false),
+       (6, 6, null ,'2023-01-10', true, true, false),
+       (6, 7, '2023-01-14', null, true, true, false);
 
 -- Inserts Comentarios
 INSERT INTO Comentario (id, descripcion, likes, valoracion, idMovie, idUsuario)

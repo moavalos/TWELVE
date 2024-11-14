@@ -3,6 +3,7 @@ package org.twelve.dominio;
 import org.twelve.dominio.entities.Movie;
 import org.twelve.presentacion.dto.MovieDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
+import org.twelve.presentacion.dto.UsuarioMovieDTO;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -29,5 +30,13 @@ public interface UsuarioService {
     long obtenerCantidadDeLikes(MovieDTO movieDTO);
 
     List<Movie> obtenerPeliculasFavoritas(Integer usuarioId);
+
+    List<UsuarioMovieDTO> obtenerHistorialDePeliculasVistas(Integer usuarioId);
+
+    boolean estaEnListaVerMasTarde(PerfilDTO usuarioDTO, MovieDTO movieDTO);
+
+    void agregarEnVerMasTarde(PerfilDTO usuarioDTO, MovieDTO movieDTO);
+
+    List<UsuarioMovieDTO> obtenerListaVerMasTarde(Integer usuarioId);
 
 }

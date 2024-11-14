@@ -20,16 +20,41 @@ public class UsuarioMovieDTO {
 
     private LocalDate fechaLike;
 
+    private Double valoracion;
+
+    private Boolean vistaPorUsuario = Boolean.FALSE;
+
+    private Boolean esVerMasTarde = Boolean.FALSE;
+
     public UsuarioMovieDTO() {
     }
 
-    public UsuarioMovieDTO(Integer id, Usuario usuario, Movie pelicula, LocalDate fechaVista, Boolean esLike, LocalDate fechaLike) {
+    public UsuarioMovieDTO(Integer id, Usuario usuario, Movie pelicula, LocalDate fechaVista, Boolean esLike, LocalDate fechaLike, Double valoracion, Boolean vistaPorUsuario, Boolean esVerMasTarde) {
         this.id = id;
         this.usuario = usuario;
         this.pelicula = pelicula;
         this.fechaVista = fechaVista;
         this.esLike = esLike;
         this.fechaLike = fechaLike;
+        this.valoracion = valoracion;
+        this.vistaPorUsuario = vistaPorUsuario;
+        this.esVerMasTarde = esVerMasTarde;
+    }
+
+    public Boolean getEsVerMasTarde() {
+        return esVerMasTarde;
+    }
+
+    public void setEsVerMasTarde(Boolean esVerMasTarde) {
+        this.esVerMasTarde = esVerMasTarde;
+    }
+
+    public Boolean getVistaPorUsuario() {
+        return vistaPorUsuario;
+    }
+
+    public void setVistaPorUsuario(Boolean vistaPorUsuario) {
+        this.vistaPorUsuario = vistaPorUsuario;
     }
 
     public Boolean getEsLike() {
@@ -80,6 +105,14 @@ public class UsuarioMovieDTO {
         return fechaLike;
     }
 
+    public Double getValoracion() {
+        return valoracion;
+    }
+
+    public void setValoracion(Double valoracion) {
+        this.valoracion = valoracion;
+    }
+
     public static UsuarioMovie dtoToEntity(UsuarioMovieDTO usuarioMovieDto) {
         UsuarioMovie usuarioMovieEntity = new UsuarioMovie();
         usuarioMovieEntity.setId(usuarioMovieDto.getId());
@@ -88,6 +121,9 @@ public class UsuarioMovieDTO {
         usuarioMovieEntity.setFechaVista(usuarioMovieDto.getFechaVista());
         usuarioMovieEntity.setFechaLike(usuarioMovieDto.getFechaLike());
         usuarioMovieEntity.setEsLike(usuarioMovieDto.getEsLike());
+        usuarioMovieEntity.setVistaPorUsuario(usuarioMovieDto.getVistaPorUsuario());
+        usuarioMovieEntity.setEsVerMasTarde(usuarioMovieDto.getEsVerMasTarde());
+
         return usuarioMovieEntity;
     }
 
@@ -99,6 +135,14 @@ public class UsuarioMovieDTO {
         usuarioMovieDTO.setFechaVista(usuarioMovie.getFechaVista());
         usuarioMovieDTO.setFechaLike(usuarioMovie.getFechaLike());
         usuarioMovieDTO.setEsLike(usuarioMovie.getEsLike());
+        usuarioMovieDTO.setVistaPorUsuario(usuarioMovie.getVistaPorUsuario());
+        usuarioMovieDTO.setEsVerMasTarde(usuarioMovie.getEsVerMasTarde());
+
+        if (usuarioMovie.getPelicula() != null)
+            usuarioMovieDTO.setValoracion(usuarioMovie.getPelicula().getValoracion());
+        else
+            usuarioMovieDTO.setValoracion(null);
+
         return usuarioMovieDTO;
     }
 }

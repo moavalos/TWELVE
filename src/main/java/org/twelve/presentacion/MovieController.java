@@ -88,6 +88,7 @@ public class MovieController {
         List<MovieDTO> similarMovies = movieService.getSimilarMovies(id);
         PerfilDTO usuario = usuarioService.buscarPorId(usuarioLogueadoId);
         boolean haDadoLike = usuarioService.haDadoLike(usuario, movie);
+        boolean enListaVerMasTarde = usuarioService.estaEnListaVerMasTarde(usuario, movie);
 
         //modelo
         ModelMap modelo = new ModelMap();
@@ -97,6 +98,7 @@ public class MovieController {
         modelo.put("peliculasSimilares", similarMovies);
         modelo.put("usuario", usuario);
         modelo.put("haDadoLike", haDadoLike);
+        modelo.put("enListaVerMasTarde", enListaVerMasTarde);
 
         return new ModelAndView("detalle-pelicula", modelo);
     }
@@ -207,5 +209,24 @@ public class MovieController {
         modelo.addAttribute("nombrePais", nombrePais);
         return new ModelAndView("movies-pais", modelo);
     }
+
+    @RequestMapping(path = "/movie/{id}/verMasTarde", method = RequestMethod.POST)
+    public String verMasTarde(@PathVariable("id") Integer id, HttpServletRequest request) {
+        Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
+
+        if (usuarioLogueadoId == null) {
+            return "redirect:/login";
+        }
+
+        MovieDTO movie = movieService.getById(id);
+        PerfilDTO usuario = usuarioService.buscarPorId(usuarioLogueadoId);
+
+        if (usuario != null && movie != null) {
+            usuarioService.agregarEnVerMasTarde(usuario, movie);
+        }
+
+        return "redirect:/detalle-pelicula/" + id;
+    }
+
 
 }

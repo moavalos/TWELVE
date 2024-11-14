@@ -54,17 +54,13 @@
 
     <nav class="menu mt-5">
         <ul class="nav nav-tabs justify-content-center">
-            <li class="nav-item"><a href="#perfil" class="nav-link">Perfil</a></li>
             <li class="nav-item"><a href="#actividad" class="nav-link">Actividad</a></li>
-            <li class="nav-item"><a href="#peliculas" class="nav-link">Películas</a></li>
-            <li class="nav-item"><a href="#historial" class="nav-link">Historial</a></li>
+            <li class="nav-item"><a th:href="@{/historial}" class="nav-link">Historial</a></li>
             <li class="nav-item"><a href="#reseñas" class="nav-link">Reseñas</a></li>
-            <li class="nav-item"><a href="#watchlist" class="nav-link">Watchlist</a></li>
+            <li class="nav-item"><a th:href="@{/verMasTarde}" class="nav-link">Ver Más Tarde</a></li>
             <li class="nav-item"><a href="#listas" class="nav-link">Listas</a></li>
             <li class="nav-item"><a th:href="@{/favoritos}" class="nav-link">Favoritos</a></li>
-            <li class="nav-item"><a href="#tags" class="nav-link">Tags</a></li>
             <li class="nav-item"><a href="#amigos" class="nav-link">Amigos</a></li>
-            <li class="nav-item"><a href="#invitaciones" class="nav-link">Invitaciones</a></li>
         </ul>
     </nav>
 </section>
@@ -96,18 +92,70 @@
                 </div>
             </div>
         </div>
+        <div class="text-center mt-3">
+            <a th:href="@{/favoritos}" class="btn btn-outline-primary rounded-pill">Ver Más</a>
+        </div>
     </div>
 
-    <!-- Watchlist -->
+    <!-- Lista Ver Más Tarde -->
     <div class="watchlist mb-5">
-        <h2 class="text-center text-primary">Watchlist</h2>
-        <div class="movies-grid d-flex justify-content-start flex-wrap">
-            <div th:each="pelicula : ${watchlist}" class="movie text-center mx-2 mb-4">
-                <img th:src="@{'/images/' + ${pelicula.imagen}}" alt="Película" class="img-fluid rounded shadow">
+        <h2 class="text-center mb-4 text-primary">Ver Más Tarde</h2>
+
+        <div class="d-flex justify-content-center">
+            <div th:if="${verMasTarde.isEmpty() && esPerfilPropio}"
+                 class="no-watchlist-message d-flex align-items-center justify-content-center bg-secondary text-white rounded w-100 shadow"
+                 style="height: 200px;">
+                <p class="text-center m-0 fs-5">No tienes películas en tu lista de Ver Más Tarde</p>
             </div>
-            <div class="movie add-more mt-3">
-                <a href="#" class="btn btn-outline-primary rounded-pill">Ver todas</a>
+            <div th:if="${verMasTarde.isEmpty() && !esPerfilPropio}"
+                 class="no-watchlist-message d-flex align-items-center justify-content-center bg-secondary text-white rounded w-100 shadow"
+                 style="height: 200px;">
+                <p class="text-center m-0 fs-5" th:text="${usuario.nombre} + ' no tiene películas en su lista de Ver Más Tarde.'"></p>
             </div>
+
+            <div class="movies-grid d-flex justify-content-start flex-wrap w-100" th:unless="${verMasTarde.isEmpty()}">
+                <div th:each="pelicula : ${verMasTarde}" class="movie text-center mx-2 mb-4">
+                    <a th:href="@{/detalle-pelicula/{id}(id=${pelicula.pelicula.id})}" class="no-link">
+                        <img th:src="@{'/images/' + ${pelicula.pelicula.imagen}}" th:alt="${pelicula.pelicula.nombre}"
+                             class="img-fluid rounded shadow mb-2" style="width: 150px; height: auto;">
+                    </a>
+                    <p th:text="${pelicula.pelicula.nombre}" class="fw-bold text-dark">Nombre de la película</p>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-3">
+            <a th:href="@{/verMasTarde}" class="btn btn-outline-primary rounded-pill">Ver Más</a>
+        </div>
+    </div>
+
+    <!-- historial -->
+    <div class="favorite-movies mb-5">
+        <h2 class="text-center mb-4 text-primary">Historial</h2>
+
+        <div class="d-flex justify-content-center">
+            <div th:if="${historial.isEmpty() && esPerfilPropio}"
+                 class="no-favorites-message d-flex align-items-center justify-content-center bg-secondary text-white rounded w-100 shadow"
+                 style="height: 200px;">
+                <p class="text-center m-0 fs-5">No tienes actividad todavia</p>
+            </div>
+            <div th:if="${historial.isEmpty() && !esPerfilPropio}"
+                 class="no-favorites-message d-flex align-items-center justify-content-center bg-secondary text-white rounded w-100 shadow"
+                 style="height: 200px;">
+                <p class="text-center m-0 fs-5" th:text="${usuario.nombre} + ' no tiene actividad todavia.'"></p>
+            </div>
+
+            <div class="movies-grid d-flex justify-content-start flex-wrap w-100" th:unless="${historial.isEmpty()}">
+                <div th:each="pelicula : ${peliculasFavoritas}" class="movie text-center mx-2 mb-4">
+                    <a th:href="@{/detalle-pelicula/{id}(id=${pelicula.id})}" class="no-link">
+                        <img th:src="@{'/images/' + ${pelicula.imagen}}" th:alt="${pelicula.nombre}"
+                             class="img-fluid rounded shadow mb-2">
+                    </a>
+                    <p th:text="${pelicula.nombre}" class="fw-bold text-dark">Nombre de la película</p>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-3">
+            <a th:href="@{/historial}" class="btn btn-outline-primary rounded-pill">Ver Más</a>
         </div>
     </div>
 

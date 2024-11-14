@@ -10,8 +10,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.twelve.dominio.ComentarioService;
 import org.twelve.dominio.UsuarioService;
 import org.twelve.dominio.entities.Movie;
+import org.twelve.dominio.entities.UsuarioMovie;
 import org.twelve.presentacion.dto.ComentarioDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
+import org.twelve.presentacion.dto.UsuarioMovieDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -54,6 +56,9 @@ public class UsuarioController {
         Boolean estaSiguiendo = usuarioService.estaSiguiendo(usuarioLogueadoId, id);
         String seguirODejarUrl = estaSiguiendo ? "/dejarDeSeguir/" + id : "/seguir/" + id;
 
+        List<UsuarioMovieDTO> historial = usuarioService.obtenerHistorialDePeliculasVistas(usuario.getId());
+        List<UsuarioMovieDTO> verMasTarde = usuarioService.obtenerListaVerMasTarde(usuario.getId());
+
         //agrego comentarios
         List<ComentarioDTO> comentariosRecientes = comentarioService.obtenerUltimosTresComentarios(id);
 
@@ -63,6 +68,8 @@ public class UsuarioController {
         model.put("cantidadPeliculasVistas", usuario.getCantidadPeliculasVistas());
         model.put("cantidadPeliculasVistasEsteAno", usuario.getCantidadPeliculasVistasEsteAno());
         model.put("peliculasFavoritas", usuario.getPeliculasFavoritas());
+        model.put("historial", historial);
+        model.put("verMasTarde", verMasTarde);
         model.put("seguidores", usuario.getSeguidores());
         model.put("siguiendo", usuario.getSeguidos());
         model.put("esPerfilPropio", esPerfilPropio);
@@ -109,6 +116,40 @@ public class UsuarioController {
         model.put("peliculasFavoritas", peliculasFavoritas != null ? peliculasFavoritas : Collections.emptyList());
 
         return new ModelAndView("favoritos", model);
+    }
+
+    @RequestMapping(path = "/historial", method = RequestMethod.GET)
+    public ModelAndView verHistorial(HttpServletRequest request) {
+        Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
+
+        if (usuarioLogueadoId == null) {
+            return new ModelAndView("redirect:/login");
+        }
+
+        PerfilDTO usuario = usuarioService.buscarPorId(usuarioLogueadoId);
+        List<UsuarioMovieDTO> historial = usuarioService.obtenerHistorialDePeliculasVistas(usuario.getId());
+
+        ModelMap model = new ModelMap();
+        model.put("historial", historial);
+
+        return new ModelAndView("historial", model);
+    }
+
+    @RequestMapping(path = "/verMasTarde", method = RequestMethod.GET)
+    public ModelAndView verMasTarde(HttpServletRequest request) {
+        Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
+
+        if (usuarioLogueadoId == null) {
+            return new ModelAndView("redirect:/login");
+        }
+
+        PerfilDTO usuario = usuarioService.buscarPorId(usuarioLogueadoId);
+        List<UsuarioMovieDTO> verMasTarde = usuarioService.obtenerListaVerMasTarde(usuario.getId());
+
+        ModelMap model = new ModelMap();
+        model.put("verMasTarde", verMasTarde);
+
+        return new ModelAndView("verMasTarde", model);
     }
 
 }
