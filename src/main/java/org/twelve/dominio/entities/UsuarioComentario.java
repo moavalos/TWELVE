@@ -6,15 +6,15 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @EqualsAndHashCode
-@Table(name = "Comentario")
-public class Comentario {
+@Table(name = "UsuarioComentario")
+public class UsuarioComentario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,22 +22,12 @@ public class Comentario {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "idMovie", nullable = false)
-    private Movie movie;
-
-    @ManyToOne
     @JoinColumn(name = "idUsuario", nullable = false)
     private Usuario usuario;
 
-    @Column(length = 800)
-    private String descripcion;
+    @ManyToOne
+    @JoinColumn(name = "idComentario", nullable = false)
+    private Comentario comentario;
 
-    private Integer likes;
-
-    @Column(length = 5)
-    private Double valoracion;
-
-    @OneToMany(mappedBy = "comentario", cascade = CascadeType.ALL)
-    private List<UsuarioComentario> usuariosQueDieronLike;
-
+    private Boolean esLike = Boolean.FALSE;
 }

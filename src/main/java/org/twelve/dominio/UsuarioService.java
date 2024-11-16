@@ -1,6 +1,7 @@
 package org.twelve.dominio;
 
 import org.twelve.dominio.entities.Movie;
+import org.twelve.presentacion.dto.ComentarioDTO;
 import org.twelve.presentacion.dto.MovieDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
 import org.twelve.presentacion.dto.UsuarioMovieDTO;
@@ -38,5 +39,13 @@ public interface UsuarioService {
     void agregarEnVerMasTarde(PerfilDTO usuarioDTO, MovieDTO movieDTO);
 
     List<UsuarioMovieDTO> obtenerListaVerMasTarde(Integer usuarioId);
+
+    //like comentario
+
+    void darMegustaComentario(PerfilDTO usuarioDTO, ComentarioDTO comentarioDTO);
+
+    boolean usuarioYaDioLikeComentario(PerfilDTO usuarioDTO, ComentarioDTO comentarioDTO);
+
+    long obtenerCantidadDeLikesComentario(ComentarioDTO comentarioDTO);
 
 }

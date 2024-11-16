@@ -30,6 +30,12 @@ public class ComentarioServiceImpl implements ComentarioService {
     }
 
     @Override
+    public ComentarioDTO buscarPorId(Integer id) {
+        Comentario comentario = comentarioRepository.findById(id);
+        return ComentarioDTO.convertToDTO(comentario);
+    }
+
+    @Override
     public List<ComentarioDTO> obtenerComentariosPorPelicula(Integer idMovie) {
         List<Comentario> comentarios = comentarioRepository.findByIdMovie(idMovie);
 

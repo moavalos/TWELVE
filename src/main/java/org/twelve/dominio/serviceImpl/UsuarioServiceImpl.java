@@ -2,14 +2,9 @@ package org.twelve.dominio.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.twelve.dominio.MovieRepository;
-import org.twelve.dominio.RepositorioUsuario;
-import org.twelve.dominio.UsuarioMovieRepository;
-import org.twelve.dominio.UsuarioService;
-import org.twelve.dominio.entities.Movie;
-import org.twelve.dominio.entities.Seguidor;
-import org.twelve.dominio.entities.Usuario;
-import org.twelve.dominio.entities.UsuarioMovie;
+import org.twelve.dominio.*;
+import org.twelve.dominio.entities.*;
+import org.twelve.presentacion.dto.ComentarioDTO;
 import org.twelve.presentacion.dto.MovieDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
 import org.twelve.presentacion.dto.UsuarioMovieDTO;
@@ -31,12 +26,18 @@ public class UsuarioServiceImpl implements UsuarioService {
     private final RepositorioUsuario repositorioUsuario;
     private final UsuarioMovieRepository usuarioMovieRepository;
     private final MovieRepository movieRepository;
+    private final UsuarioComentarioRepository usuarioComentarioRepository;
+    private final ComentarioRepository comentarioRepository;
 
     @Autowired
-    public UsuarioServiceImpl(RepositorioUsuario repositorioUsuario, UsuarioMovieRepository usuarioMovieRepository, MovieRepository movieRepository) {
+    public UsuarioServiceImpl(RepositorioUsuario repositorioUsuario, UsuarioMovieRepository usuarioMovieRepository,
+                              MovieRepository movieRepository,
+                              UsuarioComentarioRepository usuarioComentarioRepository, ComentarioRepository comentarioRepository) {
         this.repositorioUsuario = repositorioUsuario;
         this.usuarioMovieRepository = usuarioMovieRepository;
         this.movieRepository = movieRepository;
+        this.usuarioComentarioRepository = usuarioComentarioRepository;
+        this.comentarioRepository = comentarioRepository;
     }
 
     @Override
@@ -252,5 +253,63 @@ public class UsuarioServiceImpl implements UsuarioService {
                 .map(UsuarioMovieDTO::convertToDTO)
                 .collect(Collectors.toList());
     }
+
+
+    ////////////////////parte like comentario
+
+    @Override
+    public void darMegustaComentario(PerfilDTO usuarioDTO, ComentarioDTO comentarioDTO) {
+        if (usuarioDTO == null || comentarioDTO == null) {
+            throw new IllegalArgumentException("Usuario o comentario no puede ser nulo");
+        }
+
+        Usuario usuario = convertToEntity(usuarioDTO);
+        Comentario comentarioExistente = comentarioRepository.findById(comentarioDTO.getId());
+
+        if (comentarioExistente == null) {
+            throw new IllegalArgumentException("Comentario no encontrado");
+        }
+
+        Optional<UsuarioComentario> like = usuarioComentarioRepository.buscarMeGustaPorUsuario(usuario, comentarioExistente);
+        if (like.isPresent()) {
+            usuarioComentarioRepository.borrarMeGusta(like.get());
+            comentarioExistente.setLikes(comentarioExistente.getLikes() - 1);
+        } else {
+            UsuarioComentario nuevoLike = new UsuarioComentario();
+            nuevoLike.setUsuario(usuario);
+            nuevoLike.setComentario(comentarioExistente);
+            nuevoLike.setEsLike(Boolean.TRUE);
+            usuarioComentarioRepository.guardar(nuevoLike);
+            comentarioExistente.setLikes(comentarioExistente.getLikes() + 1);
+        }
+
+        comentarioRepository.actualizar(comentarioExistente);
+    }
+
+    @Override
+    public boolean usuarioYaDioLikeComentario(PerfilDTO usuarioDTO, ComentarioDTO comentarioDTO) {
+        if (usuarioDTO == null || comentarioDTO == null)
+            throw new IllegalArgumentException("Usuario o comentario no pueden ser nulos");
+
+        if (usuarioDTO.getId() < 0 || comentarioDTO.getId() < 0)
+            throw new IllegalArgumentException("ID de usuario o comentario no pueden ser negativos");
+
+        Usuario usuario = convertToEntity(usuarioDTO);
+        Comentario comentario = ComentarioDTO.convertToEntity(comentarioDTO);
+        return usuarioComentarioRepository.buscarMeGustaPorUsuario(usuario, comentario).isPresent();
+    }
+
+    public long obtenerCantidadDeLikesComentario(ComentarioDTO comentarioDTO) {
+        if (comentarioDTO == null)
+            throw new IllegalArgumentException("ComentarioDTO no puede ser nulo");
+
+        if (comentarioDTO.getId() < 0)
+            throw new IllegalArgumentException("ID de película no puede ser negativo");
+
+        Comentario comentario = ComentarioDTO.convertToEntity(comentarioDTO);
+        return this.usuarioComentarioRepository.obtenerCantidadDelikes(comentario);
+    }
+
+
 }
 

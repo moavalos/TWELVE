@@ -3,13 +3,10 @@ package org.twelve.servicesImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.twelve.dominio.MovieRepository;
-import org.twelve.dominio.RepositorioUsuario;
-import org.twelve.dominio.UsuarioMovieRepository;
-import org.twelve.dominio.entities.Movie;
-import org.twelve.dominio.entities.Usuario;
-import org.twelve.dominio.entities.UsuarioMovie;
+import org.twelve.dominio.*;
+import org.twelve.dominio.entities.*;
 import org.twelve.dominio.serviceImpl.UsuarioServiceImpl;
+import org.twelve.presentacion.dto.ComentarioDTO;
 import org.twelve.presentacion.dto.MovieDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
 import org.twelve.presentacion.dto.UsuarioMovieDTO;
@@ -33,6 +30,8 @@ public class UsuarioServiceImplTest {
     private RepositorioUsuario repositorioUsuario;
     private UsuarioMovieRepository usuarioMovieRepository;
     private MovieRepository movieRepository;
+    private UsuarioComentarioRepository usuarioComentarioRepository;
+    private ComentarioRepository comentarioRepository;
 
     @BeforeEach
     public void init() {
@@ -43,7 +42,10 @@ public class UsuarioServiceImplTest {
         repositorioUsuario = mock(RepositorioUsuario.class);
         usuarioMovieRepository = mock(UsuarioMovieRepository.class);
         movieRepository = mock(MovieRepository.class);
-        usuarioServiceImpl = new UsuarioServiceImpl(repositorioUsuario, usuarioMovieRepository, movieRepository);
+        usuarioComentarioRepository = mock(UsuarioComentarioRepository.class);
+        comentarioRepository = mock(ComentarioRepository.class);
+        usuarioServiceImpl = new UsuarioServiceImpl(repositorioUsuario, usuarioMovieRepository,
+                movieRepository, usuarioComentarioRepository, comentarioRepository);
     }
 
     @Test
@@ -751,5 +753,253 @@ public class UsuarioServiceImplTest {
         assertEquals("El ID de usuario no puede ser nulo", exception.getMessage());
         verify(usuarioMovieRepository, never()).obtenerPeliculasVerMasTarde(any());
     }
+
+    //test comentario
+    /////////////////test de likes comentario
+
+    @Test
+    public void testDarMeGustaComentarioExitoso() {
+        //preparacion
+        PerfilDTO usuarioQueHizoElComentarioDTO = new PerfilDTO();
+        usuarioQueHizoElComentarioDTO.setId(1);
+        usuarioQueHizoElComentarioDTO.setUsername("pedro");
+
+        ComentarioDTO comentarioDTO = new ComentarioDTO();
+        comentarioDTO.setId(1);
+        comentarioDTO.setIdUsuario(1);
+        comentarioDTO.setIdMovie(2);
+        comentarioDTO.setDescripcion("Buen comentario");
+        comentarioDTO.setValoracion(5.0);
+
+        Comentario comentarioExistente = new Comentario();
+        comentarioExistente.setId(1);
+        comentarioExistente.setDescripcion("Buen comentario");
+        comentarioExistente.setValoracion(5.0);
+        comentarioExistente.setLikes(0);
+
+        //usuario q da like
+        PerfilDTO usuarioQueDaLikeDTO = new PerfilDTO();
+        usuarioQueDaLikeDTO.setId(2); // Asegúrate de que el ID del usuario que da like sea diferente
+        usuarioQueDaLikeDTO.setUsername("juan");
+
+        when(comentarioRepository.findById(1)).thenReturn(comentarioExistente);
+        when(usuarioComentarioRepository.buscarMeGustaPorUsuario(any(), any())).thenReturn(Optional.empty());
+
+        //ejecucion
+        usuarioServiceImpl.darMegustaComentario(usuarioQueDaLikeDTO, comentarioDTO);
+
+        //validacion
+        verify(usuarioComentarioRepository).guardar(any(UsuarioComentario.class));
+        verify(comentarioRepository).actualizar(argThat(comentario ->
+                comentario.getId() == 1 && comentario.getLikes() == 1
+        ));
+    }
+
+
+    @Test
+    public void testQuitarMeGustaComentarioExitoso() {
+        //preparacion
+        PerfilDTO usuarioQueHizoElComentarioDTO = new PerfilDTO();
+        usuarioQueHizoElComentarioDTO.setId(1);
+        usuarioQueHizoElComentarioDTO.setUsername("pedro");
+
+        ComentarioDTO comentarioDTO = new ComentarioDTO();
+        comentarioDTO.setId(1);
+        comentarioDTO.setIdUsuario(1);
+        comentarioDTO.setIdMovie(2);
+        comentarioDTO.setDescripcion("Buen comentario");
+        comentarioDTO.setValoracion(5.0);
+
+        Comentario comentarioExistente = new Comentario();
+        comentarioExistente.setId(1);
+        comentarioExistente.setDescripcion("Buen comentario");
+        comentarioExistente.setValoracion(5.0);
+        comentarioExistente.setLikes(1);
+
+        //usuario q quita like
+        PerfilDTO usuarioQueQuitaLikeDTO = new PerfilDTO();
+        usuarioQueQuitaLikeDTO.setId(2);
+        usuarioQueQuitaLikeDTO.setUsername("juan");
+
+        UsuarioComentario usuarioComentario = new UsuarioComentario();
+        usuarioComentario.setUsuario(convertToEntity(usuarioQueQuitaLikeDTO));
+        usuarioComentario.setComentario(comentarioExistente);
+        usuarioComentario.setEsLike(Boolean.TRUE);
+
+        when(comentarioRepository.findById(1)).thenReturn(comentarioExistente);
+        when(usuarioComentarioRepository.buscarMeGustaPorUsuario(any(), any())).thenReturn(Optional.of(usuarioComentario));
+
+        //ejecucion
+        usuarioServiceImpl.darMegustaComentario(usuarioQueQuitaLikeDTO, comentarioDTO);
+
+        //validacion
+        verify(usuarioComentarioRepository).borrarMeGusta(usuarioComentario);
+        verify(comentarioRepository).actualizar(argThat(comentario ->
+                comentario.getId() == 1 && comentario.getLikes() == 0
+        ));
+    }
+
+    @Test
+    public void testDarMegustaComentarioConUsuarioNuloDeberiaLanzarExcepcion() {
+        PerfilDTO usuarioDTO = null;
+        ComentarioDTO comentarioDTO = new ComentarioDTO();
+        comentarioDTO.setId(1);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.darMegustaComentario(usuarioDTO, comentarioDTO);
+        });
+
+        assertEquals("Usuario o comentario no puede ser nulo", exception.getMessage());
+    }
+
+    @Test
+    public void testDarMegustaComentarioConComentarioNuloDeberiaLanzarExcepcion() {
+        PerfilDTO usuarioDTO = new PerfilDTO();
+        usuarioDTO.setId(1);
+        ComentarioDTO comentarioDTO = null;
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.darMegustaComentario(usuarioDTO, comentarioDTO);
+        });
+
+        assertEquals("Usuario o comentario no puede ser nulo", exception.getMessage());
+    }
+
+    @Test
+    public void testDarMegustaComentarioComentarioNoEncontradoDeberiaLanzarExcepcion() {
+        PerfilDTO usuarioDTO = new PerfilDTO();
+        usuarioDTO.setId(1);
+        ComentarioDTO comentarioDTO = new ComentarioDTO();
+        comentarioDTO.setId(1);
+
+        when(comentarioRepository.findById(comentarioDTO.getId())).thenReturn(null);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.darMegustaComentario(usuarioDTO, comentarioDTO);
+        });
+
+        assertEquals("Comentario no encontrado", exception.getMessage());
+    }
+
+
+    @Test
+    public void testHaDadoLikeAComentarioCuandoUsuarioHaDadoLikeDeberiaRetornarTrue() {
+        PerfilDTO usuarioQueComentaDTO = new PerfilDTO();
+        usuarioQueComentaDTO.setId(1);
+        usuarioQueComentaDTO.setUsername("agusmd");
+        MovieDTO movieDTO = new MovieDTO();
+        movieDTO.setId(10);
+
+        ComentarioDTO comentarioDTO = new ComentarioDTO();
+        comentarioDTO.setId(1);
+        comentarioDTO.setIdUsuario(usuarioQueComentaDTO.getId());
+        comentarioDTO.setIdMovie(movieDTO.getId());
+        comentarioDTO.setUsuario(usuarioQueComentaDTO);
+
+        PerfilDTO usuarioQueDaLikeDTO = new PerfilDTO();
+        usuarioQueDaLikeDTO.setId(2);
+        usuarioQueDaLikeDTO.setUsername("juan");
+
+        Comentario comentario = ComentarioDTO.convertToEntity(comentarioDTO);
+        Usuario usuario = convertToEntity(usuarioQueDaLikeDTO);
+
+
+        when(usuarioComentarioRepository.buscarMeGustaPorUsuario(usuario, comentario)).thenReturn(Optional.of(new UsuarioComentario()));
+
+        boolean resultado = usuarioServiceImpl.usuarioYaDioLikeComentario(usuarioQueDaLikeDTO, comentarioDTO);
+
+        assertTrue(resultado);
+        verify(usuarioComentarioRepository, times(1)).buscarMeGustaPorUsuario(usuario, comentario);
+    }
+
+
+    @Test
+    public void testHaDadoLikeComentarioCuandoUsuarioNoHaDadoLikeDeberiaRetornarFalse() {
+        PerfilDTO usuarioQueComentaDTO = new PerfilDTO();
+        usuarioQueComentaDTO.setId(1);
+        usuarioQueComentaDTO.setUsername("agusmd");
+        MovieDTO movieDTO = new MovieDTO();
+        movieDTO.setId(10);
+
+        ComentarioDTO comentarioDTO = new ComentarioDTO();
+        comentarioDTO.setId(1);
+        comentarioDTO.setIdUsuario(usuarioQueComentaDTO.getId());
+        comentarioDTO.setIdMovie(movieDTO.getId());
+        comentarioDTO.setUsuario(usuarioQueComentaDTO);
+
+        PerfilDTO usuarioQueDaLikeDTO = new PerfilDTO();
+        usuarioQueDaLikeDTO.setId(2);
+        usuarioQueDaLikeDTO.setUsername("juan");
+
+        Comentario comentario = ComentarioDTO.convertToEntity(comentarioDTO);
+        Usuario usuario = convertToEntity(usuarioQueDaLikeDTO);
+
+
+        when(usuarioComentarioRepository.buscarMeGustaPorUsuario(usuario, comentario)).thenReturn(Optional.empty());
+
+        boolean resultado = usuarioServiceImpl.usuarioYaDioLikeComentario(usuarioQueDaLikeDTO, comentarioDTO);
+
+        assertFalse(resultado);
+        verify(usuarioComentarioRepository, times(1)).buscarMeGustaPorUsuario(usuario, comentario);
+    }
+
+
+    @Test
+    public void testHaDadoLikeComentarioConUsuarioNuloDeberiaLanzarExcepcion() {
+        ComentarioDTO comentarioDTO = new ComentarioDTO();
+        comentarioDTO.setId(1);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.usuarioYaDioLikeComentario(null, comentarioDTO);
+        });
+    }
+
+    @Test
+    public void testHaDadoLikeComentarioConUsuarioNuloDeberiaLanzarExcepcion2() {
+        ComentarioDTO comentarioDTO = new ComentarioDTO();
+        comentarioDTO.setId(1);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.usuarioYaDioLikeComentario(null, comentarioDTO);
+        });
+        assertEquals("Usuario o comentario no pueden ser nulos", exception.getMessage());
+    }
+
+    @Test
+    public void testObtenerCantidadDeLikesComentarioComentarioNuloDeberiaLanzarExcepcion() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.obtenerCantidadDeLikesComentario(null);
+        });
+    }
+
+    @Test
+    public void testObtenerCantidadDeLikesComentarioComentarioConIdNegativoDeberiaLanzarExcepcion() {
+        //preparacion
+        ComentarioDTO comentarioDTO = new ComentarioDTO();
+        comentarioDTO.setId(-1);
+        //validacion y ejecucion
+        assertThrows(IllegalArgumentException.class, () -> {
+            usuarioServiceImpl.obtenerCantidadDeLikesComentario(comentarioDTO);
+        });
+    }
+
+    @Test
+    public void testObtenerCantidadDeLikesComentarioComentarioValidoDeberiaRetornarCantidadDeLikes() {
+        //preparacion
+        ComentarioDTO comentarioDTO = new ComentarioDTO();
+        comentarioDTO.setId(1);
+
+        long likesEsperados = 5;
+        Comentario comentario = ComentarioDTO.convertToEntity(comentarioDTO);
+        when(usuarioComentarioRepository.obtenerCantidadDelikes(comentario)).thenReturn(likesEsperados);
+
+        //ejecucion
+        long actualLikes = usuarioServiceImpl.obtenerCantidadDeLikesComentario(comentarioDTO);
+        assertEquals(likesEsperados, actualLikes);
+
+        // validacion
+        verify(usuarioComentarioRepository, times(1)).obtenerCantidadDelikes(comentario);
+    }
+
 
 }

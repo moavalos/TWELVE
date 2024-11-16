@@ -48,4 +48,8 @@ public class Usuario {
     @OneToMany(mappedBy = "seguido", cascade = CascadeType.ALL)
     private List<Seguidor> seguidos;
 
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<UsuarioComentario> likesEnComentarios;
+
+
 }

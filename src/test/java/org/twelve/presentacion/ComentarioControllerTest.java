@@ -3,6 +3,7 @@ package org.twelve.presentacion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.twelve.dominio.ComentarioService;
+import org.twelve.dominio.UsuarioService;
 import org.twelve.dominio.entities.Comentario;
 import org.twelve.presentacion.dto.ComentarioDTO;
 
@@ -19,6 +20,7 @@ public class ComentarioControllerTest {
     private ComentarioService comentarioService;
     private HttpServletRequest requestMock;
     private HttpSession sessionMock;
+    private UsuarioService usuarioService;
 
     @BeforeEach
     public void init() {
@@ -26,7 +28,9 @@ public class ComentarioControllerTest {
         comentarioService = mock(ComentarioService.class);
         requestMock = mock(HttpServletRequest.class);
         sessionMock = mock(HttpSession.class);
-        comentarioController = new ComentarioController(comentarioService);
+        usuarioService = mock(UsuarioService.class);
+
+        comentarioController = new ComentarioController(comentarioService, usuarioService);
     }
 
     @Test

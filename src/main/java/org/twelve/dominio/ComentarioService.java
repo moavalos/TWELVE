@@ -9,6 +9,8 @@ import java.util.List;
 @Transactional
 public interface ComentarioService {
 
+    ComentarioDTO buscarPorId(Integer id);
+
     void agregarComentario(ComentarioDTO comentarioDTO);
 
     List<ComentarioDTO> obtenerComentariosPorPelicula(Integer idMovie);

@@ -23,6 +23,14 @@ public class ComentarioRepositoryImpl implements ComentarioRepository {
     }
 
     @Override
+    public Comentario findById(Integer id) {
+        String hql = "FROM Comentario WHERE id = :id";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("id", id);
+        return (Comentario) query.getSingleResult();
+    }
+
+    @Override
     public List findByIdMovie(Integer idMovie) {
         String hql = "FROM Comentario c WHERE c.movie.id = :idMovie";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
@@ -43,6 +51,13 @@ public class ComentarioRepositoryImpl implements ComentarioRepository {
     @Override
     public void save(Comentario comentario) {
         sessionFactory.getCurrentSession().save(comentario);
+    }
+
+    @Override
+    public Comentario actualizar(Comentario comentario) {
+        Comentario comentarioActualizar = findById(comentario.getId());
+        sessionFactory.getCurrentSession().update(comentarioActualizar);
+        return comentario;
     }
 
 }
