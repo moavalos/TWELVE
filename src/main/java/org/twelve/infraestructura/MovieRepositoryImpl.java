@@ -153,6 +153,14 @@ public class MovieRepositoryImpl implements MovieRepository {
         return query.getResultList();
     }
 
+    @Override
+    public List<Movie> findUpcomingMovies() {
+        String hql = "FROM Movie WHERE fechaLanzamiento > CURRENT_DATE ORDER BY fechaLanzamiento ASC";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        return query.getResultList();
+    }
+
+
 
 }
 

@@ -141,5 +141,13 @@ public class MovieServiceImpl implements MovieService {
         );
     }
 
+
+    @Override
+    public List<MovieDTO> getUpcomingMovies() {
+        List<Movie> upcomingMovies = movieRepository.findUpcomingMovies();
+        return upcomingMovies.stream().map(MovieDTO::convertToDTO).collect(Collectors.toList());
+    }
+
+
 }
 

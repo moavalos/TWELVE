@@ -42,9 +42,12 @@ public class MovieController {
 
         List<PerfilDTO> perfiles = usuarioService.encontrarTodos();
 
+        List<MovieDTO> upcomingMovies = movieService.getUpcomingMovies();
+
         ModelMap modelo = new ModelMap();
         modelo.put("movies", topMovies);
         modelo.put("perfiles", perfiles);
+        modelo.put("upcomingMovies", upcomingMovies);
 
         return new ModelAndView("home", modelo);
     }

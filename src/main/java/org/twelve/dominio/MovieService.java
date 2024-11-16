@@ -37,4 +37,6 @@ public interface MovieService {
     List<MovieDTO> getSimilarMovies(Integer movieId);
 
     List<MovieDTO> getMoviesByPais(Integer idPais, String filter);
+
+    List<MovieDTO> getUpcomingMovies();
 }

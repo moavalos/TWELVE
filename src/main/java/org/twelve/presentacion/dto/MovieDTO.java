@@ -3,6 +3,7 @@ package org.twelve.presentacion.dto;
 import org.twelve.dominio.entities.Categoria;
 import org.twelve.dominio.entities.Movie;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,11 +27,12 @@ public class MovieDTO {
     private String escritor;
     private String idioma;
     private String tambienConocidaComo;
+    private LocalDate fechaLanzamiento;
 
     public MovieDTO() {
     }
 
-    public MovieDTO(Integer id, String nombre, String descripcion, String frase, Double duracion, PaisDTO pais, Integer cantVistas, List<CategoriaDTO> categorias, String anioLanzamiento, String imagen, Integer likes, Double valoracion, String director, String escritor, String idioma, String tambienConocidaComo) {
+    public MovieDTO(Integer id, String nombre, String descripcion, String frase, Double duracion, PaisDTO pais, Integer cantVistas, List<CategoriaDTO> categorias, String anioLanzamiento, String imagen, Integer likes, Double valoracion, String director, String escritor, String idioma, String tambienConocidaComo, LocalDate fechaLanzamiento) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -47,6 +49,7 @@ public class MovieDTO {
         this.escritor = escritor;
         this.idioma = idioma;
         this.tambienConocidaComo = tambienConocidaComo;
+        this.fechaLanzamiento = fechaLanzamiento;
     }
 
     public void setId(Integer id) {
@@ -178,6 +181,10 @@ public class MovieDTO {
         return tambienConocidaComo;
     }
 
+    public LocalDate getFechaLanzamiento() { return fechaLanzamiento; }
+
+    public void setFechaLanzamiento(LocalDate fechaLanzamiento) { this.fechaLanzamiento = fechaLanzamiento;  }
+
     public static MovieDTO convertToDTO(Movie movie) {
         List<CategoriaDTO> categoriasDTOs = new ArrayList<>();
         for (Categoria categoria : movie.getCategorias()) {
@@ -210,7 +217,8 @@ public class MovieDTO {
                 movie.getDirector(),
                 movie.getEscritor(),
                 movie.getIdioma(),
-                movie.getTambienConocidaComo()
+                movie.getTambienConocidaComo(),
+                movie.getFechaLanzamiento()
         );
     }
 
@@ -234,6 +242,7 @@ public class MovieDTO {
         movie.setEscritor(movieDTO.getEscritor());
         movie.setIdioma(movieDTO.getIdioma());
         movie.setTambienConocidaComo(movieDTO.getTambienConocidaComo());
+        movie.setFechaLanzamiento(movieDTO.getFechaLanzamiento());
 
 
         if (movieDTO.getPais() != null) {

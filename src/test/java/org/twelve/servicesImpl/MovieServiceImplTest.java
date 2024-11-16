@@ -2,6 +2,7 @@ package org.twelve.servicesImpl;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.format.datetime.joda.LocalDateParser;
 import org.twelve.dominio.MovieRepository;
 import org.twelve.dominio.entities.Categoria;
 import org.twelve.dominio.entities.Movie;
@@ -12,6 +13,7 @@ import org.twelve.presentacion.dto.PaisDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -104,7 +106,8 @@ public class MovieServiceImplTest {
                 "Lana Wachowski, Lilly Wachowski", // director
                 "Lana Wachowski, Lilly Wachowski", // escritor
                 "Inglés",                         // idioma
-                "The Matrix, Matrix"// también conocida como
+                "The Matrix, Matrix",
+                LocalDate.of(1998, 10, 12)
         );
 
         when(movieRepository.guardar(any(Movie.class))).thenReturn(movie1);
