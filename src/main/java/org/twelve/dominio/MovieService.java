@@ -39,4 +39,6 @@ public interface MovieService {
     List<MovieDTO> getMoviesByPais(Integer idPais, String filter);
 
     List<MovieDTO> getUpcomingMovies();
+
+    Boolean isMovieReleased(MovieDTO movie);
 }

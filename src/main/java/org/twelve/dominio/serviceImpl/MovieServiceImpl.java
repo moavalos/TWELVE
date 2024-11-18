@@ -8,6 +8,7 @@ import org.twelve.dominio.entities.Categoria;
 import org.twelve.dominio.entities.Movie;
 import org.twelve.presentacion.dto.MovieDTO;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
@@ -148,6 +149,11 @@ public class MovieServiceImpl implements MovieService {
         return upcomingMovies.stream().map(MovieDTO::convertToDTO).collect(Collectors.toList());
     }
 
+    @Override
+    public Boolean isMovieReleased(MovieDTO movie) {
+        LocalDate today = LocalDate.now();
+        return movie.getFechaLanzamiento().isBefore(today) || movie.getFechaLanzamiento().isEqual(today);
+    }
 
 }
 

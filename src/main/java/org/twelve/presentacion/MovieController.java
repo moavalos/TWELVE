@@ -92,6 +92,7 @@ public class MovieController {
         PerfilDTO usuario = usuarioService.buscarPorId(usuarioLogueadoId);
         boolean haDadoLike = usuarioService.haDadoLike(usuario, movie);
         boolean enListaVerMasTarde = usuarioService.estaEnListaVerMasTarde(usuario, movie);
+        boolean fueEstrenada = movieService.isMovieReleased(movie);
 
         //modelo
         ModelMap modelo = new ModelMap();
@@ -102,6 +103,8 @@ public class MovieController {
         modelo.put("usuario", usuario);
         modelo.put("haDadoLike", haDadoLike);
         modelo.put("enListaVerMasTarde", enListaVerMasTarde);
+        modelo.put("fueEstrenada", fueEstrenada);
+
 
         return new ModelAndView("detalle-pelicula", modelo);
     }

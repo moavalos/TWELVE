@@ -30,8 +30,8 @@ VALUES ('admin@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhi
 
 INSERT INTO Categoria (id, nombre)
 VALUES (1, 'SUSPENSO'),
-       (2, 'ACCION'),
-       (3, 'CIENCIA_FICCION'),
+       (2, 'ACCIÓN'),
+       (3, 'CIENCIA FICCIÓN'),
        (4, 'DRAMA'),
        (5, 'CRIMEN'),
        (6, 'COMEDIA'),
