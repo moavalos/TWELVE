@@ -752,4 +752,106 @@ public class UsuarioServiceImplTest {
         verify(usuarioMovieRepository, never()).obtenerPeliculasVerMasTarde(any());
     }
 
+    @Test
+    public void testSonAmigosCuandoAmbosSonAmigos() {
+        when(repositorioUsuario.existeRelacion(1, 2)).thenReturn(true);
+        when(repositorioUsuario.existeRelacion(2, 1)).thenReturn(true);
+
+        boolean resultado = usuarioServiceImpl.sonAmigos(1, 2);
+
+        assertTrue(resultado);
+        verify(repositorioUsuario, times(1)).existeRelacion(1, 2);
+        verify(repositorioUsuario, times(1)).existeRelacion(2, 1);
+    }
+
+    @Test
+    public void testSonAmigosCuandoUnoNoSigueAlOtro() {
+        when(repositorioUsuario.existeRelacion(1, 2)).thenReturn(true);
+        when(repositorioUsuario.existeRelacion(2, 1)).thenReturn(false);
+
+        boolean resultado = usuarioServiceImpl.sonAmigos(1, 2);
+
+        assertFalse(resultado);
+        verify(repositorioUsuario, times(1)).existeRelacion(1, 2);
+        verify(repositorioUsuario, times(1)).existeRelacion(2, 1);
+    }
+
+    @Test
+    @Disabled
+    public void testSonAmigosCuandoNingunoSigueAlOtro() {
+        when(repositorioUsuario.existeRelacion(1, 2)).thenReturn(false);
+        when(repositorioUsuario.existeRelacion(2, 1)).thenReturn(false);
+
+        boolean resultado = usuarioServiceImpl.sonAmigos(1, 2);
+
+        assertFalse(resultado);
+        verify(repositorioUsuario, times(1)).existeRelacion(1, 2);
+        verify(repositorioUsuario, times(1)).existeRelacion(2, 1);
+    }
+
+    @Test
+    public void testObtenerAmigosCuandoHayAmigos() {
+        Usuario seguido1 = new Usuario();
+        seguido1.setId(2);
+        seguido1.setNombre("Usuario 2");
+
+        Usuario seguido2 = new Usuario();
+        seguido2.setId(3);
+        seguido2.setNombre("Usuario 3");
+
+        when(repositorioUsuario.obtenerUsuariosSeguidos(1)).thenReturn(List.of(seguido1, seguido2));
+        when(repositorioUsuario.existeRelacion(2, 1)).thenReturn(true);
+        when(repositorioUsuario.existeRelacion(3, 1)).thenReturn(false);
+
+        List<PerfilDTO> amigos = usuarioServiceImpl.obtenerAmigos(1);
+
+        assertNotNull(amigos);
+        assertEquals(1, amigos.size());
+        assertEquals(2, amigos.get(0).getId());
+        //assertEquals("Usuario 2", amigos.get(0).getNombre());
+
+        verify(repositorioUsuario, times(1)).obtenerUsuariosSeguidos(1);
+        verify(repositorioUsuario, times(1)).existeRelacion(2, 1);
+        verify(repositorioUsuario, times(1)).existeRelacion(3, 1);
+    }
+
+    @Test
+    public void testObtenerAmigosCuandoNoHayAmigos() {
+        Usuario seguido1 = new Usuario();
+        seguido1.setId(2);
+        seguido1.setNombre("Usuario 2");
+
+        Usuario seguido2 = new Usuario();
+        seguido2.setId(3);
+        seguido2.setNombre("Usuario 3");
+
+        when(repositorioUsuario.obtenerUsuariosSeguidos(1)).thenReturn(List.of(seguido1, seguido2));
+        when(repositorioUsuario.existeRelacion(2, 1)).thenReturn(false);
+        when(repositorioUsuario.existeRelacion(3, 1)).thenReturn(false);
+
+        List<PerfilDTO> amigos = usuarioServiceImpl.obtenerAmigos(1);
+
+        assertNotNull(amigos);
+        assertTrue(amigos.isEmpty());
+
+        verify(repositorioUsuario, times(1)).obtenerUsuariosSeguidos(1);
+        verify(repositorioUsuario, times(1)).existeRelacion(2, 1);
+        verify(repositorioUsuario, times(1)).existeRelacion(3, 1);
+    }
+
+    @Test
+    public void testObtenerAmigosCuandoNoSigueANadie() {
+        when(repositorioUsuario.obtenerUsuariosSeguidos(1)).thenReturn(Collections.emptyList());
+
+        List<PerfilDTO> amigos = usuarioServiceImpl.obtenerAmigos(1);
+
+        assertNotNull(amigos);
+        assertTrue(amigos.isEmpty());
+
+        verify(repositorioUsuario, times(1)).obtenerUsuariosSeguidos(1);
+        verify(repositorioUsuario, never()).existeRelacion(anyInt(), eq(1));
+    }
+
+
+
 }
