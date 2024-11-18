@@ -83,25 +83,33 @@ public class MovieController {
         long likesActualizados = usuarioService.obtenerCantidadDeLikes(movie);
         movie.setLikes((int) likesActualizados);
 
-        //lista de comentarios
         List<ComentarioDTO> comentarios = comentarioService.obtenerComentariosPorPelicula(id);
         List<MovieDTO> similarMovies = movieService.getSimilarMovies(id);
         PerfilDTO usuario = usuarioService.buscarPorId(usuarioLogueadoId);
         boolean haDadoLike = usuarioService.haDadoLike(usuario, movie);
         boolean enListaVerMasTarde = usuarioService.estaEnListaVerMasTarde(usuario, movie);
 
+
+        /*
+        ESTE FOR ROMPE TODOOOO AAAAAA
+        for (ComentarioDTO comentario : comentarios) {
+            boolean usuarioYaDioLikeComentario = usuarioService.usuarioYaDioLikeComentario(usuario, comentario);
+        }
+
+         */
+
         //modelo
         ModelMap modelo = new ModelMap();
         modelo.put("movie", movie);
         modelo.put("comentarios", comentarios);
-        // modelo.put("usuario", new PerfilDTO());
-        modelo.put("peliculasSimilares", similarMovies);
         modelo.put("usuario", usuario);
+        modelo.put("peliculasSimilares", similarMovies);
         modelo.put("haDadoLike", haDadoLike);
         modelo.put("enListaVerMasTarde", enListaVerMasTarde);
 
         return new ModelAndView("detalle-pelicula", modelo);
     }
+
 
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<MovieDTO> getMovieById(@PathVariable Integer id) {

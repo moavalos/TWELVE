@@ -2,10 +2,12 @@ package org.twelve.presentacion;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 import org.twelve.dominio.ComentarioService;
 import org.twelve.dominio.UsuarioService;
 import org.twelve.presentacion.dto.ComentarioDTO;
@@ -31,21 +33,16 @@ public class ComentarioController {
         return "redirect:/detalle-pelicula/" + comentarioDTO.getIdMovie();
     }
 
-    @RequestMapping(path = "/comentario/{id}/like", method = RequestMethod.POST)
-    public String likeComentario(@PathVariable("id") Integer comentarioId, HttpServletRequest request) {
-        PerfilDTO usuarioDTO = (PerfilDTO) request.getSession().getAttribute("usuario");
-
-        if (usuarioDTO == null) {
-            return "redirect:/login";
-        }
+    @RequestMapping(path = "/comentario/{comentarioId}/like", method = RequestMethod.POST)
+    public String darLikeComentario(@PathVariable Integer comentarioId, HttpServletRequest request) {
+        Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
+        PerfilDTO usuario = usuarioService.buscarPorId(usuarioLogueadoId);
 
         ComentarioDTO comentarioDTO = comentarioService.buscarPorId(comentarioId);
-        if (comentarioDTO == null) {
-            return "redirect:/error";
-        }
-
-        usuarioService.darMegustaComentario(usuarioDTO, comentarioDTO);
+        usuarioService.darMegustaComentario(usuario, comentarioDTO);
 
         return "redirect:/detalle-pelicula/" + comentarioDTO.getIdMovie();
     }
+    
+
 }

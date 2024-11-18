@@ -44,7 +44,7 @@ public class ComentarioServiceImpl implements ComentarioService {
             Usuario usuario = comentario.getUsuario();
             Movie movie = comentario.getMovie();
 
-            return new ComentarioDTO(usuario.getId(), movie.getId(), comentario.getDescripcion(), comentario.getValoracion(), comentario.getLikes(), new PerfilDTO(usuario.getId(), usuario.getUsername()), movie.getNombre(), movie.getImagen()// para q diga el nombre de usuario
+            return new ComentarioDTO(comentario.getId(), usuario.getId(), movie.getId(), comentario.getDescripcion(), comentario.getValoracion(), comentario.getLikes(), new PerfilDTO(usuario.getId(), usuario.getUsername()), movie.getNombre(), movie.getImagen()// para q diga el nombre de usuario
             );
         }).collect(Collectors.toList());
     }
@@ -58,7 +58,7 @@ public class ComentarioServiceImpl implements ComentarioService {
             Usuario usuario = comentario.getUsuario();
             Movie movie = comentario.getMovie();
 
-            return new ComentarioDTO(usuario.getId(), movie.getId(), comentario.getDescripcion(), comentario.getValoracion(), comentario.getLikes(), new PerfilDTO(usuario.getId(), usuario.getUsername()), movie.getNombre(), movie.getImagen());
+            return new ComentarioDTO(comentario.getId(), usuario.getId(), movie.getId(), comentario.getDescripcion(), comentario.getValoracion(), comentario.getLikes(), new PerfilDTO(usuario.getId(), usuario.getUsername()), movie.getNombre(), movie.getImagen());
         }).collect(Collectors.toList());
     }
 

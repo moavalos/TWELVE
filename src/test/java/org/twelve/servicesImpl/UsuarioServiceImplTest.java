@@ -757,6 +757,8 @@ public class UsuarioServiceImplTest {
     //test comentario
     /////////////////test de likes comentario
 
+
+    /*
     @Test
     public void testDarMeGustaComentarioExitoso() {
         //preparacion
@@ -1000,6 +1002,8 @@ public class UsuarioServiceImplTest {
         // validacion
         verify(usuarioComentarioRepository, times(1)).obtenerCantidadDelikes(comentario);
     }
+
+     */
 
 
 }

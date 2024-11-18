@@ -17,8 +17,11 @@ public class ComentarioDTO {
     private String nombrePelicula;
     private String imagenPelicula;
 
-    public ComentarioDTO(Integer idUsuario, Integer idMovie, String descripcion, Double valoracion, Integer likes,
+    private boolean usuarioYaDioLike;
+
+    public ComentarioDTO(Integer id, Integer idUsuario, Integer idMovie, String descripcion, Double valoracion, Integer likes,
                          PerfilDTO usuario, String nombrePelicula, String imagenPelicula) {
+        this.id = id;
         this.idUsuario = idUsuario;
         this.idMovie = idMovie;
         this.descripcion = descripcion;
@@ -102,6 +105,14 @@ public class ComentarioDTO {
 
     public void setImagenPelicula(String imagenPelicula) {
         this.imagenPelicula = imagenPelicula;
+    }
+
+    public boolean isUsuarioYaDioLike() {
+        return usuarioYaDioLike;
+    }
+
+    public void setUsuarioYaDioLike(boolean usuarioYaDioLike) {
+        this.usuarioYaDioLike = usuarioYaDioLike;
     }
 
     public static Comentario convertToEntity(ComentarioDTO comentarioDTO) {

@@ -116,13 +116,9 @@
                                 <div th:if="${session.usuario != null}">
                                     <form th:action="@{/comentario/{comentarioId}/like(comentarioId=${comentario.id})}"
                                           method="post">
-                                        <button type="submit" class="btn"
-                                                th:classappend="${comentario.haDadoLike ? 'btn-danger' : 'btn-outline-secondary'}"
-                                                th:text="${comentario.haDadoLike ? 'Quitar Me gusta' : 'Me gusta'}">
-                                        </button>
+                                        <button type="submit"
+                                                th:text="${comentario.usuarioYaDioLike ? 'Quitar Like' : 'Dar Like'}"></button>
                                     </form>
-                                    <!-- Mostrar el ID del comentario para depuración -->
-                                    <p th:text="${comentario.id}">ID del Comentario</p>
                                 </div>
                             </div>
                         </div>
@@ -132,6 +128,7 @@
 
             <a href="#">Ver todos los comentarios</a>
         </div>
+
 
         <hr>
 
