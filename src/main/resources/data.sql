@@ -19,6 +19,10 @@ VALUES
     ('mora@gmail.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Mora', 'moras', 5, 'user para pruebas', 'USER', TRUE),
     ('morae2e@gmail.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Mora E2E', 'morae2e', 5, 'user para pruebas e2e', 'USER', TRUE);
 
+INSERT INTO Seguidor(usuario_id, seguido_id)
+VALUES
+    (6, 5),
+    (5, 6);
 
 INSERT INTO Categoria (id, nombre)
 VALUES (1, 'SUSPENSO'),

@@ -35,6 +35,7 @@ public class MovieControllerTest {
     private ComentarioService comentarioService;
     private UsuarioService usuarioService;
     private PaisService paisService;
+    private ListaColaborativaService listaColaborativaService;
 
     @BeforeEach
     public void init() {
@@ -50,7 +51,8 @@ public class MovieControllerTest {
         comentarioService = mock(ComentarioService.class);
         usuarioService = mock(UsuarioService.class);
         paisService = mock(PaisService.class);
-        movieController = new MovieController(movieService, categoriaService, comentarioService, usuarioService, paisService);
+        listaColaborativaService = mock(ListaColaborativaService.class);
+        movieController = new MovieController(movieService, categoriaService, comentarioService, usuarioService, paisService, listaColaborativaService);
     }
 
     @Test

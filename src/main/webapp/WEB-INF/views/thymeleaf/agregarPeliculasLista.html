@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <title>TWELVE</title>
+    <!-- Bootstrap core css -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+    <!--<link rel="stylesheet" th:href="@{/css/detallePelicula.css}"/>-->
+</head>
+
+<body>
+
+<div th:insert="fragments/header :: header"></div>
+
+<div class="container mt-5">
+    <h2 class="mb-4">Agregar Película a Lista Colaborativa</h2>
+    <form th:action="@{/agregarPeliculaALista}" method="POST">
+        <!-- Seleccionar Lista -->
+        <div class="mb-3">
+            <label for="lista" class="form-label">Seleccionar Lista</label>
+            <select class="form-select" id="lista" name="listaId" required>
+                <option value="" disabled selected>Seleccione una lista...</option>
+                <th:block th:each="lista : ${listas}">
+                    <option th:value="${lista.id}" th:text="${lista.nombre}"></option>
+                </th:block>
+            </select>
+        </div>
+        <!-- Seleccionar Película -->
+        <div class="mb-3">
+            <label for="pelicula" class="form-label">Seleccionar Película</label>
+            <select class="form-select" id="pelicula" name="movieId" required>
+                <option value="" disabled selected>Seleccione una película...</option>
+                <th:block th:each="pelicula : ${peliculas}">
+                    <option th:value="${pelicula.id}" th:text="${pelicula.nombre}"></option>
+                </th:block>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Agregar Película</button>
+    </form>
+</div>
+
+<div th:insert="fragments/footer :: footer"></div>
+
+<script th:src="@{https://kit.fontawesome.com/9d21607fd1.js}" crossorigin="anonymous"></script>
+<script th:src="@{/webjars/bootstrap/5.2.0/js/bootstrap.min.js}" type="text/javascript"></script>
+</body>
+</html>
