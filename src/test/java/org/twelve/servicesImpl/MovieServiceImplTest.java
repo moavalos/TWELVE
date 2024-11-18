@@ -107,7 +107,7 @@ public class MovieServiceImplTest {
                 "Lana Wachowski, Lilly Wachowski", // escritor
                 "Inglés",                         // idioma
                 "The Matrix, Matrix",
-                LocalDate.of(1998, 10, 12)
+                LocalDate.of(1999, 6, 10)
         );
 
         when(movieRepository.guardar(any(Movie.class))).thenReturn(movie1);
@@ -352,6 +352,46 @@ public class MovieServiceImplTest {
         verify(movieRepository, never()).findByPaisIdTopRated(idPais);
         verify(movieRepository, never()).findByPaisIdNewest(idPais);
     }
+
+    @Test
+    public void testGetUpcomingMoviesDeberiaDevolverListaDeMovieDTO() {
+        Movie peliculaNoEstrenada1 = new Movie();
+        peliculaNoEstrenada1.setNombre("Pelicula No Estrenada 1");
+        peliculaNoEstrenada1.setFechaLanzamiento(LocalDate.now().plusDays(5));
+
+        Movie peliculaNoEstrenada2 = new Movie();
+        peliculaNoEstrenada2.setNombre("Pelicula No Estrenada 2");
+        peliculaNoEstrenada2.setFechaLanzamiento(LocalDate.now().plusDays(15));
+
+        List<Movie> upcomingMovies = Arrays.asList(peliculaNoEstrenada1, peliculaNoEstrenada2);
+        when(movieRepository.findUpcomingMovies()).thenReturn(upcomingMovies);
+
+        List<MovieDTO> result = movieServiceImpl.getUpcomingMovies();
+
+        assertEquals(2, result.size());
+        assertEquals("Pelicula No Estrenada 1", result.get(0).getNombre());
+        assertEquals("Pelicula No Estrenada 2", result.get(1).getNombre());
+    }
+
+    @Test
+    public void testIsMovieReleasedDevuelveTrueConPeliculasYaEstrenadas() {
+        MovieDTO peliculaEstrenada = new MovieDTO();
+        peliculaEstrenada.setNombre("Pelicula Estrenada");
+        peliculaEstrenada.setFechaLanzamiento(LocalDate.now().minusDays(1));
+
+        assertTrue(movieServiceImpl.isMovieReleased(peliculaEstrenada));
+    }
+
+
+    @Test
+    public void testIsMovieReleasedDevuelveFalseConPeliculasNoEstrenadas() {
+        MovieDTO  peliculaNoEstrenada = new MovieDTO();
+        peliculaNoEstrenada.setNombre("Pelicula No Estrenada");
+        peliculaNoEstrenada.setFechaLanzamiento(LocalDate.now().plusDays(1));
+
+        assertFalse(movieServiceImpl.isMovieReleased(peliculaNoEstrenada));
+    }
+
 
 
 }

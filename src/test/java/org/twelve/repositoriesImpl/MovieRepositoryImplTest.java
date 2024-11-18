@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -18,10 +19,13 @@ import org.twelve.integracion.config.HibernateTestConfig;
 
 import javax.persistence.Query;
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
@@ -31,12 +35,10 @@ public class MovieRepositoryImplTest {
     @Autowired
     private SessionFactory sessionFactory;
     private MovieRepositoryImpl movieRepository;
-    private CategoriaRepositoryImpl categoriaRepository;
 
     @BeforeEach
     public void init() {
         this.movieRepository = new MovieRepositoryImpl(sessionFactory);
-        this.categoriaRepository = new CategoriaRepositoryImpl(sessionFactory);
     }
 
     @Test
@@ -45,7 +47,7 @@ public class MovieRepositoryImplTest {
     public void testGuardarPeliculaGuardaCorrectamente() {
         Categoria categoria = new Categoria();
         categoria.setNombre("CIENCIA_FICCION");
-        categoriaRepository.save(categoria);
+        this.sessionFactory.getCurrentSession().save(categoria);
 
         Movie movie = new Movie();
         movie.setNombre("The Matrix");
@@ -69,7 +71,7 @@ public class MovieRepositoryImplTest {
     public void testBuscarPeliculaPorIdDevuelveCorrectamente() {
         Categoria categoria = new Categoria();
         categoria.setNombre("ACCION");
-        categoriaRepository.save(categoria);
+        this.sessionFactory.getCurrentSession().save(categoria);
 
         Movie movie = new Movie();
         movie.setNombre("Inception");
@@ -91,7 +93,7 @@ public class MovieRepositoryImplTest {
     public void testBuscarPeliculaPorTituloDevuelveCorrectamente() {
         Categoria categoria = new Categoria();
         categoria.setNombre("ACCION");
-        categoriaRepository.save(categoria);
+        this.sessionFactory.getCurrentSession().save(categoria);
 
         Movie movie = new Movie();
         movie.setNombre("Avatar");
@@ -110,7 +112,7 @@ public class MovieRepositoryImplTest {
     public void testModificarPeliculaModificaCorrectamente() {
         Categoria categoria = new Categoria();
         categoria.setNombre("DRAMA");
-        categoriaRepository.save(categoria);
+        this.sessionFactory.getCurrentSession().save(categoria);
 
         Movie movie = new Movie();
         movie.setNombre("Titanic");
@@ -282,11 +284,11 @@ public class MovieRepositoryImplTest {
     public void testFindSimilarMoviesDevuelvePeliculasSimilares() {
         Categoria categoria1 = new Categoria();
         categoria1.setNombre("MUSICAL");
-        categoriaRepository.save(categoria1);
+        this.sessionFactory.getCurrentSession().save(categoria1);
 
         Categoria categoria2 = new Categoria();
         categoria2.setNombre("ACCIÓN");
-        categoriaRepository.save(categoria2);
+        this.sessionFactory.getCurrentSession().save(categoria2);
 
         Movie movie1 = new Movie();
         movie1.setNombre("Grease");
@@ -324,11 +326,11 @@ public class MovieRepositoryImplTest {
     public void testFindSimilarMoviesSinCoincidenciasDevuelveListaVacia() {
         Categoria categoria1 = new Categoria();
         categoria1.setNombre("MUSICAL");
-        categoriaRepository.save(categoria1);
+        this.sessionFactory.getCurrentSession().save(categoria1);
 
         Categoria categoria2 = new Categoria();
         categoria2.setNombre("ACCION");
-        categoriaRepository.save(categoria2);
+        this.sessionFactory.getCurrentSession().save(categoria2);
 
         Movie movie1 = new Movie();
         movie1.setNombre("Inception");
@@ -349,7 +351,7 @@ public class MovieRepositoryImplTest {
     public void testBuscarPeliculasPorCategoriaTopRated() {
         Categoria categoria = new Categoria();
         categoria.setNombre("COMEDIA");
-        categoriaRepository.save(categoria);
+        this.sessionFactory.getCurrentSession().save(categoria);
 
         Movie movie1 = new Movie();
         movie1.setNombre("Movie A");
@@ -373,7 +375,7 @@ public class MovieRepositoryImplTest {
     public void testBuscarPeliculasPorCategoriaMasNuevas() {
         Categoria categoria = new Categoria();
         categoria.setNombre("CIENCIA FICCION");
-        categoriaRepository.save(categoria);
+        this.sessionFactory.getCurrentSession().save(categoria);
 
         Movie movie1 = new Movie();
         movie1.setNombre("Old Movie");
@@ -392,10 +394,109 @@ public class MovieRepositoryImplTest {
         assertEquals("New Movie", newestMovies.get(0).getNombre());
     }
 
+    @Test
+    @Transactional
+    @Rollback
+    public void testEncontrarProximosEstrenos() {
+        Movie peliculaEstrenada = new Movie();
+        peliculaEstrenada.setNombre("Pelicula estrenada");
+        peliculaEstrenada.setFechaLanzamiento(LocalDate.now().minusDays(10));
+        movieRepository.guardar(peliculaEstrenada);
+
+        Movie peliculaNoEstrenada = new Movie();
+        peliculaNoEstrenada.setNombre("Pelicula No Estrenada");
+        peliculaNoEstrenada.setFechaLanzamiento(LocalDate.now().plusDays(10));
+        movieRepository.guardar(peliculaNoEstrenada);
+
+        List<Movie> upcomingMovies = movieRepository.findUpcomingMovies();
+
+        assertEquals(1, upcomingMovies.size());
+        assertEquals("Pelicula No Estrenada", upcomingMovies.get(0).getNombre());
+    }
 
 
+    @Test
+    @Transactional
+    @Rollback
+    @DirtiesContext
+    public void testFindByPaisIdDevuelveListaDePeliculasPorPais() {
 
+        Pais pais = new Pais();
+        pais.setNombre("EE.UU");
+        this.sessionFactory.getCurrentSession().save(pais);
 
+        Movie movie1 = new Movie();
+        movie1.setNombre("Movie A");
+        movie1.setPais(pais);
 
+        Movie movie2 = new Movie();
+        movie2.setNombre("Movie B");
+        movie2.setPais(pais);
+
+        this.movieRepository.guardar(movie1);
+        this.movieRepository.guardar(movie2);
+
+        List<Movie> peliculasEsperadas = new ArrayList<>();
+        peliculasEsperadas.add(movie1);
+        peliculasEsperadas.add(movie2);
+
+        List<Movie> peliculasObtenidas = this.movieRepository.findByPaisId(1);
+
+        assertEquals(peliculasObtenidas, peliculasEsperadas);
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    @DirtiesContext
+    public void testFindByPaisNewestDevuelveListaDePeliculasPorPaisMasRecientesPrimero() {
+        Pais pais = new Pais();
+        pais.setNombre("EE.UU");
+        this.sessionFactory.getCurrentSession().save(pais);
+
+        Movie movie1 = new Movie();
+        movie1.setNombre("Movie A");
+        movie1.setAñoLanzamiento("1994");
+        movie1.setPais(pais);
+        this.movieRepository.guardar(movie1);
+
+        Movie movie2 = new Movie();
+        movie2.setNombre("Movie B");
+        movie2.setAñoLanzamiento("2024");
+        movie2.setPais(pais);
+
+        this.movieRepository.guardar(movie2);
+
+        List<Movie> peliculasObtenidas = this.movieRepository.findByPaisIdNewest(1);
+
+        assertEquals(peliculasObtenidas.get(0), movie2);
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    @DirtiesContext
+    public void testFindByPaisTopRatedDevuelveListaDePeliculasPorPaisMejorValoradasPrimero() {
+        Pais pais = new Pais();
+        pais.setNombre("EE.UU");
+        this.sessionFactory.getCurrentSession().save(pais);
+
+        Movie movie1 = new Movie();
+        movie1.setNombre("Movie A");
+        movie1.setValoracion(5.0);
+        movie1.setPais(pais);
+
+        Movie movie2 = new Movie();
+        movie2.setNombre("Movie B");
+        movie2.setValoracion(9.0);
+        movie2.setPais(pais);
+
+        this.movieRepository.guardar(movie1);
+        this.movieRepository.guardar(movie2);
+
+        List<Movie> peliculasObtenidas = this.movieRepository.findByPaisIdTopRated(1);
+
+        assertEquals(peliculasObtenidas.get(0), movie2);
+    }
 
 }
