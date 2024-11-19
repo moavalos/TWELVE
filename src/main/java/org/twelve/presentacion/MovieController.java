@@ -24,14 +24,16 @@ public class MovieController {
     private final ComentarioService comentarioService;
     private final UsuarioService usuarioService;
     private final PaisService paisService;
+    private final ListaColaborativaService listaColaborativaService;
 
     @Autowired
-    public MovieController(MovieService movieService, CategoriaService categoriaService, ComentarioService comentarioService, UsuarioService usuarioService, PaisService paisService) {
+    public MovieController(MovieService movieService, CategoriaService categoriaService, ComentarioService comentarioService, UsuarioService usuarioService, PaisService paisService, ListaColaborativaService listaColaborativaService) {
         this.movieService = movieService;
         this.categoriaService = categoriaService;
         this.comentarioService = comentarioService;
         this.usuarioService = usuarioService;
         this.paisService = paisService;
+        this.listaColaborativaService = listaColaborativaService;
     }
 
     @RequestMapping(path = "/home", method = RequestMethod.GET)
@@ -87,8 +89,9 @@ public class MovieController {
         List<ComentarioDTO> comentarios = comentarioService.obtenerComentariosPorPelicula(id);
         List<MovieDTO> similarMovies = movieService.getSimilarMovies(id);
         PerfilDTO usuario = usuarioService.buscarPorId(usuarioLogueadoId);
-        boolean haDadoLike = usuarioService.haDadoLike(usuario, movie);
-        boolean enListaVerMasTarde = usuarioService.estaEnListaVerMasTarde(usuario, movie);
+        boolean haDadoLike = usuario != null && usuarioService.haDadoLike(usuario, movie);
+        boolean enListaVerMasTarde = usuario != null && usuarioService.estaEnListaVerMasTarde(usuario, movie);
+        List<ListaColaborativaDTO> listasColaborativas = listaColaborativaService.obtenerListasPorUsuario(usuario.getId());
 
         //modelo
         ModelMap modelo = new ModelMap();
@@ -99,6 +102,7 @@ public class MovieController {
         modelo.put("usuario", usuario);
         modelo.put("haDadoLike", haDadoLike);
         modelo.put("enListaVerMasTarde", enListaVerMasTarde);
+        modelo.put("listasColaborativas", listasColaborativas);
 
         return new ModelAndView("detalle-pelicula", modelo);
     }
@@ -110,12 +114,6 @@ public class MovieController {
             return ResponseEntity.ok(movieDTO);
         else
             return ResponseEntity.notFound().build();
-    }
-
-    @RequestMapping(path = "/agregar]", method = RequestMethod.POST)
-    public ResponseEntity<MovieDTO> addMovie(@RequestBody MovieDTO movie) {
-        MovieDTO createdMovie = movieService.create(movie);
-        return ResponseEntity.ok(createdMovie);
     }
 
     @RequestMapping(path = "/search", method = RequestMethod.GET)
@@ -136,26 +134,6 @@ public class MovieController {
     public ResponseEntity<List<MovieDTO>> getMostViewedMovies() {
         List<MovieDTO> movies = movieService.getMovieMasVista();
         return ResponseEntity.ok(movies);
-    }
-
-    @RequestMapping(path = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<MovieDTO> updateMovie(@PathVariable Integer id, @RequestBody MovieDTO movie) {
-        MovieDTO existingMovie = movieService.getById(id);
-        if (existingMovie != null) {
-            existingMovie.setNombre(movie.getNombre());
-            existingMovie.setDescripcion(movie.getDescripcion());
-            existingMovie.setFrase(movie.getFrase());
-            existingMovie.setDuracion(movie.getDuracion());
-            existingMovie.setPais(movie.getPais());
-            existingMovie.setCantVistas(movie.getCantVistas());
-            existingMovie.setAnioLanzamiento(movie.getAnioLanzamiento());
-            existingMovie.setImagen(movie.getImagen());
-            existingMovie.setLikes(movie.getLikes());
-            existingMovie.setValoracion(movie.getValoracion());
-            MovieDTO updatedMovie = movieService.create(existingMovie);
-            return ResponseEntity.ok(updatedMovie);
-        } else
-            return ResponseEntity.notFound().build();
     }
 
     // GET /movies/category?idCategoria=ID_CATEGORIA
@@ -228,5 +206,36 @@ public class MovieController {
         return "redirect:/detalle-pelicula/" + id;
     }
 
+    @RequestMapping(path = "/movie/{id}/agregar-a-lista", method = RequestMethod.POST)
+    public ModelAndView agregarPeliculaALista(@PathVariable Integer id,
+                                              @RequestParam Integer listaColaborativaId,
+                                              HttpServletRequest request) {
+        ModelMap model = new ModelMap();
+        Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
+
+        if (usuarioLogueadoId == null) {
+            model.put("error", "No se pudo agregar la película, sesión no iniciada.");
+            return new ModelAndView("detalle-pelicula", model);
+        }
+
+        try {
+            listaColaborativaService.agregarPeliculaALista(listaColaborativaId, id, usuarioLogueadoId);
+            model.put("success", "Película agregada a la lista con éxito.");
+        } catch (RuntimeException e) {
+            model.put("error", e.getMessage());
+        }
+
+        MovieDTO movie = movieService.getById(id);
+        List<ListaColaborativaDTO> listasColaborativas = listaColaborativaService.obtenerListasPorUsuario(usuarioLogueadoId);
+        List<ComentarioDTO> comentarios = comentarioService.obtenerComentariosPorPelicula(id);
+        List<MovieDTO> similarMovies = movieService.getSimilarMovies(id);
+
+        model.put("movie", movie);
+        model.put("listasColaborativas", listasColaborativas);
+        model.put("comentarios", comentarios);
+        model.put("peliculasSimilares", similarMovies);
+
+        return new ModelAndView("detalle-pelicula", model);
+    }
 
 }

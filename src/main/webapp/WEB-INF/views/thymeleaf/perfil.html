@@ -58,7 +58,7 @@
             <li class="nav-item"><a th:href="@{/historial}" class="nav-link">Historial</a></li>
             <li class="nav-item"><a href="#reseñas" class="nav-link">Reseñas</a></li>
             <li class="nav-item"><a th:href="@{/verMasTarde}" class="nav-link">Ver Más Tarde</a></li>
-            <li class="nav-item"><a href="#listas" class="nav-link">Listas</a></li>
+            <li class="nav-item"><a th:href="@{/listas/{id}(id=${usuario.id})}" class="nav-link">Listas</a></li>
             <li class="nav-item"><a th:href="@{/favoritos}" class="nav-link">Favoritos</a></li>
             <li class="nav-item"><a href="#amigos" class="nav-link">Amigos</a></li>
         </ul>

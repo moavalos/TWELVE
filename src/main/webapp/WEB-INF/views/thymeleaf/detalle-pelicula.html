@@ -24,9 +24,9 @@
                 <div th:if="${session.usuario != null}">
                     <form th:action="@{/movie/{id}/like(id=${movie.id})}" method="post">
                         <button type="submit" class="btn w-100 mb-2 rounded-pill"
-                                th:classappend="${haDadoLike ? 'btn-danger' : 'btn-warning'}">
-                            <i th:classappend="${haDadoLike ? 'fa-solid fa-heart' : 'fa-regular fa-heart'}"></i>
-                            <span th:text="${haDadoLike ? 'Quitar Me gusta' : 'Me gusta'}"></span>
+                                th:classappend="${haDadoLike != null && haDadoLike ? 'btn-danger' : 'btn-warning'}">
+                            <i th:classappend="${haDadoLike != null && haDadoLike ? 'fa-solid fa-heart' : 'fa-regular fa-heart'}"></i>
+                            <span th:text="${haDadoLike != null && haDadoLike ? 'Quitar Me gusta' : 'Me gusta'}"></span>
                         </button>
                     </form>
                 </div>
@@ -35,9 +35,9 @@
                 <div th:if="${session.usuario != null}">
                     <form th:action="@{/movie/{id}/verMasTarde(id=${movie.id})}" method="post">
                         <button type="submit" class="btn w-100 mb-2 rounded-pill"
-                                th:classappend="${enListaVerMasTarde ? 'btn-primary' : 'btn-warning'}">
-                            <i th:classappend="${enListaVerMasTarde ? 'fa-solid fa-clock' : 'fa-regular fa-clock'}"></i>
-                            <span th:text="${enListaVerMasTarde ? 'Quitar de Ver más tarde' : 'Ver más tarde'}"></span>
+                                th:classappend="${enListaVerMasTarde != null && enListaVerMasTarde ? 'btn-primary' : 'btn-warning'}">
+                            <i th:classappend="${enListaVerMasTarde != null && enListaVerMasTarde ? 'fa-solid fa-clock' : 'fa-regular fa-clock'}"></i>
+                            <span th:text="${enListaVerMasTarde != null && enListaVerMasTarde ? 'Quitar de Ver más tarde' : 'Ver más tarde'}"></span>
                         </button>
                     </form>
                 </div>
@@ -51,6 +51,31 @@
                 <div th:if="${session.usuario == null}">
                     <button class="btn btn-warning w-100 mb-2 rounded-pill">Comentar</button>
                 </div>
+
+                <!-- Formulario para agregar a la lista colaborativa -->
+                <div th:if="${session.usuario != null}" class="mt-4">
+                    <h5 class="text-secondary">Agregar a una lista colaborativa</h5>
+                    <form th:action="@{/movie/{id}/agregar-a-lista(id=${movie.id})}" method="post">
+                        <div class="mb-3">
+                            <label for="listaColaborativa" class="form-label">Seleccionar Lista</label>
+                            <select name="listaColaborativaId" id="listaColaborativa" class="form-select" required>
+                                <option value="" disabled selected>Seleccione una lista...</option>
+                                <th:block th:each="lista : ${listasColaborativas}">
+                                    <option th:value="${lista.id}" th:text="${lista.nombre}"></option>
+                                </th:block>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 rounded-pill">Agregar a la lista</button>
+                    </form>
+                </div>
+
+                <div th:if="${success}" class="alert alert-success" role="alert">
+                    <span th:text="${success}"></span>
+                </div>
+                <div th:if="${error}" class="alert alert-danger" role="alert">
+                    <span th:text="${error}"></span>
+                </div>
+
             </div>
         </div>
 

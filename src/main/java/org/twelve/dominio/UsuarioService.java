@@ -39,4 +39,8 @@ public interface UsuarioService {
 
     List<UsuarioMovieDTO> obtenerListaVerMasTarde(Integer usuarioId);
 
+    boolean sonAmigos(Integer usuario1Id, Integer usuario2Id);
+
+    List<PerfilDTO> obtenerAmigos(Integer usuarioId);
+
 }

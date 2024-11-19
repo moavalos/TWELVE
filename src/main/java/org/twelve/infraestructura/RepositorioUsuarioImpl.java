@@ -107,4 +107,24 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
         return query.getResultList();
     }
 
+    @Override
+    public boolean existeRelacion(Integer usuarioId, Integer seguidoId) {
+        String hql = "SELECT COUNT(*) FROM Seguidor WHERE usuario.id = :usuarioId AND seguido.id = :seguidoId";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("usuarioId", usuarioId);
+        query.setParameter("seguidoId", seguidoId);
+
+        Long count = (Long) query.getSingleResult();
+        return count > 0;
+    }
+
+    @Override
+    public List<Usuario> obtenerUsuariosSeguidos(Integer usuarioId) {
+        String hql = "SELECT s.seguido FROM Seguidor s WHERE s.usuario.id = :usuarioId";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("usuarioId", usuarioId);
+        return query.getResultList();
+    }
+
+
 }
