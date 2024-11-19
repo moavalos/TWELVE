@@ -86,17 +86,16 @@ public class MovieController {
         List<ComentarioDTO> comentarios = comentarioService.obtenerComentariosPorPelicula(id);
         List<MovieDTO> similarMovies = movieService.getSimilarMovies(id);
         PerfilDTO usuario = usuarioService.buscarPorId(usuarioLogueadoId);
+        //verifica si el ususario dio like a pelicula
         boolean haDadoLike = usuarioService.haDadoLike(usuario, movie);
+        //verifica si el ususario le dio en ver ams tarde a la pelicula
         boolean enListaVerMasTarde = usuarioService.estaEnListaVerMasTarde(usuario, movie);
 
-
-        /*
-        ESTE FOR ROMPE TODOOOO AAAAAA
         for (ComentarioDTO comentario : comentarios) {
             boolean usuarioYaDioLikeComentario = usuarioService.usuarioYaDioLikeComentario(usuario, comentario);
+            comentario.setUsuarioYaDioLike(usuarioYaDioLikeComentario);
         }
 
-         */
 
         //modelo
         ModelMap modelo = new ModelMap();
