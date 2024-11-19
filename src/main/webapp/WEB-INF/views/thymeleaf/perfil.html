@@ -130,21 +130,27 @@
     <div class="favorite-movies mb-5">
         <h2 class="text-center mb-4 text-primary">Películas favoritas</h2>
 
-        <div class="d-flex justify-content-center">
+        <div class="container">
             <div th:if="${peliculasFavoritas.isEmpty() && esPerfilPropio}"
-                 class="no-favorites-message d-flex align-items-center justify-content-center bg-secondary text-white rounded w-100 shadow"
-                 style="height: 200px;">
-                <p class="text-center m-0 fs-5">No agregaste películas favoritas todavía</p>
-            </div>
-            <div th:if="${peliculasFavoritas.isEmpty() && !esPerfilPropio}"
-                 class="no-favorites-message d-flex align-items-center justify-content-center bg-secondary text-white rounded w-100 shadow"
-                 style="height: 200px;">
-                <p class="text-center m-0 fs-5" th:text="${usuario.nombre} + ' no tiene películas favoritas todavía.'"></p>
+                 class="row justify-content-center">
+                <div class="col-12 no-favorites-message d-flex align-items-center justify-content-center bg-secondary text-white rounded shadow"
+                     style="height: 200px;">
+                    <p class="text-center m-0 fs-5">No agregaste películas favoritas todavía</p>
+                </div>
             </div>
 
-            <div class="movies-grid d-flex justify-content-start flex-wrap w-100" th:unless="${peliculasFavoritas.isEmpty()}">
-                <div th:each="pelicula : ${peliculasFavoritas}" class="movie text-center mx-2 mb-4">
-                    <a th:href="@{/detalle-pelicula/{id}(id=${pelicula.id})}" class="no-link">
+            <div th:if="${peliculasFavoritas.isEmpty() && !esPerfilPropio}"
+                 class="row justify-content-center">
+                <div class="col-12 no-favorites-message d-flex align-items-center justify-content-center bg-secondary text-white rounded shadow"
+                     style="height: 200px;">
+                    <p class="text-center m-0 fs-5" th:text="${usuario.nombre} + ' no tiene películas favoritas todavía.'"></p>
+                </div>
+            </div>
+
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3"
+                 th:unless="${peliculasFavoritas.isEmpty()}">
+                <div th:each="pelicula : ${peliculasFavoritas}" class="col text-center">
+                    <a th:href="@{/detalle-pelicula/{id}(id=${pelicula.id})}" class="no-link text-decoration-none">
                         <img th:src="@{'/images/' + ${pelicula.imagen}}" th:alt="${pelicula.nombre}"
                              class="img-fluid rounded shadow mb-2">
                     </a>
