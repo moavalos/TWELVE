@@ -18,20 +18,23 @@
 <div th:insert="fragments/header :: header"></div>
 
 <main role="main" class="container my-5">
-    <h1 class="mb-4 text-center text-primary">Listado de Películas</h1>
+    <h1 th:if="${!esEstrenos} "class="mb-4 text-center text-primary">Listado de Películas</h1>
+    <h1 th:if="${esEstrenos} "class="mb-4 text-center text-primary">Próximos estrenos</h1>
+
 
     <!-- Filtros -->
     <div class="mb-4 p-3 bg-light rounded shadow-sm">
         <form action="#" method="get" id="categoryForm">
             <div class="row g-3">
-                <div class="col-md-6">
+                <div th:classappend="${!esEstrenos ? 'col-md-6' : 'col-md'}">
                     <label for="idCategoria" class="form-label">Filtrar por categoría:</label>
                     <select class="form-select" id="idCategoria" name="idCategoria" onchange="submitCategoryForm()">
                         <option value="">Todas</option>
-                        <option th:each="category : ${categorias}" th:value="${category.id}" th:text="${category.nombre}"></option>
+                        <option th:each="category : ${categorias}" th:value="${category.id}"
+                                th:text="${category.nombre}"></option>
                     </select>
                 </div>
-                <div class="col-md-6">
+                <div th:if="${!esEstrenos}" class="col-md-6">
                     <label for="filter" class="form-label">Otros filtros:</label>
                     <select class="form-select" id="filter" name="filter" onchange="submitCategoryForm()">
                         <option value="">Ninguno</option>
@@ -54,7 +57,8 @@
             <div class="col" th:each="movie : ${movies}">
                 <div class="card h-100 shadow-sm">
                     <a th:href="@{/detalle-pelicula/{id}(id=${movie.id})}">
-                        <img th:src="@{'/images/' + ${movie.imagen}}" class="card-img-top rounded-top" alt="Imagen de la película"  style="width: 100%; height: auto;">
+                        <img th:src="@{'/images/' + ${movie.imagen}}" class="card-img-top rounded-top"
+                             alt="Imagen de la película" style="width: 100%; height: auto;">
                     </a>
                     <div class="card-body">
                         <h5 class="card-title text-center fw-bold" th:text="${movie.nombre}"></h5>

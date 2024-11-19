@@ -42,4 +42,5 @@ public interface MovieService {
 
     Boolean isMovieReleased(MovieDTO movie);
 
+    List<MovieDTO> getUpcomingMoviesByCategory(Integer idCategoria);
 }

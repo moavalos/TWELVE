@@ -73,6 +73,9 @@ public class MovieController {
         modelo.put("movies", movies);
         modelo.put("categorias", categorias);
         modelo.put("selectedFilter", filter);
+        modelo.put("esEstrenos", false);
+
+
 
         return new ModelAndView("movies", modelo);
     }
@@ -232,6 +235,28 @@ public class MovieController {
         }
 
         return "redirect:/detalle-pelicula/" + id;
+    }
+
+
+    @RequestMapping(path = "/upcoming-movies", method = RequestMethod.GET)
+    public ModelAndView getAllUcomingMoviesView(
+            @RequestParam(value = "idCategoria", required = false) Integer idCategoria) {
+
+        List<MovieDTO> movies;
+         if (idCategoria != null) {
+             movies = movieService.getUpcomingMoviesByCategory(idCategoria);
+         } else {
+             movies = movieService.getUpcomingMovies();
+         }
+
+        List<CategoriaDTO> categorias = categoriaService.getAll();
+
+        ModelMap modelo = new ModelMap();
+        modelo.put("movies", movies);
+        modelo.put("categorias", categorias);
+        modelo.put("esEstrenos", true);
+
+        return new ModelAndView("movies", modelo);
     }
 
 

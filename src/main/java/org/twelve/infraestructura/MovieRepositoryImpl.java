@@ -160,6 +160,15 @@ public class MovieRepositoryImpl implements MovieRepository {
         return query.getResultList();
     }
 
+    @Override
+    public List<Movie> findUpcomingMoviesByCategoria(Integer idCategoria) {
+        String hql = "SELECT m FROM Movie m JOIN FETCH m.categorias c WHERE c.id = :idCategoria AND m.fechaLanzamiento > CURRENT_DATE ";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("idCategoria", idCategoria);
+        return query.getResultList();
+    }
+
+
 
 
 }
