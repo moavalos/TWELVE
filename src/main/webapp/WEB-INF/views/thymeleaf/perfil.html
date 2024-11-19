@@ -27,6 +27,7 @@
                     <button class="btn rounded-pill btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">Editar perfil</button>
                 </div>
 
+
                 <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -76,7 +77,7 @@
                 </div>
             </div>
         </div>
-        <div class="stats col-md-4 d-flex justify-content-around bg-light p-4 rounded shadow">
+        <div class="stats col-md-4 d-flex justify-content-around bg-light p-4 rounded shadow flex-wrap">
             <div class="stat-item text-center">
                 <p class="stat-title text-muted">Películas</p>
                 <p class="stat-number fs-4 fw-bold" th:text="${cantidadPeliculasVistas}"></p>
@@ -95,22 +96,33 @@
             </div>
         </div>
     </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <!-- Botón del toggle -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-    <nav class="menu mt-5">
-        <ul class="nav nav-tabs justify-content-center">
-            <li class="nav-item"><a href="#perfil" class="nav-link">Perfil</a></li>
-            <li class="nav-item"><a href="#actividad" class="nav-link">Actividad</a></li>
-            <li class="nav-item"><a href="#peliculas" class="nav-link">Películas</a></li>
-            <li class="nav-item"><a href="#historial" class="nav-link">Historial</a></li>
-            <li class="nav-item"><a href="#reseñas" class="nav-link">Reseñas</a></li>
-            <li class="nav-item"><a href="#watchlist" class="nav-link">Watchlist</a></li>
-            <li class="nav-item"><a href="#listas" class="nav-link">Listas</a></li>
-            <li class="nav-item"><a th:href="@{/favoritos}" class="nav-link">Favoritos</a></li>
-            <li class="nav-item"><a href="#tags" class="nav-link">Tags</a></li>
-            <li class="nav-item"><a href="#amigos" class="nav-link">Amigos</a></li>
-            <li class="nav-item"><a href="#invitaciones" class="nav-link">Invitaciones</a></li>
-        </ul>
+            <!-- Menú colapsable -->
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav nav nav-tabs">
+                    <li class="nav-item"><a href="#perfil" class="nav-link">Perfil</a></li>
+                    <li class="nav-item"><a href="#actividad" class="nav-link">Actividad</a></li>
+                    <li class="nav-item"><a href="#peliculas" class="nav-link">Películas</a></li>
+                    <li class="nav-item"><a href="#historial" class="nav-link">Historial</a></li>
+                    <li class="nav-item"><a href="#reseñas" class="nav-link">Reseñas</a></li>
+                    <li class="nav-item"><a href="#watchlist" class="nav-link">Watchlist</a></li>
+                    <li class="nav-item"><a href="#listas" class="nav-link">Listas</a></li>
+                    <li class="nav-item"><a th:href="@{/favoritos}" class="nav-link">Favoritos</a></li>
+                    <li class="nav-item"><a href="#tags" class="nav-link">Tags</a></li>
+                    <li class="nav-item"><a href="#amigos" class="nav-link">Amigos</a></li>
+                    <li class="nav-item"><a href="#invitaciones" class="nav-link">Invitaciones</a></li>
+                </ul>
+            </div>
+        </div>
     </nav>
+
+
 </section>
 
 <section class="content container my-5">

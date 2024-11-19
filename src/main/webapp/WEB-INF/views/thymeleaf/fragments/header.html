@@ -1,14 +1,27 @@
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm" th:fragment="header">
     <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/home}"><img th:src="@{/images/TWELVE_logo.png}"  alt="logo" style="height: 50px;"></a>
+        <!-- Logo -->
+        <a class="navbar-brand" th:href="@{/home}">
+            <img th:src="@{/images/TWELVE_logo.png}" alt="logo" class="img-fluid" style="height: 50px;">
+        </a>
 
+
+
+        <!-- Formulario de búsqueda -->
         <div class="mx-auto order-0 w-75">
             <form class="d-flex justify-content-center" role="search" th:action="@{/search}" method="get">
-                <input class="form-control me-2 w-75 rounded-pill" type="search" name="title" placeholder="Buscar película"
-                       aria-label="Search">
+                <input class="form-control me-2 w-75 rounded-pill" type="search" name="title" placeholder="Buscar película" aria-label="Search">
                 <button class="btn btn-outline-success rounded-pill" type="submit">Buscar</button>
             </form>
         </div>
+
+        <!-- Botón del toggle -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Menú colapsable -->
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item" th:if="${session.usuario == null}">
@@ -30,3 +43,4 @@
         </div>
     </div>
 </nav>
+
