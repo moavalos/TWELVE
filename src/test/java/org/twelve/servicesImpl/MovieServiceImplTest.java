@@ -14,6 +14,7 @@ import org.twelve.presentacion.dto.PaisDTO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -392,6 +393,25 @@ public class MovieServiceImplTest {
         assertFalse(movieServiceImpl.isMovieReleased(peliculaNoEstrenada));
     }
 
+
+    @Test
+    public void testGetUpcomingMoviesCalculaDiasQueFaltanParaEstrenoCorrectamente() {
+        LocalDate fechaEstreno = LocalDate.now().plusDays(15);
+        LocalDate hoy = LocalDate.now();
+        int diasQueFaltanEsperados = (int) ChronoUnit.DAYS.between(hoy, fechaEstreno);
+
+        Movie pelicula = new Movie();
+        pelicula.setNombre("Pelicula No Estrenada");
+        pelicula.setFechaLanzamiento(fechaEstreno);
+
+        when(movieRepository.findUpcomingMovies()).thenReturn(Collections.singletonList(pelicula));
+
+        List<MovieDTO> peliculas = movieServiceImpl.getUpcomingMovies();
+
+        int diasQueFaltanObtenidos = peliculas.get(0).getDiasParaEstreno();
+
+        assertEquals(diasQueFaltanEsperados, diasQueFaltanObtenidos);
+    }
 
 
 }

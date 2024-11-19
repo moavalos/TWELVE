@@ -28,6 +28,7 @@ public class MovieDTO {
     private String idioma;
     private String tambienConocidaComo;
     private LocalDate fechaLanzamiento;
+    private Integer diasParaEstreno;
 
     public MovieDTO() {
     }
@@ -184,6 +185,14 @@ public class MovieDTO {
     public LocalDate getFechaLanzamiento() { return fechaLanzamiento; }
 
     public void setFechaLanzamiento(LocalDate fechaLanzamiento) { this.fechaLanzamiento = fechaLanzamiento;  }
+
+    public Integer getDiasParaEstreno() {
+        return diasParaEstreno;
+    }
+
+    public void setDiasParaEstreno(Integer diasParaEstreno) {
+        this.diasParaEstreno = diasParaEstreno;
+    }
 
     public static MovieDTO convertToDTO(Movie movie) {
         List<CategoriaDTO> categoriasDTOs = new ArrayList<>();

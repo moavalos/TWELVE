@@ -41,4 +41,5 @@ public interface MovieService {
     List<MovieDTO> getUpcomingMovies();
 
     Boolean isMovieReleased(MovieDTO movie);
+
 }

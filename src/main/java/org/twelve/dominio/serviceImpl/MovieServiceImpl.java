@@ -9,6 +9,7 @@ import org.twelve.dominio.entities.Movie;
 import org.twelve.presentacion.dto.MovieDTO;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
@@ -146,14 +147,27 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<MovieDTO> getUpcomingMovies() {
         List<Movie> upcomingMovies = movieRepository.findUpcomingMovies();
-        return upcomingMovies.stream().map(MovieDTO::convertToDTO).collect(Collectors.toList());
+
+        // Convertir cada Movie a MovieDTO y calcular los días para el estreno
+        return upcomingMovies.stream()
+                .map(movie -> {
+                    MovieDTO movieDTO = MovieDTO.convertToDTO(movie);
+                    if (movie.getFechaLanzamiento() != null) {
+                        long diasParaEstreno = ChronoUnit.DAYS.between(LocalDate.now(), movie.getFechaLanzamiento());
+                        movieDTO.setDiasParaEstreno((int) diasParaEstreno);
+                    }
+                    return movieDTO;
+                })
+                .collect(Collectors.toList());
     }
+
 
     @Override
     public Boolean isMovieReleased(MovieDTO movie) {
         LocalDate today = LocalDate.now();
         return movie.getFechaLanzamiento().isBefore(today) || movie.getFechaLanzamiento().isEqual(today);
     }
+
 
 }
 
