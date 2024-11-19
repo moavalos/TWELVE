@@ -213,6 +213,11 @@ public class MovieController {
         ModelMap model = new ModelMap();
         Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
 
+        if (usuarioLogueadoId == null) {
+            model.put("error", "No se pudo agregar la película, sesión no iniciada.");
+            return new ModelAndView("detalle-pelicula", model);
+        }
+
         try {
             listaColaborativaService.agregarPeliculaALista(listaColaborativaId, id, usuarioLogueadoId);
             model.put("success", "Película agregada a la lista con éxito.");

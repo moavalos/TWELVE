@@ -10,7 +10,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.twelve.dominio.*;
 import org.twelve.dominio.entities.ListaMovie;
 import org.twelve.presentacion.dto.ListaColaborativaDTO;
-import org.twelve.presentacion.dto.MovieDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,6 +46,10 @@ public class ListaColaborativaController {
         ModelMap model = new ModelMap();
         Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
 
+        if (usuarioLogueadoId == null) {
+            return new ModelAndView("redirect:/login");
+        }
+
         // hay q verificar si los usuarios se siguen mutuamente
         boolean sonAmigos = usuarioService.sonAmigos(usuarioLogueadoId, usuarioColaborador);
         if (!sonAmigos) {
@@ -72,6 +75,11 @@ public class ListaColaborativaController {
         ModelMap model = new ModelMap();
 
         Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
+
+        if (usuarioLogueadoId == null) {
+            return new ModelAndView("redirect:/login");
+        }
+
         List<ListaColaborativaDTO> listas = listaColaborativaService.obtenerListasPorUsuario(usuarioLogueadoId);
 
         model.put("listas", listas);
