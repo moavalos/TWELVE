@@ -116,9 +116,9 @@
         <h4 class="mt-5 text-primary">Películas Similares</h4>
         <div class="row similar-movies">
             <div th:each="pelicula : ${peliculasSimilares}" class="col-md-2 col-sm-4 col-6 mb-3">
-                <div class="card h-100 shadow-sm">
+                <div class="card shadow-sm">
                     <a th:href="@{/detalle-pelicula/{id}(id=${pelicula.id})}">
-                        <img th:src="@{'/images/' + ${pelicula.imagen}}" alt="Similar Movie" class="card-img-top rounded">
+                        <img th:src="@{'/images/' + ${pelicula.imagen}}" alt="Similar Movie">
                     </a>
                     <div class="card-body p-2">
                         <h6 class="card-title text-center" th:text="${pelicula.nombre}"></h6>
