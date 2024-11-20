@@ -117,6 +117,7 @@
         <!-- Comentarios populares -->
         <h4 class="mt-5 text-primary">Comentarios Populares</h4>
         <div class="review-section">
+
             <div th:each="comentario : ${comentarios}" class="card mb-3 shadow-sm">
                 <div class="card-body">
                     <div class="d-flex align-items-start">
@@ -127,10 +128,21 @@
                                 <span class="text-success">Puntaje: <span th:text="${comentario.valoracion}"></span>/10</span>
                             </h6>
                             <p th:text="${comentario.descripcion}" class="mb-0"></p>
+
+                            <p class="mt-2"><span th:text="${comentario.likes}"></span> me gusta</p>
+
+                            <!-- Botón para dar like al comentario -->
+                            <form th:action="@{/movie/{idMovie}/comment/{idComentario}/like(idMovie=${movie.id}, idComentario=${comentario.id})}" method="post">
+                                <button type="submit" class="btn btn-sm btn-primary mt-2">
+                                    <i class="fa-solid fa-thumbs-up"></i> Like
+                                </button>
+                            </form>
+
                         </div>
                     </div>
                 </div>
             </div>
+
             <a href="#" class="text-decoration-none">Ver todos los comentarios</a>
         </div>
 

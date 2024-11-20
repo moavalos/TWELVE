@@ -16,4 +16,6 @@ public interface ComentarioService {
     List<ComentarioDTO> obtenerUltimosTresComentarios(Integer idUsuario);
 
     void actualizarValoracionPelicula(Movie movie);
+
+    void darMeGustaComentario(Integer idComentario, Integer idUsuario);
 }

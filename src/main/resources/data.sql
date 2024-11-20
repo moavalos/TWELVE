@@ -113,6 +113,10 @@ INSERT INTO Comentario (id, descripcion, likes, valoracion, idMovie, idUsuario)
 VALUES (null, 'buenisima', 0, 9, 1, 1),
        (null, 'bastante bien', 0, 8, 7, 1);
 
+-- Insertar likes en la tabla UsuarioComentario
+INSERT INTO UsuarioComentario (comentario_id, usuario_id, likeComentario)
+VALUES
+    (1, 6, TRUE);  -- El usuario 6 da like al comentario 1
 
 INSERT INTO movie_categoria (movie_id, categoria_id)
 VALUES (1, 6),

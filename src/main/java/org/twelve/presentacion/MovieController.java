@@ -238,4 +238,19 @@ public class MovieController {
         return new ModelAndView("detalle-pelicula", model);
     }
 
+    @RequestMapping(path = "/movie/{idMovie}/comment/{idComentario}/like", method = RequestMethod.POST)
+    public String likeComentario(@PathVariable Integer idMovie,
+                                 @PathVariable Integer idComentario,
+                                 HttpServletRequest request) {
+
+        Integer idUsuario = (Integer) request.getSession().getAttribute("usuarioId");
+
+        if (idUsuario == null) {
+            return "redirect:/login";
+        }
+
+        comentarioService.darMeGustaComentario(idComentario, idUsuario);
+        return "redirect:/detalle-pelicula/" + idMovie;
+    }
+
 }

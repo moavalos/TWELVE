@@ -42,7 +42,7 @@ public class ComentarioServiceImplTest {
         movieRepository = mock(MovieRepository.class);
         repositorioUsuario = mock(RepositorioUsuario.class);
         comentarioRepository = mock(ComentarioRepository.class);
-        this.comentarioServiceImpl = new ComentarioServiceImpl(comentarioRepository, movieRepository, repositorioUsuario);
+        //this.comentarioServiceImpl = new ComentarioServiceImpl(comentarioRepository, movieRepository, repositorioUsuario);
         this.movie1 = mock(Movie.class);
         this.movie2 = mock(Movie.class);
         this.movie3 = mock(Movie.class);
