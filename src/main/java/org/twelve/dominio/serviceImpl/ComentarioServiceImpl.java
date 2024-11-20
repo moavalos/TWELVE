@@ -12,7 +12,9 @@ import org.twelve.presentacion.dto.ComentarioDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service("comentarioService")
@@ -132,5 +134,37 @@ public class ComentarioServiceImpl implements ComentarioService {
 
         comentarioRepository.save(comentario);
     }
+
+    public void quitarMeGustaComentario(Integer idComentario, Integer idUsuario) {
+        Comentario comentario = comentarioRepository.findById(idComentario)
+                .orElseThrow(() -> new RuntimeException("Comentario no encontrado"));
+
+        Usuario usuario = usuarioRepository.buscarPorId(idUsuario);
+        if (usuario == null) {
+            throw new RuntimeException("Usuario no encontrado");
+        }
+
+        boolean yaDioLike = usuarioComentarioRepository.existsByComentarioAndUsuario(idComentario, idUsuario);
+
+        if (!yaDioLike) {
+            throw new RuntimeException("No has dado like a este comentario.");
+        }
+
+        UsuarioComentario comentarioLike = usuarioComentarioRepository.findByComentarioAndUsuario(idComentario, idUsuario);
+        if (comentarioLike == null) {
+            throw new RuntimeException("Error interno: no se encontró el registro del like.");
+        }
+
+        usuarioComentarioRepository.delete(comentarioLike);
+
+        comentario.setLikes(Math.max(0, comentario.getLikes() - 1));
+
+        comentarioRepository.save(comentario);
+    }
+
+    public Set<Integer> obtenerLikesPorUsuario(Integer idUsuario) {
+        return new HashSet<>(usuarioComentarioRepository.findComentarioIdsByUsuarioId(idUsuario));
+    }
+
 
 }

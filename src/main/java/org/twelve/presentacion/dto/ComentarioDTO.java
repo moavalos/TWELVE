@@ -107,6 +107,7 @@ public class ComentarioDTO {
     public static Comentario convertToEntity(ComentarioDTO comentarioDTO, Movie movie, Usuario usuario) {
         Comentario comentario = new Comentario();
         comentario.setDescripcion(comentarioDTO.getDescripcion());
+        comentario.setLikes(comentarioDTO.getLikes());
         comentario.setValoracion(comentarioDTO.getValoracion());
         comentario.setMovie(movie);
         comentario.setUsuario(usuario);
@@ -117,6 +118,7 @@ public class ComentarioDTO {
         ComentarioDTO comentarioDTO = new ComentarioDTO();
         comentarioDTO.setId(comentario.getId());
         comentarioDTO.setDescripcion(comentario.getDescripcion());
+        comentarioDTO.setLikes(comentario.getLikes());
         comentarioDTO.setValoracion(comentario.getValoracion());
         comentarioDTO.setLikes(comentario.getLikes());
         comentarioDTO.setUsuario(new PerfilDTO(comentario.getUsuario().getId(), comentario.getUsuario().getUsername()));
