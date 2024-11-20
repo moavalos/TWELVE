@@ -92,9 +92,9 @@ public class MovieController {
         //lista de comentarios
         List<ComentarioDTO> comentarios = comentarioService.obtenerComentariosPorPelicula(id);
         List<MovieDTO> similarMovies = movieService.getSimilarMovies(id);
-        PerfilDTO usuario = usuarioService.buscarPorId(usuarioLogueadoId);
-        boolean haDadoLike = usuarioService.haDadoLike(usuario, movie);
-        boolean enListaVerMasTarde = usuarioService.estaEnListaVerMasTarde(usuario, movie);
+        PerfilDTO usuario = usuarioLogueadoId != null ? usuarioService.buscarPorId(usuarioLogueadoId) : null;
+        boolean haDadoLike = usuario != null && usuarioService.haDadoLike(usuario, movie);
+        boolean enListaVerMasTarde = usuario != null && usuarioService.estaEnListaVerMasTarde(usuario, movie);
         boolean fueEstrenada = movieService.isMovieReleased(movie);
 
         //modelo
