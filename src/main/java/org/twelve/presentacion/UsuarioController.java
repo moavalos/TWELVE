@@ -1,6 +1,7 @@
 package org.twelve.presentacion;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import org.twelve.presentacion.dto.PerfilDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -128,8 +130,15 @@ public class UsuarioController {
             return "redirect:/login";
         }
 
+        // Validación básica de campos
+        if (username.isEmpty() || nombre.isEmpty() || pais.isEmpty()) {
+            return "redirect:/perfil/" + usuarioLogueadoId + "?error=Campos obligatorios";
+        }
+
         try {
             usuarioService.actualizarPerfil(usuarioLogueadoId, username, descripcion, nombre, pais, fotoPerfil);
+        } catch (DataIntegrityViolationException e) {
+            return "redirect:/perfil/" + usuarioLogueadoId + "?error=Error de datos";
         } catch (Exception e) {
             return "redirect:/error";
         }

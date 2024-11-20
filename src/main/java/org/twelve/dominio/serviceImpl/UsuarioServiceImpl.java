@@ -7,10 +7,7 @@ import org.twelve.dominio.MovieRepository;
 import org.twelve.dominio.RepositorioUsuario;
 import org.twelve.dominio.UsuarioMovieRepository;
 import org.twelve.dominio.UsuarioService;
-import org.twelve.dominio.entities.Movie;
-import org.twelve.dominio.entities.Seguidor;
-import org.twelve.dominio.entities.Usuario;
-import org.twelve.dominio.entities.UsuarioMovie;
+import org.twelve.dominio.entities.*;
 import org.twelve.presentacion.dto.MovieDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
 import org.twelve.presentacion.dto.UsuarioMovieDTO;
@@ -182,28 +179,47 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public void actualizarPerfil(Integer userId, String username, String descripcion, String nombre, String pais, MultipartFile fotoPerfil) {
         Usuario usuario = repositorioUsuario.buscarPorId(userId);
+
+        // Actualizar los campos básicos del usuario
         usuario.setUsername(username);
         usuario.setDescripcion(descripcion);
         usuario.setNombre(nombre);
-        usuario.getPais().setNombre(pais);
 
+        // Verificar y actualizar el país
+        if (usuario.getPais() != null) {
+            usuario.getPais().setNombre(pais);
+        } else {
+            // Si el país es nulo, se podría crear un nuevo objeto Pais, si corresponde
+            Pais nuevoPais = new Pais();
+            nuevoPais.setNombre(pais);
+            usuario.setPais(nuevoPais);
+        }
+
+        // Manejo de la foto de perfil
         if (fotoPerfil != null && !fotoPerfil.isEmpty()) {
             String nombreArchivo = guardarFoto(fotoPerfil);
-            usuario.setFotoDePerfil(nombreArchivo); // Actualiza la ruta o nombre del archivo en el perfil
+            usuario.setFotoDePerfil(nombreArchivo); // Actualizar la ruta o nombre del archivo en el perfil
         }
 
         repositorioUsuario.guardar(usuario);
     }
-
+    @Override
     public String guardarFoto(MultipartFile fotoPerfil) {
+        // Validación del tipo de archivo
+        String tipoArchivo = fotoPerfil.getContentType();
+        if (!tipoArchivo.startsWith("image/")) {
+            throw new RuntimeException("El archivo no es una imagen válida");
+        }
+
         String nombreArchivo = UUID.randomUUID() + "_" + fotoPerfil.getOriginalFilename();
-        Path rutaArchivo = Paths.get("/images/user", nombreArchivo);
+        Path rutaArchivo = Paths.get("uploads", "user", nombreArchivo);  // Ajustar la ruta si es necesario
 
         try {
             Files.copy(fotoPerfil.getInputStream(), rutaArchivo, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new RuntimeException("Error al guardar la foto de perfil", e);
         }
+
         return nombreArchivo;
     }
 
