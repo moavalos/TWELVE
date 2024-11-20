@@ -207,4 +207,6 @@ public class UsuarioMovieRepositoryImpl implements UsuarioMovieRepository {
         return query.getResultList();
     }
 
+
+
 }

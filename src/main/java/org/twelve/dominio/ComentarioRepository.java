@@ -15,4 +15,6 @@ public interface ComentarioRepository {
     List<Comentario> findTop3ByUsuarioId(Integer idUsuario);
 
     Optional<Comentario> findById(Integer id);
+
+    List<Comentario> obtener3ComentariosConMasLikes();
 }

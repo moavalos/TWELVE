@@ -44,10 +44,12 @@ public class MovieController {
                 .collect(Collectors.toList());
 
         List<PerfilDTO> perfiles = usuarioService.encontrarTodos();
+        List<ComentarioDTO> comentariosPopulares = comentarioService.obtener3ComentariosConMasLikes();
 
         ModelMap modelo = new ModelMap();
         modelo.put("movies", topMovies);
         modelo.put("perfiles", perfiles);
+        modelo.put("comentariosPopulares", comentariosPopulares);
 
         return new ModelAndView("home", modelo);
     }

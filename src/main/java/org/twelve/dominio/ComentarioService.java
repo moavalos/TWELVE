@@ -23,4 +23,6 @@ public interface ComentarioService {
     void quitarMeGustaComentario(Integer idComentario, Integer idUsuario);
 
     Set<Integer> obtenerLikesPorUsuario(Integer idUsuario);
+
+    List<ComentarioDTO> obtener3ComentariosConMasLikes();
 }

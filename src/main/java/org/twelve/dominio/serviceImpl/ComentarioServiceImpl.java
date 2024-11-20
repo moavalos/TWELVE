@@ -166,5 +166,28 @@ public class ComentarioServiceImpl implements ComentarioService {
         return new HashSet<>(usuarioComentarioRepository.findComentarioIdsByUsuarioId(idUsuario));
     }
 
+    @Override
+    public List<ComentarioDTO> obtener3ComentariosConMasLikes() {
+        List<Comentario> comentarios = comentarioRepository.obtener3ComentariosConMasLikes();
+
+        // Convertir a DTO
+        return comentarios.stream().map(comentario -> {
+            Usuario usuario = comentario.getUsuario();
+            Movie movie = comentario.getMovie();
+
+            return new ComentarioDTO(
+                    comentario.getId(),
+                    movie.getId(),
+                    usuario.getId(),
+                    comentario.getDescripcion(),
+                    comentario.getLikes(),
+                    new PerfilDTO(usuario.getId(), usuario.getUsername()),
+                    comentario.getValoracion(),
+                    movie.getNombre(),
+                    movie.getImagen()
+            );
+        }).collect(Collectors.toList());
+    }
+
 
 }

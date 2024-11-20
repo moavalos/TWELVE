@@ -40,6 +40,7 @@ public class ComentarioRepositoryImpl implements ComentarioRepository {
         return query.getResultList();
     }
 
+
     @Override
     public void save(Comentario comentario) {
         sessionFactory.getCurrentSession().save(comentario);
@@ -53,4 +54,14 @@ public class ComentarioRepositoryImpl implements ComentarioRepository {
         Comentario comentario = (Comentario) query.getSingleResult();
         return Optional.ofNullable(comentario);
     }
+
+
+    @Override
+    public List<Comentario> obtener3ComentariosConMasLikes() {
+        String hql = "FROM Comentario ORDER BY likes DESC";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setMaxResults(3);
+        return query.getResultList();
+    }
+
 }
