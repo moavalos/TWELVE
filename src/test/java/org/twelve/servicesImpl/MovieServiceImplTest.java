@@ -414,4 +414,45 @@ public class MovieServiceImplTest {
     }
 
 
+
+    @Test
+    public void testGetUpcomingMoviesByCategoryDevuelvePeliculasPorCategoria() {
+        Movie movie = new Movie();
+        movie.setNombre("Película no estrenada");
+        movie.setFechaLanzamiento(LocalDate.now().plusDays(10));
+
+        List<Movie> mockMovies = Collections.singletonList(movie);
+
+        when(movieRepository.findUpcomingMoviesByCategoria(1)).thenReturn(mockMovies);
+
+        List<MovieDTO> result = movieServiceImpl.getUpcomingMoviesByCategory(1);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        MovieDTO movieDTO = result.get(0);
+        assertEquals("Película no estrenada", movieDTO.getNombre());
+    }
+
+
+    @Test
+    public void testGetUpcomingMoviesByCategoryCalculaDiasParaEstreno() {
+        LocalDate fechaDeEstreno = LocalDate.now().plusDays(10);
+        Movie movie = new Movie();
+        movie.setNombre("Película no estrenada");
+        movie.setFechaLanzamiento(fechaDeEstreno);
+
+        List<Movie> mockMovies = Collections.singletonList(movie);
+
+        when(movieRepository.findUpcomingMoviesByCategoria(1)).thenReturn(mockMovies);
+
+        List<MovieDTO> result = movieServiceImpl.getUpcomingMoviesByCategory(1);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        MovieDTO movieDTO = result.get(0);
+        assertEquals(10, movieDTO.getDiasParaEstreno());
+    }
+
+
+
 }

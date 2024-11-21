@@ -527,5 +527,40 @@ public class MovieControllerTest {
         verify(usuarioService, times(1)).agregarEnVerMasTarde(perfilDTOMock, movieDTO);
     }
 
+    @Test
+    public void testGetAllUpcomingMoviesViewWithCategoryFilter() {
+        // Mocks
+        List<MovieDTO> upcomingMoviesByCategoryMock = Collections.singletonList(mock(MovieDTO.class));
+        List<CategoriaDTO> categoriasMock = Collections.singletonList(mock(CategoriaDTO.class));
+
+        when(movieService.getUpcomingMoviesByCategory(1)).thenReturn(upcomingMoviesByCategoryMock);
+        when(categoriaService.getAll()).thenReturn(categoriasMock);
+
+        ModelAndView modelAndView = movieController.getAllUcomingMoviesView(1);
+
+        // Verificaciones
+        assertThat(modelAndView.getViewName(), is("upcoming-movies"));
+        assertThat(((List<MovieDTO>) modelAndView.getModel().get("movies")).size(), is(1));
+        assertThat(((List<CategoriaDTO>) modelAndView.getModel().get("categorias")).size(), is(1));
+    }
+
+    @Test
+    public void testGetAllUpcomingMoviesViewWithoutCategoryFilter() {
+        // Mocks
+        List<MovieDTO> upcomingMoviesMock = Arrays.asList(mock(MovieDTO.class), mock(MovieDTO.class));
+        List<CategoriaDTO> categoriasMock = Collections.singletonList(mock(CategoriaDTO.class));
+
+        when(movieService.getUpcomingMovies()).thenReturn(upcomingMoviesMock);
+        when(categoriaService.getAll()).thenReturn(categoriasMock);
+
+        ModelAndView modelAndView = movieController.getAllUcomingMoviesView(null);
+
+        // Verificaciones
+        assertThat(modelAndView.getViewName(), is("upcoming-movies"));
+        assertThat(((List<MovieDTO>) modelAndView.getModel().get("movies")).size(), is(2));
+        assertThat(((List<CategoriaDTO>) modelAndView.getModel().get("categorias")).size(), is(1));
+    }
+
+
 
 }

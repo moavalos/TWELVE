@@ -73,7 +73,6 @@ public class MovieController {
         modelo.put("movies", movies);
         modelo.put("categorias", categorias);
         modelo.put("selectedFilter", filter);
-        modelo.put("esEstrenos", false);
 
 
 
@@ -254,10 +253,11 @@ public class MovieController {
         ModelMap modelo = new ModelMap();
         modelo.put("movies", movies);
         modelo.put("categorias", categorias);
-        modelo.put("esEstrenos", true);
 
-        return new ModelAndView("movies", modelo);
+        return new ModelAndView("upcoming-movies", modelo);
     }
+
+
 
 
 }

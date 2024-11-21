@@ -18,15 +18,14 @@
 <div th:insert="fragments/header :: header"></div>
 
 <main role="main" class="container my-5">
-    <h1 th:if="${!esEstrenos} "class="mb-4 text-center text-primary">Listado de Películas</h1>
-    <h1 th:if="${esEstrenos} "class="mb-4 text-center text-primary">Próximos estrenos</h1>
+    <h1 class="mb-4 text-center text-primary">Listado de Películas</h1>
 
 
     <!-- Filtros -->
     <div class="mb-4 p-3 bg-light rounded shadow-sm">
         <form action="#" method="get" id="categoryForm">
             <div class="row g-3">
-                <div th:classappend="${!esEstrenos ? 'col-md-6' : 'col-md'}">
+                <div class="col-md-6">
                     <label for="idCategoria" class="form-label">Filtrar por categoría:</label>
                     <select class="form-select" id="idCategoria" name="idCategoria" onchange="submitCategoryForm()">
                         <option value="">Todas</option>
@@ -34,7 +33,7 @@
                                 th:text="${category.nombre}"></option>
                     </select>
                 </div>
-                <div th:if="${!esEstrenos}" class="col-md-6">
+                <div class="col-md-6">
                     <label for="filter" class="form-label">Otros filtros:</label>
                     <select class="form-select" id="filter" name="filter" onchange="submitCategoryForm()">
                         <option value="">Ninguno</option>

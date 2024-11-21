@@ -499,4 +499,38 @@ public class MovieRepositoryImplTest {
         assertEquals(peliculasObtenidas.get(0), movie2);
     }
 
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testFindUpcomingMoviesByCategoryDevuelvesSoloPeliculasNoEstrenadas() {
+
+        Categoria categoria = new Categoria();
+        categoria.setNombre("DRAMA");
+        this.sessionFactory.getCurrentSession().save(categoria);
+
+
+        Movie movie1 = new Movie();
+        movie1.setNombre("Movie A");
+        movie1.setFechaLanzamiento(LocalDate.now().plusDays(10));
+        movie1.getCategorias().add(categoria);
+
+
+        Movie movie2 = new Movie();
+        movie2.setNombre("Movie B");
+        movie2.setFechaLanzamiento(LocalDate.now().minusDays(10));
+        movie2.getCategorias().add(categoria);
+
+
+        this.movieRepository.guardar(movie1);
+        this.movieRepository.guardar(movie2);
+
+        List<Movie> peliculasObtenidas = this.movieRepository.findUpcomingMoviesByCategoria(categoria.getId());
+
+        assertEquals(peliculasObtenidas.get(0), movie1);
+        assertEquals(1, peliculasObtenidas.size());
+
+    }
+
+
 }
