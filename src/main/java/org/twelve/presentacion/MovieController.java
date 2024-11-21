@@ -11,6 +11,7 @@ import org.twelve.dominio.*;
 import org.twelve.presentacion.dto.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -92,17 +93,16 @@ public class MovieController {
 
         //lista de comentarios
         List<ComentarioDTO> comentarios = comentarioService.obtenerComentariosPorPelicula(id);
-         List<MovieDTO> similarMovies = movieService.getSimilarMovies(id);
-
-        // PerfilDTO usuario = usuarioLogueadoId != null ? usuarioService.buscarPorId(usuarioLogueadoId) : null;
-        // boolean haDadoLike = usuario != null && usuarioService.haDadoLike(usuario, movie);
-        // boolean enListaVerMasTarde = usuario != null && usuarioService.estaEnListaVerMasTarde(usuario, movie);
-      
+        List<MovieDTO> similarMovies = movieService.getSimilarMovies(id);
         boolean fueEstrenada = movieService.isMovieReleased(movie);
-        PerfilDTO usuario = usuarioService.buscarPorId(usuarioLogueadoId);
+
+        PerfilDTO usuario = usuarioLogueadoId != null ? usuarioService.buscarPorId(usuarioLogueadoId) : null;
+
         boolean haDadoLike = usuario != null && usuarioService.haDadoLike(usuario, movie);
         boolean enListaVerMasTarde = usuario != null && usuarioService.estaEnListaVerMasTarde(usuario, movie);
-        List<ListaColaborativaDTO> listasColaborativas = listaColaborativaService.obtenerListasPorUsuario(usuario.getId());
+        List<ListaColaborativaDTO> listasColaborativas = usuario != null
+                ? listaColaborativaService.obtenerListasPorUsuario(usuario.getId())
+                : Collections.emptyList();
 
         //modelo
         ModelMap modelo = new ModelMap();
@@ -114,7 +114,6 @@ public class MovieController {
         modelo.put("haDadoLike", haDadoLike);
         modelo.put("enListaVerMasTarde", enListaVerMasTarde);
         modelo.put("fueEstrenada", fueEstrenada);
-
         modelo.put("listasColaborativas", listasColaborativas);
 
         return new ModelAndView("detalle-pelicula", modelo);
@@ -242,11 +241,14 @@ public class MovieController {
         List<ListaColaborativaDTO> listasColaborativas = listaColaborativaService.obtenerListasPorUsuario(usuarioLogueadoId);
         List<ComentarioDTO> comentarios = comentarioService.obtenerComentariosPorPelicula(id);
         List<MovieDTO> similarMovies = movieService.getSimilarMovies(id);
+        boolean fueEstrenada = movieService.isMovieReleased(movie);
+
 
         model.put("movie", movie);
         model.put("listasColaborativas", listasColaborativas);
         model.put("comentarios", comentarios);
         model.put("peliculasSimilares", similarMovies);
+        model.put("fueEstrenada",fueEstrenada);
 
         return new ModelAndView("detalle-pelicula", model);
     }
