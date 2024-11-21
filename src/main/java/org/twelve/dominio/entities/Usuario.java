@@ -29,8 +29,8 @@ public class Usuario {
 
     private String username;
 
+    @Column(name = "foto_de_perfil")
     private String fotoDePerfil;
-
 
     @ManyToOne
     @JoinColumn(name = "pais_id")

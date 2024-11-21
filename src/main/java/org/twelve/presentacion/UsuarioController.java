@@ -130,7 +130,6 @@ public class UsuarioController {
             return "redirect:/login";
         }
 
-        // Validación básica de campos
         if (username.isEmpty() || nombre.isEmpty() || pais.isEmpty()) {
             return "redirect:/perfil/" + usuarioLogueadoId + "?error=Campos obligatorios";
         }

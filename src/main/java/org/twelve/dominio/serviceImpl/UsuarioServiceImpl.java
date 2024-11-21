@@ -175,44 +175,39 @@ public class UsuarioServiceImpl implements UsuarioService {
         return usuarioMovieRepository.obtenerPeliculasFavoritas(usuarioId);
     }
 
-
     @Override
     public void actualizarPerfil(Integer userId, String username, String descripcion, String nombre, String pais, MultipartFile fotoPerfil) {
         Usuario usuario = repositorioUsuario.buscarPorId(userId);
 
-        // Actualizar los campos básicos del usuario
         usuario.setUsername(username);
         usuario.setDescripcion(descripcion);
         usuario.setNombre(nombre);
 
-        // Verificar y actualizar el país
         if (usuario.getPais() != null) {
             usuario.getPais().setNombre(pais);
         } else {
-            // Si el país es nulo, se podría crear un nuevo objeto Pais, si corresponde
             Pais nuevoPais = new Pais();
             nuevoPais.setNombre(pais);
             usuario.setPais(nuevoPais);
         }
 
-        // Manejo de la foto de perfil
         if (fotoPerfil != null && !fotoPerfil.isEmpty()) {
             String nombreArchivo = guardarFoto(fotoPerfil);
-            usuario.setFotoDePerfil(nombreArchivo); // Actualizar la ruta o nombre del archivo en el perfil
+            usuario.setFotoDePerfil(nombreArchivo);
         }
 
         repositorioUsuario.guardar(usuario);
     }
+
     @Override
     public String guardarFoto(MultipartFile fotoPerfil) {
-        // Validación del tipo de archivo
         String tipoArchivo = fotoPerfil.getContentType();
-        if (!tipoArchivo.startsWith("image/")) {
+        if (!tipoArchivo.startsWith("images/")) {
             throw new RuntimeException("El archivo no es una imagen válida");
         }
 
         String nombreArchivo = UUID.randomUUID() + "_" + fotoPerfil.getOriginalFilename();
-        Path rutaArchivo = Paths.get("uploads", "user", nombreArchivo);  // Ajustar la ruta si es necesario
+        Path rutaArchivo = Paths.get("uploads", "user", nombreArchivo);
 
         try {
             Files.copy(fotoPerfil.getInputStream(), rutaArchivo, StandardCopyOption.REPLACE_EXISTING);
@@ -222,7 +217,6 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         return nombreArchivo;
     }
-
 
 }
 

@@ -9,13 +9,13 @@ VALUES (1, 'Argentina'),
 
 -- Inserts del Usuario
 
-INSERT INTO Usuario (email, password, nombre, username, pais_id, descripcion, rol, activo)
+INSERT INTO Usuario (email, password, nombre, username, foto_de_perfil, pais_id, descripcion, rol, activo)
 VALUES
-    ('admin@example.com', 'password123', 'Admin User', 'admin', 1, 'Administrador del sistema', 'ADMIN', TRUE),
-    ('juan.perez@example.com', 'pass1234', 'Juan Perez', 'juanperez', 2, 'Cinéfilo amateur', 'USER', FALSE),
-    ('moderador@example.com', 'modpass456', 'Moderador Uno', 'moduser', 4, 'Encargado de moderar reseñas', 'MOD', TRUE),
-    ('ana.gomez@example.com', 'ana123', 'Ana Gomez', 'anagomez', 3, 'Amante de películas de acción', 'USER', TRUE),
-    ('carlos.lopez@example.com', 'carlospass', 'Carlos Lopez', 'carlosl', 5, 'Fanático del cine clásico', 'USER', FALSE);
+    ('admin@example.com', 'password123', 'Admin User', 'admin', 'admin.jpg', 1, 'Administrador del sistema', 'ADMIN', TRUE),
+    ('juan.perez@example.com', 'pass1234', 'Juan Perez', 'juanperez', 'juan.jpg', 2, 'Cinéfilo amateur', 'USER', FALSE),
+    ('moderador@example.com', 'modpass456', 'Moderador Uno', 'moduser', 'moderador.jpg', 4, 'Encargado de moderar reseñas', 'MOD', TRUE),
+    ('ana.gomez@example.com', 'ana123', 'Ana Gomez', 'anagomez', 'ana.jpg', 3, 'Amante de películas de acción', 'USER', TRUE),
+    ('carlos.lopez@example.com', 'carlospass', 'Carlos Lopez', 'carlosl', 'carlos.jpg', 5, 'Fanático del cine clásico', 'USER', FALSE);
 
 
 INSERT INTO Categoria (id, nombre)
