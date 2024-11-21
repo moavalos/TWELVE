@@ -250,6 +250,8 @@ public class MovieController {
         List<ComentarioDTO> comentarios = comentarioService.obtenerComentariosPorPelicula(id);
         List<MovieDTO> similarMovies = movieService.getSimilarMovies(id);
         boolean fueEstrenada = movieService.isMovieReleased(movie);
+        Set<Integer> usuarioLikes = comentarioService.obtenerLikesPorUsuario(usuarioLogueadoId);
+
 
 
         model.put("movie", movie);
@@ -257,6 +259,8 @@ public class MovieController {
         model.put("comentarios", comentarios);
         model.put("peliculasSimilares", similarMovies);
         model.put("fueEstrenada",fueEstrenada);
+        model.put("usuarioLikes",usuarioLikes);
+
 
         return new ModelAndView("detalle-pelicula", model);
     }
