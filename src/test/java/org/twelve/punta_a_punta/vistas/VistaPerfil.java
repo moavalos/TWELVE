@@ -46,7 +46,9 @@ public class VistaPerfil extends VistaWeb{
     }
 
     public boolean esSeccionFavoritosVisible() {
-        return this.obtenerElemento(".favorite-movies").isVisible();
+//        return this.obtenerElemento(".favorite-movies").isVisible();
+        return this.obtenerElemento("div.favorite-movies:first-of-type").isVisible();
+
     }
 
     public boolean esSeccionWatchlistVisible() {

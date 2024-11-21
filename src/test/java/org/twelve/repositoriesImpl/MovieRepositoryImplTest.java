@@ -442,7 +442,7 @@ public class MovieRepositoryImplTest {
 
         List<Movie> peliculasObtenidas = this.movieRepository.findByPaisId(1);
 
-        assertEquals(peliculasObtenidas, peliculasEsperadas);
+        assertEquals(peliculasEsperadas, peliculasObtenidas);
     }
 
     @Test
@@ -503,6 +503,7 @@ public class MovieRepositoryImplTest {
     @Test
     @Transactional
     @Rollback
+    @DirtiesContext
     public void testFindUpcomingMoviesByCategoryDevuelvesSoloPeliculasNoEstrenadas() {
 
         Categoria categoria = new Categoria();

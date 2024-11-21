@@ -14,7 +14,9 @@ public class VistaHome extends VistaWeb{
     }
 
     public String obtenerTituloDePeliculasPopulares() {
-        return this.obtenerTextoDelElemento(".container .row.mt-4 h2.text-primary.mb-3");
+//        return this.obtenerTextoDelElemento(".container .row.mt-4 h2.text-primary.mb-3");
+        return this.obtenerTextoDelElemento(".container .row.mt-4 h2.text-primary.mb-3:has-text('Populares')");
+
     }
 
     public String obtenerTituloDePerfiles() {
@@ -30,7 +32,7 @@ public class VistaHome extends VistaWeb{
     }
 
     public boolean esVisibleBotonVerMasPeliculas() {
-        return this.obtenerElemento("a.btn-primary.rounded-pill").isVisible();
+        return this.obtenerElemento("a.btn-primary.rounded-pill[href='movies.html']").isVisible();
     }
 
     public boolean esVisibleBotonMasResenas() {
