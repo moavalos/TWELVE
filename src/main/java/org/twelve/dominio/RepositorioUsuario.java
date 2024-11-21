@@ -25,5 +25,9 @@ public interface RepositorioUsuario {
 
     List<Seguidor> obtenerSeguidores(Integer usuarioId);
 
+    boolean existeRelacion(Integer usuarioId, Integer seguidoId);
+
+    List<Usuario> obtenerUsuariosSeguidos(Integer usuarioId);
+
 }
 

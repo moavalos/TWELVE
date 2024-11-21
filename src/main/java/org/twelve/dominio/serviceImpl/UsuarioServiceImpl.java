@@ -252,5 +252,22 @@ public class UsuarioServiceImpl implements UsuarioService {
                 .map(UsuarioMovieDTO::convertToDTO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public boolean sonAmigos(Integer usuario1Id, Integer usuario2Id) {
+        return repositorioUsuario.existeRelacion(usuario1Id, usuario2Id)
+                && repositorioUsuario.existeRelacion(usuario2Id, usuario1Id);
+    }
+
+    @Override
+    public List<PerfilDTO> obtenerAmigos(Integer usuarioId) {
+        List<Usuario> seguidos = repositorioUsuario.obtenerUsuariosSeguidos(usuarioId);
+
+        return seguidos.stream()
+                .filter(seguido -> repositorioUsuario.existeRelacion(seguido.getId(), usuarioId))
+                .map(usuario -> new PerfilDTO(usuario.getId(), usuario.getNombre()))
+                .collect(Collectors.toList());
+    }
+
 }
 

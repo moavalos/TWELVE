@@ -27,6 +27,10 @@ VALUES ('admin@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhi
         'user para pruebas e2e', 'USER', TRUE),
     ('flor@unlam.edu.ar','$2a$10$BqkXqgYnG35/LujcXESGP.QQOhecbLVcBe6fJcG3CZ62SKjUi5.3e','Florencia','flor',1,'hola','USER',TRUE);
 
+INSERT INTO Seguidor(usuario_id, seguido_id)
+VALUES
+    (6, 5),
+    (5, 6);
 
 INSERT INTO Categoria (id, nombre)
 VALUES (1, 'SUSPENSO'),
