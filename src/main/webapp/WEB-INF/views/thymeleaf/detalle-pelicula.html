@@ -141,7 +141,7 @@
 
                             <!-- btns like comentario de la muerte -->
                             <div th:if="${usuarioLogueadoId != comentario.usuario.id}">
-                                <div>
+                                <div th:if="${!usuarioLikes.contains(comentario.id)}">
                                     <form th:action="@{/movie/{idMovie}/comment/{idComentario}/like(idMovie=${movie.id}, idComentario=${comentario.id})}"
                                           method="post">
                                         <button type="submit" class="btn btn-sm btn-primary mt-2">
@@ -149,7 +149,7 @@
                                         </button>
                                     </form>
                                 </div>
-                                <div>
+                                <div th:if="${usuarioLikes.contains(comentario.id)}">
                                     <form th:action="@{/movie/{idMovie}/comment/{idComentario}/unlike(idMovie=${movie.id}, idComentario=${comentario.id})}"
                                           method="post">
                                         <button type="submit" class="btn btn-sm btn-danger mt-2">
