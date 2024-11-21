@@ -123,8 +123,9 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
         String hql = "SELECT s.seguido FROM Seguidor s WHERE s.usuario.id = :usuarioId";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setParameter("usuarioId", usuarioId);
-        return query.getResultList();
-    }
 
+        List<Usuario> usuariosSeguidos = query.getResultList();
+        return usuariosSeguidos;
+    }
 
 }

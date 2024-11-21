@@ -73,6 +73,15 @@ public class ListaColaborativaRepositoryImpl implements ListaColaborativaReposit
         return count > 0;
     }
 
+    @Override
+    public boolean existeListaConNombreParaUsuario(Integer usuarioId, String nombreLista) {
+        String hql = "SELECT COUNT(l) FROM ListaColaborativa l WHERE l.creador.id = :usuarioId AND l.nombre = :nombreLista";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("usuarioId", usuarioId);
+        query.setParameter("nombreLista", nombreLista);
 
+        Long count = (Long) query.getSingleResult();
+        return count > 0;
+    }
 
 }

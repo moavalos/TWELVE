@@ -23,6 +23,11 @@
             <input type="text" class="form-control" id="nombreLista" name="nombreLista"
                    placeholder="Ingrese el nombre de la lista" required>
         </div>
+
+        <div th:if="${error}" class="alert alert-danger" role="alert">
+            <p th:text="${error}"></p>
+        </div>
+
         <!-- Seleccionar Usuario -->
         <div class="mb-3">
             <label for="usuarioColaborador" class="form-label">Seleccionar Usuario</label>
@@ -33,6 +38,7 @@
                 </th:block>
             </select>
         </div>
+
         <button type="submit" class="btn btn-primary">Crear Lista</button>
     </form>
 </div>

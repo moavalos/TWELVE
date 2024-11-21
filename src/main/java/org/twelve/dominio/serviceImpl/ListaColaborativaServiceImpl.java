@@ -49,6 +49,11 @@ public class ListaColaborativaServiceImpl implements ListaColaborativaService {
             throw new RuntimeException("Los usuarios deben seguirse mutuamente para colaborar.");
         }
 
+        boolean existeListaConNombre = listaColaborativaRepository.existeListaConNombreParaUsuario(usuario1Id, nombreLista);
+        if (existeListaConNombre) {
+            throw new RuntimeException("Ya existe una lista con este nombre para el usuario.");
+        }
+
         ListaColaborativa listaColaborativa = new ListaColaborativa();
         listaColaborativa.setCreador(repositorioUsuario.buscarPorId(usuario1Id));
         listaColaborativa.setColaborador(repositorioUsuario.buscarPorId(usuario2Id));

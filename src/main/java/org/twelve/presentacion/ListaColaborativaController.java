@@ -58,8 +58,18 @@ public class ListaColaborativaController {
             return new ModelAndView("crearListaColaborativa", model);
         }
 
-        listaColaborativaService.crearListaColaborativa(usuarioLogueadoId, usuarioColaborador, nombreLista);
-        return new ModelAndView("redirect:/listas/" + usuarioLogueadoId);
+        try {
+            listaColaborativaService.crearListaColaborativa(usuarioLogueadoId, usuarioColaborador, nombreLista);
+            return new ModelAndView("redirect:/listas/" + usuarioLogueadoId);
+        } catch (RuntimeException e) {
+            if ("Ya existe una lista con este nombre para el usuario.".equals(e.getMessage())) {
+                model.put("error", "Ya existe una lista con este nombre para el usuario.");
+            } else {
+                model.put("error", "Ocurrió un error al crear la lista. Intenta nuevamente.");
+            }
+            model.put("usuarios", usuarioService.obtenerAmigos(usuarioLogueadoId));
+            return new ModelAndView("crearListaColaborativa", model);
+        }
     }
 
     @RequestMapping(path = "/agregarPelicula", method = RequestMethod.GET)

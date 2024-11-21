@@ -356,6 +356,96 @@ public class ListaColaborativaServiceImplTest {
         verify(listaColaborativaRepository, times(1)).buscarPeliculasPorListaId(999);
     }
 
+    @Test
+    public void testCrearListaColaborativaExitoso() {
+        Integer usuario1Id = 1;
+        Integer usuario2Id = 2;
+        String nombreLista = "Lista Nueva";
 
+        Usuario usuario1 = new Usuario();
+        usuario1.setId(usuario1Id);
+
+        Usuario usuario2 = new Usuario();
+        usuario2.setId(usuario2Id);
+
+        ListaColaborativa lista = new ListaColaborativa();
+        lista.setId(1);
+        lista.setNombre(nombreLista);
+        lista.setCreador(usuario1);
+        lista.setColaborador(usuario2);
+        lista.setFechaCreacion(LocalDate.now());
+
+        when(repositorioUsuario.existeRelacion(usuario1Id, usuario2Id)).thenReturn(true);
+        when(repositorioUsuario.buscarPorId(usuario1Id)).thenReturn(usuario1);
+        when(repositorioUsuario.buscarPorId(usuario2Id)).thenReturn(usuario2);
+        when(listaColaborativaRepository.existeListaConNombreParaUsuario(usuario1Id, nombreLista)).thenReturn(false);
+        when(listaColaborativaRepository.guardar(any(ListaColaborativa.class))).thenReturn(lista);
+
+        ListaColaborativaDTO resultado = listaColaborativaServiceImpl.crearListaColaborativa(usuario1Id, usuario2Id, nombreLista);
+
+        assertNotNull(resultado, "El resultado no debe ser nulo");
+        assertEquals(1, resultado.getId(), "El ID de la lista debe ser 1");
+        assertEquals(nombreLista, resultado.getNombre(), "El nombre de la lista debe coincidir");
+        assertEquals(usuario1Id, resultado.getCreador().getId(), "El creador debe ser el usuario con ID 1");
+        assertEquals(usuario2Id, resultado.getColaborador().getId(), "El colaborador debe ser el usuario con ID 2");
+    }
+
+    @Test
+    public void testCrearListaColaborativaUsuariosNoAmigos() {
+        Integer usuario1Id = 1;
+        Integer usuario2Id = 2;
+        String nombreLista = "Lista Nueva";
+
+        when(repositorioUsuario.existeRelacion(usuario1Id, usuario2Id)).thenReturn(false);
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            listaColaborativaServiceImpl.crearListaColaborativa(usuario1Id, usuario2Id, nombreLista);
+        });
+
+        assertEquals("Los usuarios deben seguirse mutuamente para colaborar.", exception.getMessage(),
+                "El mensaje de excepción debe ser 'Los usuarios deben seguirse mutuamente para colaborar.'");
+    }
+
+    @Test
+    public void testCrearListaColaborativaNombreDuplicado() {
+        Integer usuario1Id = 1;
+        Integer usuario2Id = 2;
+        String nombreLista = "Lista Duplicada";
+
+        when(repositorioUsuario.existeRelacion(usuario1Id, usuario2Id)).thenReturn(true);
+        when(listaColaborativaRepository.existeListaConNombreParaUsuario(usuario1Id, nombreLista)).thenReturn(true);
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            listaColaborativaServiceImpl.crearListaColaborativa(usuario1Id, usuario2Id, nombreLista);
+        });
+
+        assertEquals("Ya existe una lista con este nombre para el usuario.", exception.getMessage(),
+                "El mensaje de excepción debe ser 'Ya existe una lista con este nombre para el usuario.'");
+    }
+
+    @Test
+    public void testCrearListaColaborativaErrorAlGuardar() {
+        Integer usuario1Id = 1;
+        Integer usuario2Id = 2;
+        String nombreLista = "Lista Nueva";
+
+        Usuario usuario1 = new Usuario();
+        usuario1.setId(usuario1Id);
+
+        Usuario usuario2 = new Usuario();
+        usuario2.setId(usuario2Id);
+
+        when(repositorioUsuario.existeRelacion(usuario1Id, usuario2Id)).thenReturn(true);
+        when(repositorioUsuario.buscarPorId(usuario1Id)).thenReturn(usuario1);
+        when(repositorioUsuario.buscarPorId(usuario2Id)).thenReturn(usuario2);
+        when(listaColaborativaRepository.existeListaConNombreParaUsuario(usuario1Id, nombreLista)).thenReturn(false);
+        when(listaColaborativaRepository.guardar(any(ListaColaborativa.class))).thenThrow(new RuntimeException("Error al guardar"));
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            listaColaborativaServiceImpl.crearListaColaborativa(usuario1Id, usuario2Id, nombreLista);
+        });
+
+        assertEquals("Error al guardar", exception.getMessage(), "El mensaje de excepción debe ser 'Error al guardar'");
+    }
 
 }

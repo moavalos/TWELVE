@@ -20,4 +20,6 @@ public interface ListaColaborativaRepository {
     List<ListaMovie> buscarPeliculasPorListaId(Integer listaId);
 
     boolean existePeliculaEnLista(Integer listaId, Integer movieId);
+
+    boolean existeListaConNombreParaUsuario(Integer usuarioId, String nombreLista);
 }

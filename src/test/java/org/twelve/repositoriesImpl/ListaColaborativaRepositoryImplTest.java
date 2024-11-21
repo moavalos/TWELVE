@@ -609,4 +609,27 @@ public class ListaColaborativaRepositoryImplTest {
 
         assertFalse(resultado);
     }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testExisteListaConNombreParaUsuarioCuandoNoExiste() throws Exception {
+        Usuario usuario = new Usuario();
+        usuario.setEmail("usuario@unlam.com");
+        usuario.setPassword("password");
+        sessionFactory.getCurrentSession().save(usuario);
+
+        boolean resultado = listaColaborativaRepositoryImpl.existeListaConNombreParaUsuario(usuario.getId(), "Lista Inexistente");
+
+        assertFalse(resultado, "El resultado debe ser false porque no hay ninguna lista con ese nombre para el usuario.");
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testExisteListaConNombreParaUsuarioUsuarioInexistente() throws Exception {
+        boolean resultado = listaColaborativaRepositoryImpl.existeListaConNombreParaUsuario(999, "Lista Inexistente");
+
+        assertFalse(resultado, "El resultado debe ser false porque el usuario no existe.");
+    }
 }

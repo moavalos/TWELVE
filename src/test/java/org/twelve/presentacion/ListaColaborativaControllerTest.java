@@ -39,7 +39,6 @@ public class ListaColaborativaControllerTest {
         usuarioService = mock(UsuarioService.class);
         listaColaborativaService = mock(ListaColaborativaService.class);
         listaColaborativaController = new ListaColaborativaController(usuarioService, listaColaborativaService, movieService);
-
     }
 
     @Test
@@ -236,5 +235,57 @@ public class ListaColaborativaControllerTest {
         assertTrue(((List<ListaMovie>) modelAndView.getModel().get("peliculas")).isEmpty());
     }
 
+    @Test
+    public void testCrearListaColaborativaConNombreDuplicado() {
+        Integer usuarioLogueadoId = 1;
+        Integer usuarioColaboradorId = 2;
+        String nombreLista = "Lista Existente";
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(usuarioLogueadoId);
+        when(usuarioService.sonAmigos(usuarioLogueadoId, usuarioColaboradorId)).thenReturn(true);
+        when(listaColaborativaService.crearListaColaborativa(usuarioLogueadoId, usuarioColaboradorId, nombreLista))
+                .thenThrow(new RuntimeException("Ya existe una lista con este nombre para el usuario."));
+
+        ModelAndView modelAndView = listaColaborativaController.crearListaColaborativa(requestMock, nombreLista, usuarioColaboradorId);
+
+        assertThat(modelAndView.getViewName(), is("crearListaColaborativa"));
+        assertThat(modelAndView.getModel().get("error"), is("Ya existe una lista con este nombre para el usuario."));
+        assertNotNull(modelAndView.getModel().get("usuarios"));
+    }
+
+    @Test
+    public void testCrearListaColaborativaConErrorGenerico() {
+        Integer usuarioLogueadoId = 1;
+        Integer usuarioColaboradorId = 2;
+        String nombreLista = "Nueva Lista";
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(usuarioLogueadoId);
+        when(usuarioService.sonAmigos(usuarioLogueadoId, usuarioColaboradorId)).thenReturn(true);
+        when(listaColaborativaService.crearListaColaborativa(usuarioLogueadoId, usuarioColaboradorId, nombreLista))
+                .thenThrow(new RuntimeException("Error inesperado"));
+
+        ModelAndView modelAndView = listaColaborativaController.crearListaColaborativa(requestMock, nombreLista, usuarioColaboradorId);
+
+        assertThat(modelAndView.getViewName(), is("crearListaColaborativa"));
+        assertThat(modelAndView.getModel().get("error"), is("Ocurrió un error al crear la lista. Intenta nuevamente."));
+        assertNotNull(modelAndView.getModel().get("usuarios"));
+    }
+
+    @Test
+    public void testCrearListaColaborativaExito() {
+        Integer usuarioLogueadoId = 1;
+        Integer usuarioColaboradorId = 2;
+        String nombreLista = "Lista Nueva";
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(usuarioLogueadoId);
+        when(usuarioService.sonAmigos(usuarioLogueadoId, usuarioColaboradorId)).thenReturn(true);
+
+        ModelAndView modelAndView = listaColaborativaController.crearListaColaborativa(requestMock, nombreLista, usuarioColaboradorId);
+
+        assertThat(modelAndView.getViewName(), is("redirect:/listas/" + usuarioLogueadoId));
+    }
 
 }
