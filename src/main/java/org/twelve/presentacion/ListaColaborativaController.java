@@ -97,8 +97,10 @@ public class ListaColaborativaController {
     }
 
     @RequestMapping(path = "/listas/detalle/{id}", method = RequestMethod.GET)
-    public ModelAndView mostrarDetalleLista(@PathVariable Integer id) {
+    public ModelAndView mostrarDetalleLista(@PathVariable Integer id, HttpServletRequest request) {
         ModelMap model = new ModelMap();
+
+        Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
 
         ListaColaborativaDTO lista = listaColaborativaService.obtenerDetalleLista(id);
 
@@ -108,6 +110,12 @@ public class ListaColaborativaController {
         }
 
         List<ListaMovie> peliculas = listaColaborativaService.obtenerPeliculasPorListaId(id);
+
+        if (!lista.getCreador().getId().equals(usuarioLogueadoId) &&
+                !lista.getColaborador().getId().equals(usuarioLogueadoId)) {
+            return new ModelAndView("redirect:/error", "error", "No tienes permiso para ver esta lista.");
+        }
+
         model.put("peliculas", peliculas);
         model.put("lista", lista);
 

@@ -252,15 +252,12 @@ public class MovieController {
         boolean fueEstrenada = movieService.isMovieReleased(movie);
         Set<Integer> usuarioLikes = comentarioService.obtenerLikesPorUsuario(usuarioLogueadoId);
 
-
-
         model.put("movie", movie);
         model.put("listasColaborativas", listasColaborativas);
         model.put("comentarios", comentarios);
         model.put("peliculasSimilares", similarMovies);
         model.put("fueEstrenada",fueEstrenada);
         model.put("usuarioLikes",usuarioLikes);
-
 
         return new ModelAndView("detalle-pelicula", model);
     }
@@ -284,8 +281,6 @@ public class MovieController {
 
         return new ModelAndView("upcoming-movies", modelo);
     }
-
-
 
     @RequestMapping(path = "/movie/{idMovie}/comment/{idComentario}/like", method = RequestMethod.POST)
     public String likeComentario(@PathVariable Integer idMovie,
@@ -316,6 +311,5 @@ public class MovieController {
         comentarioService.quitarMeGustaComentario(idComentario, idUsuario);
         return "redirect:/detalle-pelicula/" + idMovie;
     }
-
 
 }

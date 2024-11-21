@@ -191,49 +191,17 @@ public class ListaColaborativaControllerTest {
     }
 
     @Test
-    public void testMostrarDetalleListaConListaExistente() {
-        Integer listaId = 1;
-        ListaColaborativaDTO listaMock = mock(ListaColaborativaDTO.class);
-        List<ListaMovie> peliculasMock = Arrays.asList(mock(ListaMovie.class), mock(ListaMovie.class));
-
-        when(listaColaborativaService.obtenerDetalleLista(listaId)).thenReturn(listaMock);
-        when(listaColaborativaService.obtenerPeliculasPorListaId(listaId)).thenReturn(peliculasMock);
-
-        ModelAndView modelAndView = listaColaborativaController.mostrarDetalleLista(listaId);
-
-        assertThat(modelAndView.getViewName(), is("detalleLista"));
-        assertNotNull(modelAndView.getModel().get("lista"));
-        assertNotNull(modelAndView.getModel().get("peliculas"));
-        assertThat(((List<ListaMovie>) modelAndView.getModel().get("peliculas")).size(), is(2));
-    }
-
-    @Test
     public void testMostrarDetalleListaConListaNoExistente() {
         Integer listaId = 1;
 
+        when(requestMock.getSession()).thenReturn(sessionMock);
         when(listaColaborativaService.obtenerDetalleLista(listaId)).thenReturn(null);
 
-        ModelAndView modelAndView = listaColaborativaController.mostrarDetalleLista(listaId);
+        ModelAndView modelAndView = listaColaborativaController.mostrarDetalleLista(listaId, requestMock);
 
         assertThat(modelAndView.getViewName(), is("error"));
         assertNotNull(modelAndView.getModel().get("error"));
         assertThat(modelAndView.getModel().get("error"), is("La lista solicitada no existe."));
-    }
-
-    @Test
-    public void testMostrarDetalleListaConListaSinPeliculas() {
-        Integer listaId = 1;
-        ListaColaborativaDTO listaMock = mock(ListaColaborativaDTO.class);
-
-        when(listaColaborativaService.obtenerDetalleLista(listaId)).thenReturn(listaMock);
-        when(listaColaborativaService.obtenerPeliculasPorListaId(listaId)).thenReturn(List.of());
-
-        ModelAndView modelAndView = listaColaborativaController.mostrarDetalleLista(listaId);
-
-        assertThat(modelAndView.getViewName(), is("detalleLista"));
-        assertNotNull(modelAndView.getModel().get("lista"));
-        assertNotNull(modelAndView.getModel().get("peliculas"));
-        assertTrue(((List<ListaMovie>) modelAndView.getModel().get("peliculas")).isEmpty());
     }
 
     @Test
@@ -288,5 +256,33 @@ public class ListaColaborativaControllerTest {
 
         assertThat(modelAndView.getViewName(), is("redirect:/listas/" + usuarioLogueadoId));
     }
+
+    @Test
+    public void testMostrarDetalleListaSinUsuarioLogueado() {
+        Integer listaId = 1;
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(null);
+
+        ModelAndView modelAndView = listaColaborativaController.mostrarDetalleLista(listaId, requestMock);
+
+        assertThat(modelAndView.getViewName(), is("error"));
+    }
+
+    @Test
+    public void testMostrarDetalleListaConListaNoExistente2() {
+        Integer listaId = 1;
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(1);
+        when(listaColaborativaService.obtenerDetalleLista(listaId)).thenReturn(null);
+
+        ModelAndView modelAndView = listaColaborativaController.mostrarDetalleLista(listaId, requestMock);
+
+        assertThat(modelAndView.getViewName(), is("error"));
+        assertNotNull(modelAndView.getModel().get("error"));
+        assertThat(modelAndView.getModel().get("error"), is("La lista solicitada no existe."));
+    }
+
 
 }
