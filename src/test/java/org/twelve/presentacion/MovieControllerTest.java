@@ -42,7 +42,7 @@ public class MovieControllerTest {
         movie = mock(Movie.class);
         when(movie.getDescripcion()).thenReturn("Coraline");
 
-        movieDTO  = mock(MovieDTO.class);
+        movieDTO = mock(MovieDTO.class);
         perfilDTOMock = mock(PerfilDTO.class);
         requestMock = mock(HttpServletRequest.class);
         sessionMock = mock(HttpSession.class);
@@ -607,4 +607,6 @@ public class MovieControllerTest {
         assertThat(modelAndView.getModel().get("error"), is("No se pudo agregar la película, sesión no iniciada."));
         verify(listaColaborativaService, never()).agregarPeliculaALista(anyInt(), anyInt(), anyInt());
     }
+
+
 }

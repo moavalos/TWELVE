@@ -1,8 +1,8 @@
 package org.twelve.presentacion.dto;
 
-import org.twelve.dominio.MovieRepository;
-import org.twelve.dominio.RepositorioUsuario;
 import org.twelve.dominio.entities.Comentario;
+import org.twelve.dominio.entities.Movie;
+import org.twelve.dominio.entities.Usuario;
 
 public class ComentarioDTO {
 
@@ -17,14 +17,14 @@ public class ComentarioDTO {
     private String nombrePelicula;
     private String imagenPelicula;
 
-    public ComentarioDTO(Integer idUsuario, Integer idMovie, String descripcion, Double valoracion, Integer likes,
-                         PerfilDTO usuario, String nombrePelicula, String imagenPelicula) {
-        this.idUsuario = idUsuario;
+    public ComentarioDTO(Integer id, Integer idMovie, Integer idUsuario, String descripcion, Integer likes, PerfilDTO usuario, Double valoracion, String nombrePelicula, String imagenPelicula) {
+        this.id = id;
         this.idMovie = idMovie;
+        this.idUsuario = idUsuario;
         this.descripcion = descripcion;
-        this.valoracion = valoracion;
         this.likes = likes;
         this.usuario = usuario;
+        this.valoracion = valoracion;
         this.nombrePelicula = nombrePelicula;
         this.imagenPelicula = imagenPelicula;
     }
@@ -104,18 +104,26 @@ public class ComentarioDTO {
         this.imagenPelicula = imagenPelicula;
     }
 
-    public static Comentario convertToEntity(ComentarioDTO comentarioDTO) {
+    public static Comentario convertToEntity(ComentarioDTO comentarioDTO, Movie movie, Usuario usuario) {
         Comentario comentario = new Comentario();
         comentario.setDescripcion(comentarioDTO.getDescripcion());
+        comentario.setLikes(comentarioDTO.getLikes());
         comentario.setValoracion(comentarioDTO.getValoracion());
-
+        comentario.setMovie(movie);
+        comentario.setUsuario(usuario);
         return comentario;
     }
 
     public static ComentarioDTO convertToDTO(Comentario comentario) {
         ComentarioDTO comentarioDTO = new ComentarioDTO();
+        comentarioDTO.setId(comentario.getId());
         comentarioDTO.setDescripcion(comentario.getDescripcion());
+        comentarioDTO.setLikes(comentario.getLikes());
         comentarioDTO.setValoracion(comentario.getValoracion());
+        comentarioDTO.setLikes(comentario.getLikes());
+        comentarioDTO.setUsuario(new PerfilDTO(comentario.getUsuario().getId(), comentario.getUsuario().getUsername()));
+        comentarioDTO.setNombrePelicula(comentario.getMovie().getNombre());
+        comentarioDTO.setImagenPelicula(comentario.getMovie().getImagen());
         return comentarioDTO;
     }
 }

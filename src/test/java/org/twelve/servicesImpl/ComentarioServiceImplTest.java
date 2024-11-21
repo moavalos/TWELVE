@@ -3,19 +3,15 @@ package org.twelve.servicesImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.twelve.dominio.ComentarioRepository;
-import org.twelve.dominio.ComentarioService;
-import org.twelve.dominio.MovieRepository;
-import org.twelve.dominio.RepositorioUsuario;
+import org.twelve.dominio.*;
 import org.twelve.dominio.entities.Comentario;
 import org.twelve.dominio.entities.Movie;
 import org.twelve.dominio.entities.Usuario;
+import org.twelve.dominio.entities.UsuarioComentario;
 import org.twelve.dominio.serviceImpl.ComentarioServiceImpl;
 import org.twelve.presentacion.dto.ComentarioDTO;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -27,6 +23,7 @@ public class ComentarioServiceImplTest {
     private MovieRepository movieRepository;
     private RepositorioUsuario repositorioUsuario;
     private ComentarioRepository comentarioRepository;
+    private UsuarioComentarioRepository usuarioComentarioRepository;
 
     private Movie movie1;
     private Movie movie2;
@@ -42,7 +39,8 @@ public class ComentarioServiceImplTest {
         movieRepository = mock(MovieRepository.class);
         repositorioUsuario = mock(RepositorioUsuario.class);
         comentarioRepository = mock(ComentarioRepository.class);
-        this.comentarioServiceImpl = new ComentarioServiceImpl(comentarioRepository, movieRepository, repositorioUsuario);
+        usuarioComentarioRepository = mock(UsuarioComentarioRepository.class);
+        this.comentarioServiceImpl = new ComentarioServiceImpl(comentarioRepository, movieRepository, repositorioUsuario, usuarioComentarioRepository);
         this.movie1 = mock(Movie.class);
         this.movie2 = mock(Movie.class);
         this.movie3 = mock(Movie.class);
@@ -218,5 +216,76 @@ public class ComentarioServiceImplTest {
         assertEquals("pelicula3.jpg", listaComentarioDTO.get(2).getImagenPelicula());
 
         verify(comentarioRepository, times(1)).findTop3ByUsuarioId(usuarioId);
+    }
+
+    ///////////////////////
+
+
+    @Test
+    public void testObtenerLikesPorUsuario() {
+        //preparacion
+        Integer idUsuario = 1;
+        Set<Integer> comentariosLikes = new HashSet<>(Arrays.asList(1, 2, 3));
+
+        when(usuarioComentarioRepository.findComentarioIdsByUsuarioId(idUsuario)).thenReturn(Arrays.asList(1, 2, 3));
+
+        //ejecucion
+        Set<Integer> result = comentarioServiceImpl.obtenerLikesPorUsuario(idUsuario);
+
+        //validacion
+        assertEquals(comentariosLikes, result);
+        verify(usuarioComentarioRepository, times(1)).findComentarioIdsByUsuarioId(idUsuario);
+    }
+
+    @Test
+    public void testDarMeGustaComentario() {
+        //preparacion
+        Integer idComentario = 1;
+        Integer idUsuario = 1;
+
+
+        Comentario comentario1 = new Comentario();
+        comentario1.setLikes(0);
+
+        when(comentarioRepository.findById(idComentario)).thenReturn(Optional.of(comentario1));
+        when(repositorioUsuario.buscarPorId(idUsuario)).thenReturn(usuario1);
+        when(usuarioComentarioRepository.existsByComentarioAndUsuario(idComentario, idUsuario)).thenReturn(false);
+
+        //ejecucion
+        comentarioServiceImpl.darMeGustaComentario(idComentario, idUsuario);
+
+        //validacion
+        verify(usuarioComentarioRepository, times(1)).save(any(UsuarioComentario.class));
+        verify(comentarioRepository, times(1)).save(comentario1);
+        assertEquals(1, comentario1.getLikes());
+    }
+
+
+    @Test
+    public void testQuitarMeGustaComentario() {
+        //preparacion
+        Integer idComentario = 1;
+        Integer idUsuario = 1;
+
+        Comentario comentario1 = new Comentario();
+        comentario1.setLikes(1);
+
+        UsuarioComentario usuarioComentario = new UsuarioComentario();
+        usuarioComentario.setComentario(comentario1);
+        usuarioComentario.setUsuario(usuario1);
+        usuarioComentario.setLikeComentario(true);
+
+        when(comentarioRepository.findById(idComentario)).thenReturn(Optional.of(comentario1));
+        when(repositorioUsuario.buscarPorId(idUsuario)).thenReturn(usuario1);
+        when(usuarioComentarioRepository.existsByComentarioAndUsuario(idComentario, idUsuario)).thenReturn(true);
+        when(usuarioComentarioRepository.findByComentarioAndUsuario(idComentario, idUsuario)).thenReturn(usuarioComentario);
+
+        //ejecucion
+        comentarioServiceImpl.quitarMeGustaComentario(idComentario, idUsuario);
+
+        //validacion
+        verify(usuarioComentarioRepository, times(1)).delete(usuarioComentario);
+        verify(comentarioRepository, times(1)).save(comentario1);
+        assertEquals(0, comentario1.getLikes());
     }
 }

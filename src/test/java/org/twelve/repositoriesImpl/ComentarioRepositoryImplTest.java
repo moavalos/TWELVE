@@ -178,4 +178,59 @@ public class ComentarioRepositoryImplTest {
     }
 
 
+    @Test
+    @Transactional
+    public void testDadoQueBuscoLosUltimosTresComentariosConMasLikesCuandoExistenComentariosEntoncesDevuelveLosTresConMayorPuntaje() {
+        //preparacion
+        Usuario usuario = new Usuario();
+        usuario.setId(1);
+        usuario.setNombre("Jose");
+        sessionFactory.getCurrentSession().save(usuario);
+
+        Movie movie1 = new Movie();
+        movie1.setId(1);
+        movie1.setNombre("pelicula1");
+        sessionFactory.getCurrentSession().save(movie1);
+
+        //preparacion comentarios
+        Comentario comentario1 = new Comentario();
+        comentario1.setDescripcion("comentario1");
+        comentario1.setUsuario(usuario);
+        comentario1.setMovie(movie1);
+        comentario1.setLikes(3);
+        sessionFactory.getCurrentSession().save(comentario1);
+
+        Comentario comentario2 = new Comentario();
+        comentario2.setDescripcion("comentario2");
+        comentario2.setUsuario(usuario);
+        comentario2.setMovie(movie1);
+        comentario2.setLikes(2);
+        sessionFactory.getCurrentSession().save(comentario2);
+
+        Comentario comentario3 = new Comentario();
+        comentario3.setDescripcion("comentario3");
+        comentario3.setUsuario(usuario);
+        comentario3.setMovie(movie1);
+        comentario3.setLikes(24);
+        sessionFactory.getCurrentSession().save(comentario3);
+
+        Comentario comentario4 = new Comentario();
+        comentario4.setDescripcion("comentario4");
+        comentario4.setUsuario(usuario);
+        comentario4.setMovie(movie1);
+        comentario4.setLikes(13);
+        sessionFactory.getCurrentSession().save(comentario4);
+
+        //ejecucion
+        List<Comentario> comentarios = comentarioRepository.obtener3ComentariosConMasLikes();
+
+        //validacion
+        assertNotNull(comentarios);
+        assertThat(comentarios.size(), equalTo(3));
+        assertThat(comentarios.get(0).getDescripcion(), equalTo("comentario3"));
+        assertThat(comentarios.get(1).getDescripcion(), equalTo("comentario4"));
+        assertThat(comentarios.get(2).getDescripcion(), equalTo("comentario1"));
+    }
+
+
 }

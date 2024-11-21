@@ -13,6 +13,7 @@ import org.twelve.presentacion.dto.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
@@ -44,6 +45,7 @@ public class MovieController {
                 .collect(Collectors.toList());
 
         List<PerfilDTO> perfiles = usuarioService.encontrarTodos();
+        List<ComentarioDTO> comentariosPopulares = comentarioService.obtener3ComentariosConMasLikes();
 
         List<MovieDTO> upcomingMovies = movieService.getUpcomingMovies();
 
@@ -51,6 +53,7 @@ public class MovieController {
         modelo.put("movies", topMovies);
         modelo.put("perfiles", perfiles);
         modelo.put("upcomingMovies", upcomingMovies);
+        modelo.put("comentariosPopulares", comentariosPopulares);
 
         return new ModelAndView("home", modelo);
     }
@@ -104,6 +107,9 @@ public class MovieController {
                 ? listaColaborativaService.obtenerListasPorUsuario(usuario.getId())
                 : Collections.emptyList();
 
+        Set<Integer> usuarioLikes = comentarioService.obtenerLikesPorUsuario(usuarioLogueadoId);
+
+
         //modelo
         ModelMap modelo = new ModelMap();
         modelo.put("movie", movie);
@@ -115,6 +121,8 @@ public class MovieController {
         modelo.put("enListaVerMasTarde", enListaVerMasTarde);
         modelo.put("fueEstrenada", fueEstrenada);
         modelo.put("listasColaborativas", listasColaborativas);
+        modelo.put("usuarioLikes", usuarioLikes);
+        modelo.put("usuarioLogueadoId", usuarioLogueadoId);
 
         return new ModelAndView("detalle-pelicula", modelo);
     }
@@ -273,6 +281,37 @@ public class MovieController {
         return new ModelAndView("upcoming-movies", modelo);
     }
 
+
+
+    @RequestMapping(path = "/movie/{idMovie}/comment/{idComentario}/like", method = RequestMethod.POST)
+    public String likeComentario(@PathVariable Integer idMovie,
+                                 @PathVariable Integer idComentario,
+                                 HttpServletRequest request) {
+
+        Integer idUsuario = (Integer) request.getSession().getAttribute("usuarioId");
+
+        if (idUsuario == null) {
+            return "redirect:/login";
+        }
+
+        comentarioService.darMeGustaComentario(idComentario, idUsuario);
+        return "redirect:/detalle-pelicula/" + idMovie;
+    }
+
+    @RequestMapping(path = "/movie/{idMovie}/comment/{idComentario}/unlike", method = RequestMethod.POST)
+    public String unlikeComentario(@PathVariable Integer idMovie,
+                                   @PathVariable Integer idComentario,
+                                   HttpServletRequest request) {
+
+        Integer idUsuario = (Integer) request.getSession().getAttribute("usuarioId");
+
+        if (idUsuario == null) {
+            return "redirect:/login";
+        }
+
+        comentarioService.quitarMeGustaComentario(idComentario, idUsuario);
+        return "redirect:/detalle-pelicula/" + idMovie;
+    }
 
 
 }
