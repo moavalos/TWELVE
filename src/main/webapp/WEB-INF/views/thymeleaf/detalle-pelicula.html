@@ -17,9 +17,10 @@
 <div class="container my-5">
     <div class="row">
         <!-- Columna imagen y botones -->
-        <div class="col-md-3">
-            <img th:src="@{'/images/' + ${movie.imagen}}" alt="Movie Image"
-                 class="img-fluid rounded shadow movie-image">
+        <div class="col-md-3 text-center">
+
+                <img th:src="@{'/images/' + ${movie.imagen}}" alt="Movie Image" class="img-fluid rounded shadow movie-image">
+
             <div class="sidebar-buttons mt-4">
                 <!-- Botón Me gusta -->
                 <div th:if="${session.usuario != null && fueEstrenada}">
@@ -31,7 +32,7 @@
                         </button>
                     </form>
                 </div>
-
+              
                 <!-- Botón ver más tarde -->
                 <div th:if="${session.usuario != null}">
                     <form th:action="@{/movie/{id}/verMasTarde(id=${movie.id})}" method="post">

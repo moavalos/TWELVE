@@ -2,24 +2,28 @@ package org.twelve.dominio.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.twelve.dominio.MovieRepository;
 import org.twelve.dominio.RepositorioUsuario;
 import org.twelve.dominio.UsuarioMovieRepository;
 import org.twelve.dominio.UsuarioService;
-import org.twelve.dominio.entities.Movie;
-import org.twelve.dominio.entities.Seguidor;
-import org.twelve.dominio.entities.Usuario;
-import org.twelve.dominio.entities.UsuarioMovie;
+import org.twelve.dominio.entities.*;
 import org.twelve.presentacion.dto.MovieDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
 import org.twelve.presentacion.dto.UsuarioMovieDTO;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.twelve.presentacion.dto.PerfilDTO.convertToDTO;
@@ -170,6 +174,49 @@ public class UsuarioServiceImpl implements UsuarioService {
             throw new IllegalArgumentException("El ID de usuario no puede ser negativo");
 
         return usuarioMovieRepository.obtenerPeliculasFavoritas(usuarioId);
+    }
+
+    @Override
+    public void actualizarPerfil(Integer userId, String username, String descripcion, String nombre, String pais, MultipartFile fotoPerfil) {
+        Usuario usuario = repositorioUsuario.buscarPorId(userId);
+
+        usuario.setUsername(username);
+        usuario.setDescripcion(descripcion);
+        usuario.setNombre(nombre);
+
+        if (usuario.getPais() != null) {
+            usuario.getPais().setNombre(pais);
+        } else {
+            Pais nuevoPais = new Pais();
+            nuevoPais.setNombre(pais);
+            usuario.setPais(nuevoPais);
+        }
+
+        if (fotoPerfil != null && !fotoPerfil.isEmpty()) {
+            String nombreArchivo = guardarFoto(fotoPerfil);
+            usuario.setFotoDePerfil(nombreArchivo);
+        }
+
+        repositorioUsuario.guardar(usuario);
+    }
+
+    @Override
+    public String guardarFoto(MultipartFile fotoPerfil) {
+        String tipoArchivo = fotoPerfil.getContentType();
+        if (!tipoArchivo.startsWith("images/")) {
+            throw new RuntimeException("El archivo no es una imagen válida");
+        }
+
+        String nombreArchivo = UUID.randomUUID() + "_" + fotoPerfil.getOriginalFilename();
+        Path rutaArchivo = Paths.get("uploads", "user", nombreArchivo);
+
+        try {
+            Files.copy(fotoPerfil.getInputStream(), rutaArchivo, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException("Error al guardar la foto de perfil", e);
+        }
+
+        return nombreArchivo;
     }
 
     @Override

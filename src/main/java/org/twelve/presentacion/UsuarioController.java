@@ -1,11 +1,14 @@
 package org.twelve.presentacion;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.twelve.dominio.ComentarioService;
 import org.twelve.dominio.UsuarioService;
@@ -17,6 +20,7 @@ import org.twelve.presentacion.dto.UsuarioMovieDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -116,6 +120,36 @@ public class UsuarioController {
         model.put("peliculasFavoritas", peliculasFavoritas != null ? peliculasFavoritas : Collections.emptyList());
 
         return new ModelAndView("favoritos", model);
+    }
+
+    @RequestMapping(path = "/editarPerfil", method = RequestMethod.POST)
+    public String editarPerfil(
+            @RequestParam("username") String username,
+            @RequestParam("descripcion") String descripcion,
+            @RequestParam("nombre") String nombre,
+            @RequestParam("pais") String pais,
+            @RequestParam(value = "fotoPerfil", required = false) MultipartFile fotoPerfil,
+            HttpServletRequest request) {
+
+        Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
+
+        if (usuarioLogueadoId == null) {
+            return "redirect:/login";
+        }
+
+        if (username.isEmpty() || nombre.isEmpty() || pais.isEmpty()) {
+            return "redirect:/perfil/" + usuarioLogueadoId + "?error=Campos obligatorios";
+        }
+
+        try {
+            usuarioService.actualizarPerfil(usuarioLogueadoId, username, descripcion, nombre, pais, fotoPerfil);
+        } catch (DataIntegrityViolationException e) {
+            return "redirect:/perfil/" + usuarioLogueadoId + "?error=Error de datos";
+        } catch (Exception e) {
+            return "redirect:/error";
+        }
+
+        return "redirect:/perfil/" + usuarioLogueadoId;
     }
 
     @RequestMapping(path = "/historial", method = RequestMethod.GET)

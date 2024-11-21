@@ -29,6 +29,9 @@ public class Usuario {
 
     private String username;
 
+    @Column(name = "foto_de_perfil")
+    private String fotoDePerfil;
+
     @ManyToOne
     @JoinColumn(name = "pais_id")
     private Pais pais;
@@ -47,5 +50,6 @@ public class Usuario {
 
     @OneToMany(mappedBy = "seguido", cascade = CascadeType.ALL)
     private List<Seguidor> seguidos;
+
 
 }

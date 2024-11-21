@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil de Usuario</title>
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
-    <link rel="stylesheet" th:href="@{/css/perfil.css}"/>
+<!--    <link rel="stylesheet" th:href="@{/css/perfil.css}"/>-->
 </head>
 <body>
+
 
 <div th:insert="fragments/header :: header"></div>
 
@@ -15,13 +16,57 @@
     <div class="profile-info row mb-4">
         <div class="profile-left col-md-8 d-flex align-items-start bg-light p-4 rounded shadow">
             <div class="avatar">
-                <img th:src="@{/images/user/foto-perfil.jpg}" alt="User Avatar" class="img-fluid rounded-circle shadow" style="width: 150px; height: 150px;">
+                <img th:src="@{/images/user/icono-perfil.jpg}" alt="User Avatar" class="img-fluid rounded-circle shadow" style="width: 150px; height: 150px;">
             </div>
             <div class="info ms-4">
                 <h1 th:text="${usuario.username}" class="text-primary">Nombre del Usuario</h1>
                 <p class="mt-3 text-muted" th:text="${usuario.descripcion}">Descripción del perfil</p>
                 <p><strong>Nombre:</strong> <span th:text="${usuario.nombre}">@username</span></p>
                 <p><strong>Ubicación:</strong> <span th:text="${usuario.pais.nombre}">Ubicación</span></p>
+                <div th:if="${esPerfilPropio}">
+                    <button class="btn rounded-pill btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">Editar perfil</button>
+                </div>
+
+
+                <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form th:action="@{/editarPerfil}"  method="POST">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editProfileModalLabel">Editar Perfil</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="fotoPerfil" class="form-label">Foto de Perfil</label>
+                                        <input type="file" class="form-control" id="fotoPerfil" name="fotoPerfil" accept="image/*">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="username" class="form-label">Nombre de Usuario</label>
+                                        <input type="text" class="form-control" id="username" name="username" th:value="${usuario.username}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="descripcion" class="form-label">Descripción</label>
+                                        <textarea class="form-control" id="descripcion" name="descripcion" rows="3" th:text="${usuario.descripcion}" required></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="nombre" class="form-label">Nombre Completo</label>
+                                        <input type="text" class="form-control" id="nombre" name="nombre" th:value="${usuario.nombre}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="pais" class="form-label">Ubicación</label>
+                                        <input type="text" class="form-control" id="pais" name="pais" th:value="${usuario.pais.nombre}" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
 
                 <div class="follow-button mt-4">
                     <form th:action="@{${seguirODejarUrl}}" method="post" th:if="${!esPerfilPropio}">
@@ -32,7 +77,7 @@
                 </div>
             </div>
         </div>
-        <div class="stats col-md-4 d-flex justify-content-around bg-light p-4 rounded shadow">
+        <div class="stats col-md-4 d-flex justify-content-around bg-light p-4 rounded shadow flex-wrap">
             <div class="stat-item text-center">
                 <p class="stat-title text-muted">Películas</p>
                 <p class="stat-number fs-4 fw-bold" th:text="${cantidadPeliculasVistas}"></p>
@@ -51,6 +96,12 @@
             </div>
         </div>
     </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <!-- Botón del toggle -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
     <nav class="menu mt-5">
         <ul class="nav nav-tabs justify-content-center">
@@ -63,6 +114,7 @@
             <li class="nav-item"><a href="#amigos" class="nav-link">Amigos</a></li>
         </ul>
     </nav>
+
 </section>
 
 <section class="content container my-5">
@@ -70,21 +122,27 @@
     <div class="favorite-movies mb-5">
         <h2 class="text-center mb-4 text-primary">Películas favoritas</h2>
 
-        <div class="d-flex justify-content-center">
+        <div class="container">
             <div th:if="${peliculasFavoritas.isEmpty() && esPerfilPropio}"
-                 class="no-favorites-message d-flex align-items-center justify-content-center bg-secondary text-white rounded w-100 shadow"
-                 style="height: 200px;">
-                <p class="text-center m-0 fs-5">No agregaste películas favoritas todavía</p>
-            </div>
-            <div th:if="${peliculasFavoritas.isEmpty() && !esPerfilPropio}"
-                 class="no-favorites-message d-flex align-items-center justify-content-center bg-secondary text-white rounded w-100 shadow"
-                 style="height: 200px;">
-                <p class="text-center m-0 fs-5" th:text="${usuario.nombre} + ' no tiene películas favoritas todavía.'"></p>
+                 class="row justify-content-center">
+                <div class="col-12 no-favorites-message d-flex align-items-center justify-content-center bg-secondary text-white rounded shadow"
+                     style="height: 200px;">
+                    <p class="text-center m-0 fs-5">No agregaste películas favoritas todavía</p>
+                </div>
             </div>
 
-            <div class="movies-grid d-flex justify-content-start flex-wrap w-100" th:unless="${peliculasFavoritas.isEmpty()}">
-                <div th:each="pelicula : ${peliculasFavoritas}" class="movie text-center mx-2 mb-4">
-                    <a th:href="@{/detalle-pelicula/{id}(id=${pelicula.id})}" class="no-link">
+            <div th:if="${peliculasFavoritas.isEmpty() && !esPerfilPropio}"
+                 class="row justify-content-center">
+                <div class="col-12 no-favorites-message d-flex align-items-center justify-content-center bg-secondary text-white rounded shadow"
+                     style="height: 200px;">
+                    <p class="text-center m-0 fs-5" th:text="${usuario.nombre} + ' no tiene películas favoritas todavía.'"></p>
+                </div>
+            </div>
+
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3"
+                 th:unless="${peliculasFavoritas.isEmpty()}">
+                <div th:each="pelicula : ${peliculasFavoritas}" class="col text-center">
+                    <a th:href="@{/detalle-pelicula/{id}(id=${pelicula.id})}" class="no-link text-decoration-none">
                         <img th:src="@{'/images/' + ${pelicula.imagen}}" th:alt="${pelicula.nombre}"
                              class="img-fluid rounded shadow mb-2">
                     </a>
