@@ -9,6 +9,7 @@ import org.twelve.dominio.entities.Comentario;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Repository("comentarioRepository")
 @Transactional
@@ -22,9 +23,9 @@ public class ComentarioRepositoryImpl implements ComentarioRepository {
     }
 
     @Override
-    public List findByIdMovie(Integer idMovie) {
+    public List<Comentario> findByIdMovie(Integer idMovie) {
         String hql = "FROM Comentario c WHERE c.movie.id = :idMovie";
-        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        Query query = sessionFactory.getCurrentSession().createQuery(hql, Comentario.class);
         query.setParameter("idMovie", idMovie);
         return query.getResultList();
     }
@@ -39,9 +40,28 @@ public class ComentarioRepositoryImpl implements ComentarioRepository {
         return query.getResultList();
     }
 
+
     @Override
     public void save(Comentario comentario) {
         sessionFactory.getCurrentSession().save(comentario);
+    }
+
+    @Override
+    public Optional<Comentario> findById(Integer id) {
+        String hql = "FROM Comentario c WHERE c.id = :id";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql, Comentario.class);
+        query.setParameter("id", id);
+        Comentario comentario = (Comentario) query.getSingleResult();
+        return Optional.ofNullable(comentario);
+    }
+
+
+    @Override
+    public List<Comentario> obtener3ComentariosConMasLikes() {
+        String hql = "FROM Comentario ORDER BY likes DESC";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setMaxResults(3);
+        return query.getResultList();
     }
 
 }
