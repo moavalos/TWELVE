@@ -30,6 +30,10 @@
             </div>
         </div>
     </div>
+
+    <form th:action="@{/listas/eliminar/{id}(id=${lista.id})}" method="post">
+        <button type="submit" class="btn btn-danger">Eliminar Lista</button>
+    </form>
 </div>
 
 <div th:insert="fragments/footer :: footer"></div>

@@ -121,4 +121,17 @@ public class ListaColaborativaController {
 
         return new ModelAndView("detalleLista", model);
     }
+
+    @RequestMapping(path = "/listas/eliminar/{id}", method = RequestMethod.POST)
+    public ModelAndView eliminarLista(@PathVariable Integer id, HttpServletRequest request) {
+        Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
+
+        if (usuarioLogueadoId == null) {
+            return new ModelAndView("redirect:/login");
+        }
+
+        listaColaborativaService.eliminarListaColaborativa(id, usuarioLogueadoId);
+        return new ModelAndView("redirect:/listas/" + usuarioLogueadoId);
+    }
+
 }

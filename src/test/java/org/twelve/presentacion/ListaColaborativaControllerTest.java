@@ -18,10 +18,8 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class ListaColaborativaControllerTest {
 
@@ -284,5 +282,48 @@ public class ListaColaborativaControllerTest {
         assertThat(modelAndView.getModel().get("error"), is("La lista solicitada no existe."));
     }
 
+    @Test
+    public void testEliminarListaConUsuarioLogueado() {
+        Integer usuarioLogueadoId = 1;
+        Integer listaId = 123;
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(usuarioLogueadoId);
+
+        doNothing().when(listaColaborativaService).eliminarListaColaborativa(listaId, usuarioLogueadoId);
+
+        ModelAndView modelAndView = listaColaborativaController.eliminarLista(listaId, requestMock);
+
+        assertThat(modelAndView.getViewName(), is("redirect:/listas/" + usuarioLogueadoId));
+    }
+
+    @Test
+    public void testEliminarListaSinUsuarioLogueado() {
+        Integer listaId = 123;
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(null);
+
+        ModelAndView modelAndView = listaColaborativaController.eliminarLista(listaId, requestMock);
+
+        assertThat(modelAndView.getViewName(), is("redirect:/login"));
+    }
+
+    @Test
+    public void testEliminarListaConErrorEnElServicio() {
+        Integer usuarioLogueadoId = 1;
+        Integer listaId = 123;
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(usuarioLogueadoId);
+
+        doThrow(new RuntimeException("Error eliminando la lista"))
+                .when(listaColaborativaService).eliminarListaColaborativa(listaId, usuarioLogueadoId);
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            listaColaborativaController.eliminarLista(listaId, requestMock);
+        });
+        assertThat(exception.getMessage(), is("Error eliminando la lista"));
+    }
 
 }

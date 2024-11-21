@@ -116,4 +116,24 @@ public class ListaColaborativaServiceImpl implements ListaColaborativaService {
         return listaColaborativaRepository.buscarPeliculasPorListaId(listaId);
     }
 
+    @Override
+    public void eliminarListaColaborativa(Integer listaId, Integer usuarioId) {
+        ListaColaborativa lista = listaColaborativaRepository.buscarPorId(listaId);
+
+        if (lista == null) {
+            throw new RuntimeException("La lista no existe.");
+        }
+
+        if (!lista.getCreador().getId().equals(usuarioId) && !lista.getColaborador().getId().equals(usuarioId)) {
+            throw new RuntimeException("No tienes permiso para eliminar esta lista.");
+        }
+
+        List<ListaMovie> peliculas = listaColaborativaRepository.buscarPeliculasPorListaId(listaId);
+        for (ListaMovie pelicula : peliculas) {
+            listaColaborativaRepository.eliminarPelicula(pelicula);
+        }
+
+        listaColaborativaRepository.eliminar(listaId);
+    }
+
 }

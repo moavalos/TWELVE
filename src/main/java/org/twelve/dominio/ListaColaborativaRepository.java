@@ -22,4 +22,8 @@ public interface ListaColaborativaRepository {
     boolean existePeliculaEnLista(Integer listaId, Integer movieId);
 
     boolean existeListaConNombreParaUsuario(Integer usuarioId, String nombreLista);
+
+    void eliminar(Integer listaId);
+
+    void eliminarPelicula(ListaMovie listaMovie);
 }

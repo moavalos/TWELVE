@@ -21,4 +21,6 @@ public interface ListaColaborativaService {
 
     List<ListaMovie> obtenerPeliculasPorListaId(Integer listaId);
 
+    void eliminarListaColaborativa(Integer listaId, Integer usuarioId);
+
 }

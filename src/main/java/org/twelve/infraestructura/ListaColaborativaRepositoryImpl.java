@@ -84,4 +84,18 @@ public class ListaColaborativaRepositoryImpl implements ListaColaborativaReposit
         return count > 0;
     }
 
+    @Override
+    public void eliminar(Integer listaId) {
+        ListaColaborativa lista = buscarPorId(listaId);
+        if (lista != null) {
+            sessionFactory.getCurrentSession().delete(lista);
+        }
+    }
+
+    @Override
+    public void eliminarPelicula(ListaMovie listaMovie) {
+        sessionFactory.getCurrentSession().delete(listaMovie);
+    }
+
+
 }

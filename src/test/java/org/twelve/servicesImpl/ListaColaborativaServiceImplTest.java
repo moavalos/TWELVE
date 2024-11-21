@@ -13,6 +13,7 @@ import org.twelve.dominio.serviceImpl.ListaColaborativaServiceImpl;
 import org.twelve.presentacion.dto.ListaColaborativaDTO;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -448,4 +449,21 @@ public class ListaColaborativaServiceImplTest {
         assertEquals("Error al guardar", exception.getMessage(), "El mensaje de excepción debe ser 'Error al guardar'");
     }
 
+    @Test
+    public void testEliminarListaColaborativaNoExistente() {
+        Integer listaId = 1;
+        Integer usuarioId = 10;
+
+        when(listaColaborativaRepository.buscarPorId(listaId)).thenReturn(null);
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () ->
+                listaColaborativaServiceImpl.eliminarListaColaborativa(listaId, usuarioId));
+
+        assertThrows(RuntimeException.class, () -> {
+            throw new RuntimeException("La lista no existe.");
+        });
+
+        verify(listaColaborativaRepository, times(1)).buscarPorId(listaId);
+        verifyNoMoreInteractions(listaColaborativaRepository);
+    }
 }
