@@ -20,7 +20,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -134,6 +134,7 @@ public class UsuarioServiceImpl implements UsuarioService {
             nuevoLike.setEsLike(Boolean.TRUE);
             nuevoLike.setFechaLike(LocalDate.now());
             nuevoLike.setFechaVista(LocalDate.now());
+            nuevoLike.setVistaPorUsuario(Boolean.TRUE);
             usuarioMovieRepository.guardar(nuevoLike);
         }
         movieRepository.actualizar(movie);
@@ -216,6 +217,102 @@ public class UsuarioServiceImpl implements UsuarioService {
         }
 
         return nombreArchivo;
+
+    @Override
+    public List<UsuarioMovieDTO> obtenerHistorialDePeliculasVistas(Integer usuarioId) {
+        if (usuarioId == null) {
+            throw new IllegalArgumentException("El ID de usuario no puede ser nulo");
+        }
+
+        Usuario usuario = repositorioUsuario.buscarPorId(usuarioId);
+        if (usuario == null) {
+            throw new EntityNotFoundException("Usuario no encontrado");
+        }
+
+        List<Object[]> results = usuarioMovieRepository.buscarPeliculasDondeElUsuarioTuvoInteraccion(usuarioId);
+        List<UsuarioMovieDTO> historialDTO = new ArrayList<>();
+
+        for (Object[] row : results) {
+            UsuarioMovie usuarioMovie = (UsuarioMovie) row[0];
+            Double valoracion = (Double) row[1];
+
+            UsuarioMovieDTO dto = new UsuarioMovieDTO();
+            dto.setId(usuarioMovie.getId());
+            dto.setUsuario(usuarioMovie.getUsuario());
+            dto.setPelicula(usuarioMovie.getPelicula());
+            dto.setEsLike(usuarioMovie.getEsLike());
+            dto.setFechaVista(usuarioMovie.getFechaVista());
+            dto.setFechaLike(usuarioMovie.getFechaLike());
+            dto.setValoracion(valoracion);
+            dto.setVistaPorUsuario(usuarioMovie.getVistaPorUsuario());
+
+            historialDTO.add(dto);
+        }
+
+        return historialDTO;
+    }
+
+    @Override
+    public boolean estaEnListaVerMasTarde(PerfilDTO usuarioDTO, MovieDTO movieDTO) {
+        if (usuarioDTO == null || movieDTO == null) {
+            throw new IllegalArgumentException("Usuario o película no pueden ser nulos");
+        }
+
+        Usuario usuario = convertToEntity(usuarioDTO);
+        Movie movie = MovieDTO.convertToEntity(movieDTO);
+
+        return usuarioMovieRepository.buscarVerMasTardePorUsuario(usuario, movie).isPresent();
+    }
+
+    @Override
+    public void agregarEnVerMasTarde(PerfilDTO usuarioDTO, MovieDTO movieDTO) {
+        if (usuarioDTO == null || movieDTO == null) {
+            throw new IllegalArgumentException("Usuario o película no pueden ser nulos");
+        }
+
+        Usuario usuario = convertToEntity(usuarioDTO);
+        Movie movie = MovieDTO.convertToEntity(movieDTO);
+
+        Optional<UsuarioMovie> verMasTarde = usuarioMovieRepository.buscarVerMasTardePorUsuario(usuario, movie);
+
+        if (verMasTarde.isPresent()) {
+            usuarioMovieRepository.borrarVerMasTarde(verMasTarde.get());
+        } else {
+            UsuarioMovie usuarioMovie = new UsuarioMovie();
+            usuarioMovie.setUsuario(usuario);
+            usuarioMovie.setPelicula(movie);
+            usuarioMovie.setEsVerMasTarde(Boolean.TRUE);
+            usuarioMovieRepository.guardar(usuarioMovie);
+        }
+    }
+
+    @Override
+    public List<UsuarioMovieDTO> obtenerListaVerMasTarde(Integer usuarioId) {
+        if (usuarioId == null) {
+            throw new IllegalArgumentException("El ID de usuario no puede ser nulo");
+        }
+
+        List<UsuarioMovie> verMasTardeMovies = usuarioMovieRepository.obtenerPeliculasVerMasTarde(usuarioId);
+
+        return verMasTardeMovies.stream()
+                .map(UsuarioMovieDTO::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean sonAmigos(Integer usuario1Id, Integer usuario2Id) {
+        return repositorioUsuario.existeRelacion(usuario1Id, usuario2Id)
+                && repositorioUsuario.existeRelacion(usuario2Id, usuario1Id);
+    }
+
+    @Override
+    public List<PerfilDTO> obtenerAmigos(Integer usuarioId) {
+        List<Usuario> seguidos = repositorioUsuario.obtenerUsuariosSeguidos(usuarioId);
+
+        return seguidos.stream()
+                .filter(seguido -> repositorioUsuario.existeRelacion(seguido.getId(), usuarioId))
+                .map(usuario -> new PerfilDTO(usuario.getId(), usuario.getNombre()))
+                .collect(Collectors.toList());
     }
 
 }

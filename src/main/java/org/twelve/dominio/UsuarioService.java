@@ -4,6 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.twelve.dominio.entities.Movie;
 import org.twelve.presentacion.dto.MovieDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
+import org.twelve.presentacion.dto.UsuarioMovieDTO;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -33,6 +34,18 @@ public interface UsuarioService {
 
     void actualizarPerfil(Integer userId, String username, String descripcion, String nombre, String pais, MultipartFile fotoPerfil);
 
-
     String guardarFoto(MultipartFile fotoPerfil);
+
+    List<UsuarioMovieDTO> obtenerHistorialDePeliculasVistas(Integer usuarioId);
+
+    boolean estaEnListaVerMasTarde(PerfilDTO usuarioDTO, MovieDTO movieDTO);
+
+    void agregarEnVerMasTarde(PerfilDTO usuarioDTO, MovieDTO movieDTO);
+
+    List<UsuarioMovieDTO> obtenerListaVerMasTarde(Integer usuarioId);
+
+    boolean sonAmigos(Integer usuario1Id, Integer usuario2Id);
+
+    List<PerfilDTO> obtenerAmigos(Integer usuarioId);
+
 }

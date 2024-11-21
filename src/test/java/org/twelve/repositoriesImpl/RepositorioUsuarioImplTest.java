@@ -331,4 +331,122 @@ public class RepositorioUsuarioImplTest {
         assertNotNull(seguidos);
         assertTrue(seguidos.isEmpty());
     }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testExisteRelacionCuandoRelacionExisteDevuelveVerdadero() throws Exception {
+        Usuario usuario1 = new Usuario();
+        usuario1.setEmail("user1@unlam.com");
+        usuario1.setPassword("password1");
+        repositorioUsuario.guardar(usuario1);
+
+        Usuario usuario2 = new Usuario();
+        usuario2.setEmail("user2@unlam.com");
+        usuario2.setPassword("password2");
+        repositorioUsuario.guardar(usuario2);
+
+        Seguidor seguidor = new Seguidor();
+        seguidor.setUsuario(usuario1);
+        seguidor.setSeguido(usuario2);
+        sessionFactory.getCurrentSession().persist(seguidor);
+
+        boolean resultado = repositorioUsuario.existeRelacion(usuario1.getId(), usuario2.getId());
+        assertTrue(resultado);
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testExisteRelacionCuandoRelacionNoExisteDevuelveFalso() throws Exception {
+        Usuario usuario1 = new Usuario();
+        usuario1.setEmail("user1@unlam.com");
+        usuario1.setPassword("password1");
+        repositorioUsuario.guardar(usuario1);
+
+        Usuario usuario2 = new Usuario();
+        usuario2.setEmail("user2@unlam.com");
+        usuario2.setPassword("password2");
+        repositorioUsuario.guardar(usuario2);
+
+        boolean resultado = repositorioUsuario.existeRelacion(usuario1.getId(), usuario2.getId());
+        assertFalse(resultado);
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testExisteRelacionCuandoUsuarioNoExisteDevuelveFalso() throws Exception {
+        Usuario usuario2 = new Usuario();
+        usuario2.setEmail("user2@unlam.com");
+        usuario2.setPassword("password2");
+        repositorioUsuario.guardar(usuario2);
+
+        boolean resultado = repositorioUsuario.existeRelacion(999, usuario2.getId());
+        assertFalse(resultado);
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testObtenerUsuariosSeguidosCuandoHayUsuariosDevuelveListaCorrecta() throws Exception {
+        Usuario usuario1 = new Usuario();
+        usuario1.setEmail("user1@unlam.com");
+        usuario1.setPassword("password1");
+        repositorioUsuario.guardar(usuario1);
+
+        Usuario usuario2 = new Usuario();
+        usuario2.setEmail("user2@unlam.com");
+        usuario2.setPassword("password2");
+        repositorioUsuario.guardar(usuario2);
+
+        Usuario usuario3 = new Usuario();
+        usuario3.setEmail("user3@unlam.com");
+        usuario3.setPassword("password3");
+        repositorioUsuario.guardar(usuario3);
+
+        Seguidor seguidor1 = new Seguidor();
+        seguidor1.setUsuario(usuario1);
+        seguidor1.setSeguido(usuario2);
+        sessionFactory.getCurrentSession().persist(seguidor1);
+
+        Seguidor seguidor2 = new Seguidor();
+        seguidor2.setUsuario(usuario1);
+        seguidor2.setSeguido(usuario3);
+        sessionFactory.getCurrentSession().persist(seguidor2);
+
+        List<Usuario> seguidos = repositorioUsuario.obtenerUsuariosSeguidos(usuario1.getId());
+
+        assertNotNull(seguidos);
+        assertEquals(2, seguidos.size());
+        assertTrue(seguidos.stream().anyMatch(u -> u.getEmail().equals("user2@unlam.com")));
+        assertTrue(seguidos.stream().anyMatch(u -> u.getEmail().equals("user3@unlam.com")));
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testObtenerUsuariosSeguidosCuandoNoHayUsuariosDevuelveListaVacia() throws Exception {
+        Usuario usuario = new Usuario();
+        usuario.setEmail("user1@unlam.com");
+        usuario.setPassword("password1");
+        repositorioUsuario.guardar(usuario);
+
+        List<Usuario> seguidos = repositorioUsuario.obtenerUsuariosSeguidos(usuario.getId());
+
+        assertNotNull(seguidos);
+        assertTrue(seguidos.isEmpty());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testObtenerUsuariosSeguidosConUsuarioInexistenteDevuelveListaVacia() throws Exception {
+        List<Usuario> seguidos = repositorioUsuario.obtenerUsuariosSeguidos(999);
+
+        assertNotNull(seguidos);
+        assertTrue(seguidos.isEmpty());
+    }
+
+
 }

@@ -37,4 +37,8 @@ public interface MovieRepository {
     List<Movie> findByPaisIdTopRated(Integer idPais);
 
     List<Movie> findByPaisIdNewest(Integer idPais);
+
+    List<Movie> findUpcomingMovies();
+
+    List<Movie> findUpcomingMoviesByCategoria(Integer idCategoria);
 }

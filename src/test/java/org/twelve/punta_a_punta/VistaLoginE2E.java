@@ -1,14 +1,11 @@
 package org.twelve.punta_a_punta;
 
-import com.microsoft.playwright.Browser;
-import com.microsoft.playwright.BrowserContext;
-import com.microsoft.playwright.Page;
-import com.microsoft.playwright.Playwright;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import com.microsoft.playwright.*;
+import org.junit.jupiter.api.*;
 import org.twelve.punta_a_punta.vistas.VistaLogin;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 public class VistaLoginE2E {
 
@@ -20,9 +17,8 @@ public class VistaLoginE2E {
     @BeforeAll
     static void abrirNavegador() {
         playwright = Playwright.create();
-        browser = playwright.chromium().launch();
-        //browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false).setSlowMo(50));
-
+        //browser = playwright.chromium().launch(); // crear una instancia de navegador por cada test
+        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false).setSlowMo(100));
     }
 
     @AfterAll
@@ -42,27 +38,21 @@ public class VistaLoginE2E {
         context.close();
     }
 
-    /*@Test
-    void deberiaDecirUNLAMEnElNavbar() {
-        String texto = vistaLogin.obtenerTextoDeLaBarraDeNavegacion();
-        assertThat("UNLAM", equalToIgnoringCase(texto));
+    @Test
+    void deberiaMostrarTituloIniciarSesion() {
+        String titulo = vistaLogin.obtenerTextoDelElemento("h1.text-center.mb-4.text-gray");
+        assertThat(titulo, equalToIgnoringCase("Iniciar Sesión"));
     }
 
     @Test
-    void deberiaDarUnErrorAlNoCompletarElLoginYTocarElBoton() {
-        vistaLogin.escribirEMAIL("damian@unlam.edu.ar");
-        vistaLogin.escribirClave("unlam");
-        vistaLogin.darClickEnIniciarSesion();
-        String texto = vistaLogin.obtenerMensajeDeError();
-        assertThat("Error Usuario o clave incorrecta", equalToIgnoringCase(texto));
+    void deberiaMostrarLinkParaRegistrarse() {
+        String linkRegistro = vistaLogin.obtenerTextoDelElemento("a.text-primary");
+        assertThat(linkRegistro, equalToIgnoringCase("Registrarme"));
     }
 
     @Test
-    void deberiaNavegarAlHomeSiElUsuarioExiste() {
-        vistaLogin.escribirEMAIL("test@unlam.edu.ar");
-        vistaLogin.escribirClave("test");
-        vistaLogin.darClickEnIniciarSesion();
-        String url = vistaLogin.obtenerURLActual();
-        assertThat(url, containsStringIgnoringCase("/spring/home"));
-    }*/
+    void deberiaTenerBotonDeIniciarSesionVisible() {
+        boolean botonVisible = vistaLogin.obtenerElemento("#btn-login").isVisible();
+        assertThat(botonVisible, is(true));
+    }
 }

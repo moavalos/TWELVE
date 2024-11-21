@@ -5,6 +5,7 @@ import org.twelve.presentacion.dto.ComentarioDTO;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Set;
 
 @Transactional
 public interface ComentarioService {
@@ -16,4 +17,12 @@ public interface ComentarioService {
     List<ComentarioDTO> obtenerUltimosTresComentarios(Integer idUsuario);
 
     void actualizarValoracionPelicula(Movie movie);
+
+    void darMeGustaComentario(Integer idComentario, Integer idUsuario);
+
+    void quitarMeGustaComentario(Integer idComentario, Integer idUsuario);
+
+    Set<Integer> obtenerLikesPorUsuario(Integer idUsuario);
+
+    List<ComentarioDTO> obtener3ComentariosConMasLikes();
 }

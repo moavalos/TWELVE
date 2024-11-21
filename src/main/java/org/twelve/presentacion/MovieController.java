@@ -11,7 +11,9 @@ import org.twelve.dominio.*;
 import org.twelve.presentacion.dto.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
@@ -24,14 +26,16 @@ public class MovieController {
     private final ComentarioService comentarioService;
     private final UsuarioService usuarioService;
     private final PaisService paisService;
+    private final ListaColaborativaService listaColaborativaService;
 
     @Autowired
-    public MovieController(MovieService movieService, CategoriaService categoriaService, ComentarioService comentarioService, UsuarioService usuarioService, PaisService paisService) {
+    public MovieController(MovieService movieService, CategoriaService categoriaService, ComentarioService comentarioService, UsuarioService usuarioService, PaisService paisService, ListaColaborativaService listaColaborativaService) {
         this.movieService = movieService;
         this.categoriaService = categoriaService;
         this.comentarioService = comentarioService;
         this.usuarioService = usuarioService;
         this.paisService = paisService;
+        this.listaColaborativaService = listaColaborativaService;
     }
 
     @RequestMapping(path = "/home", method = RequestMethod.GET)
@@ -41,10 +45,15 @@ public class MovieController {
                 .collect(Collectors.toList());
 
         List<PerfilDTO> perfiles = usuarioService.encontrarTodos();
+        List<ComentarioDTO> comentariosPopulares = comentarioService.obtener3ComentariosConMasLikes();
+
+        List<MovieDTO> upcomingMovies = movieService.getUpcomingMovies();
 
         ModelMap modelo = new ModelMap();
         modelo.put("movies", topMovies);
         modelo.put("perfiles", perfiles);
+        modelo.put("upcomingMovies", upcomingMovies);
+        modelo.put("comentariosPopulares", comentariosPopulares);
 
         return new ModelAndView("home", modelo);
     }
@@ -71,6 +80,8 @@ public class MovieController {
         modelo.put("categorias", categorias);
         modelo.put("selectedFilter", filter);
 
+
+
         return new ModelAndView("movies", modelo);
     }
 
@@ -86,8 +97,18 @@ public class MovieController {
         //lista de comentarios
         List<ComentarioDTO> comentarios = comentarioService.obtenerComentariosPorPelicula(id);
         List<MovieDTO> similarMovies = movieService.getSimilarMovies(id);
-        PerfilDTO usuario = usuarioService.buscarPorId(usuarioLogueadoId);
-        boolean haDadoLike = usuarioService.haDadoLike(usuario, movie);
+        boolean fueEstrenada = movieService.isMovieReleased(movie);
+
+        PerfilDTO usuario = usuarioLogueadoId != null ? usuarioService.buscarPorId(usuarioLogueadoId) : null;
+
+        boolean haDadoLike = usuario != null && usuarioService.haDadoLike(usuario, movie);
+        boolean enListaVerMasTarde = usuario != null && usuarioService.estaEnListaVerMasTarde(usuario, movie);
+        List<ListaColaborativaDTO> listasColaborativas = usuario != null
+                ? listaColaborativaService.obtenerListasPorUsuario(usuario.getId())
+                : Collections.emptyList();
+
+        Set<Integer> usuarioLikes = comentarioService.obtenerLikesPorUsuario(usuarioLogueadoId);
+
 
         //modelo
         ModelMap modelo = new ModelMap();
@@ -97,6 +118,11 @@ public class MovieController {
         modelo.put("peliculasSimilares", similarMovies);
         modelo.put("usuario", usuario);
         modelo.put("haDadoLike", haDadoLike);
+        modelo.put("enListaVerMasTarde", enListaVerMasTarde);
+        modelo.put("fueEstrenada", fueEstrenada);
+        modelo.put("listasColaborativas", listasColaborativas);
+        modelo.put("usuarioLikes", usuarioLikes);
+        modelo.put("usuarioLogueadoId", usuarioLogueadoId);
 
         return new ModelAndView("detalle-pelicula", modelo);
     }
@@ -108,12 +134,6 @@ public class MovieController {
             return ResponseEntity.ok(movieDTO);
         else
             return ResponseEntity.notFound().build();
-    }
-
-    @RequestMapping(path = "/agregar]", method = RequestMethod.POST)
-    public ResponseEntity<MovieDTO> addMovie(@RequestBody MovieDTO movie) {
-        MovieDTO createdMovie = movieService.create(movie);
-        return ResponseEntity.ok(createdMovie);
     }
 
     @RequestMapping(path = "/search", method = RequestMethod.GET)
@@ -134,26 +154,6 @@ public class MovieController {
     public ResponseEntity<List<MovieDTO>> getMostViewedMovies() {
         List<MovieDTO> movies = movieService.getMovieMasVista();
         return ResponseEntity.ok(movies);
-    }
-
-    @RequestMapping(path = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<MovieDTO> updateMovie(@PathVariable Integer id, @RequestBody MovieDTO movie) {
-        MovieDTO existingMovie = movieService.getById(id);
-        if (existingMovie != null) {
-            existingMovie.setNombre(movie.getNombre());
-            existingMovie.setDescripcion(movie.getDescripcion());
-            existingMovie.setFrase(movie.getFrase());
-            existingMovie.setDuracion(movie.getDuracion());
-            existingMovie.setPais(movie.getPais());
-            existingMovie.setCantVistas(movie.getCantVistas());
-            existingMovie.setAnioLanzamiento(movie.getAnioLanzamiento());
-            existingMovie.setImagen(movie.getImagen());
-            existingMovie.setLikes(movie.getLikes());
-            existingMovie.setValoracion(movie.getValoracion());
-            MovieDTO updatedMovie = movieService.create(existingMovie);
-            return ResponseEntity.ok(updatedMovie);
-        } else
-            return ResponseEntity.notFound().build();
     }
 
     // GET /movies/category?idCategoria=ID_CATEGORIA
@@ -207,5 +207,115 @@ public class MovieController {
         modelo.addAttribute("nombrePais", nombrePais);
         return new ModelAndView("movies-pais", modelo);
     }
+
+    @RequestMapping(path = "/movie/{id}/verMasTarde", method = RequestMethod.POST)
+    public String verMasTarde(@PathVariable("id") Integer id, HttpServletRequest request) {
+        Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
+
+        if (usuarioLogueadoId == null) {
+            return "redirect:/login";
+        }
+
+        MovieDTO movie = movieService.getById(id);
+        PerfilDTO usuario = usuarioService.buscarPorId(usuarioLogueadoId);
+
+        if (usuario != null && movie != null) {
+            usuarioService.agregarEnVerMasTarde(usuario, movie);
+        }
+
+        return "redirect:/detalle-pelicula/" + id;
+    }
+
+    @RequestMapping(path = "/movie/{id}/agregar-a-lista", method = RequestMethod.POST)
+    public ModelAndView agregarPeliculaALista(@PathVariable Integer id,
+                                              @RequestParam Integer listaColaborativaId,
+                                              HttpServletRequest request) {
+        ModelMap model = new ModelMap();
+        Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
+
+        if (usuarioLogueadoId == null) {
+            model.put("error", "No se pudo agregar la película, sesión no iniciada.");
+            return new ModelAndView("detalle-pelicula", model);
+        }
+
+        try {
+            listaColaborativaService.agregarPeliculaALista(listaColaborativaId, id, usuarioLogueadoId);
+            model.put("success", "Película agregada a la lista con éxito.");
+        } catch (RuntimeException e) {
+            model.put("error", e.getMessage());
+        }
+
+        MovieDTO movie = movieService.getById(id);
+        List<ListaColaborativaDTO> listasColaborativas = listaColaborativaService.obtenerListasPorUsuario(usuarioLogueadoId);
+        List<ComentarioDTO> comentarios = comentarioService.obtenerComentariosPorPelicula(id);
+        List<MovieDTO> similarMovies = movieService.getSimilarMovies(id);
+        boolean fueEstrenada = movieService.isMovieReleased(movie);
+        Set<Integer> usuarioLikes = comentarioService.obtenerLikesPorUsuario(usuarioLogueadoId);
+
+
+
+        model.put("movie", movie);
+        model.put("listasColaborativas", listasColaborativas);
+        model.put("comentarios", comentarios);
+        model.put("peliculasSimilares", similarMovies);
+        model.put("fueEstrenada",fueEstrenada);
+        model.put("usuarioLikes",usuarioLikes);
+
+
+        return new ModelAndView("detalle-pelicula", model);
+    }
+
+    @RequestMapping(path = "/upcoming-movies", method = RequestMethod.GET)
+    public ModelAndView getAllUcomingMoviesView(
+            @RequestParam(value = "idCategoria", required = false) Integer idCategoria) {
+
+        List<MovieDTO> movies;
+         if (idCategoria != null) {
+             movies = movieService.getUpcomingMoviesByCategory(idCategoria);
+         } else {
+             movies = movieService.getUpcomingMovies();
+         }
+
+        List<CategoriaDTO> categorias = categoriaService.getAll();
+
+        ModelMap modelo = new ModelMap();
+        modelo.put("movies", movies);
+        modelo.put("categorias", categorias);
+
+        return new ModelAndView("upcoming-movies", modelo);
+    }
+
+
+
+    @RequestMapping(path = "/movie/{idMovie}/comment/{idComentario}/like", method = RequestMethod.POST)
+    public String likeComentario(@PathVariable Integer idMovie,
+                                 @PathVariable Integer idComentario,
+                                 HttpServletRequest request) {
+
+        Integer idUsuario = (Integer) request.getSession().getAttribute("usuarioId");
+
+        if (idUsuario == null) {
+            return "redirect:/login";
+        }
+
+        comentarioService.darMeGustaComentario(idComentario, idUsuario);
+        return "redirect:/detalle-pelicula/" + idMovie;
+    }
+
+    @RequestMapping(path = "/movie/{idMovie}/comment/{idComentario}/unlike", method = RequestMethod.POST)
+    public String unlikeComentario(@PathVariable Integer idMovie,
+                                   @PathVariable Integer idComentario,
+                                   HttpServletRequest request) {
+
+        Integer idUsuario = (Integer) request.getSession().getAttribute("usuarioId");
+
+        if (idUsuario == null) {
+            return "redirect:/login";
+        }
+
+        comentarioService.quitarMeGustaComentario(idComentario, idUsuario);
+        return "redirect:/detalle-pelicula/" + idMovie;
+    }
+
 
 }

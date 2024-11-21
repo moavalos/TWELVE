@@ -8,6 +8,7 @@ import org.twelve.dominio.UsuarioService;
 import org.twelve.dominio.entities.Movie;
 import org.twelve.presentacion.dto.ComentarioDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
+import org.twelve.presentacion.dto.UsuarioMovieDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -23,6 +24,8 @@ public class UsuarioControllerTest {
     private UsuarioController usuarioController;
     private UsuarioService usuarioServiceMock;
     private ComentarioService comentarioServiceMock;
+    private UsuarioMovieDTO usuarioMovieDTO;
+    private UsuarioMovieDTO usuarioMovieDTO2;
     private PerfilDTO perfilMock;
     private HttpSession sessionMock;
     private HttpServletRequest requestMock;
@@ -31,6 +34,8 @@ public class UsuarioControllerTest {
     public void setUp() {
         usuarioServiceMock = mock(UsuarioService.class);
         perfilMock = mock(PerfilDTO.class);
+        usuarioMovieDTO = mock(UsuarioMovieDTO.class);
+        usuarioMovieDTO2 = mock(UsuarioMovieDTO.class);
         sessionMock = mock(HttpSession.class);
         requestMock = mock(HttpServletRequest.class);
         comentarioServiceMock = mock(ComentarioService.class);
@@ -112,6 +117,75 @@ public class UsuarioControllerTest {
         assertNotNull(modelAndView.getModel().get("usuario"));
         assertFalse((Boolean) modelAndView.getModel().get("estaSiguiendo"));
         assertEquals("/seguir/1", modelAndView.getModel().get("seguirODejarUrl"));
+    }
+
+    @Test
+    public void testUsuarioNoEncontradoMuestraError() {
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(1);
+        when(usuarioServiceMock.buscarPorId(1)).thenReturn(null);
+
+        ModelAndView modelAndView = usuarioController.verPerfil(1, requestMock);
+
+        assertEquals("perfil", modelAndView.getViewName());
+        assertEquals("Usuario no encontrado", modelAndView.getModel().get("error"));
+    }
+
+    @Test
+    public void testUsuarioLogueadoViendoSuPropioPerfil() {
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(1);
+        when(usuarioServiceMock.buscarPorId(1)).thenReturn(perfilMock);
+
+        ModelAndView modelAndView = usuarioController.verPerfil(1, requestMock);
+
+        assertEquals("perfil", modelAndView.getViewName());
+        assertEquals(perfilMock, modelAndView.getModel().get("usuario"));
+        assertTrue((Boolean) modelAndView.getModel().get("esPerfilPropio"));
+    }
+
+    @Test
+    public void testUsuarioLogueadoViendoOtroPerfil() {
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(2);
+        when(usuarioServiceMock.buscarPorId(1)).thenReturn(perfilMock);
+        when(usuarioServiceMock.estaSiguiendo(2, 1)).thenReturn(false);
+
+        ModelAndView modelAndView = usuarioController.verPerfil(1, requestMock);
+
+        assertEquals("perfil", modelAndView.getViewName());
+        assertEquals(perfilMock, modelAndView.getModel().get("usuario"));
+        assertFalse((Boolean) modelAndView.getModel().get("esPerfilPropio"));
+        assertFalse((Boolean) modelAndView.getModel().get("estaSiguiendo"));
+        assertEquals("/seguir/1", modelAndView.getModel().get("seguirODejarUrl"));
+    }
+
+    @Test
+    public void testUsuarioLogueadoViendoOtroPerfilQueSigue() {
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(2);
+        when(usuarioServiceMock.buscarPorId(1)).thenReturn(perfilMock);
+        when(usuarioServiceMock.estaSiguiendo(2, 1)).thenReturn(true);
+
+        ModelAndView modelAndView = usuarioController.verPerfil(1, requestMock);
+
+        assertEquals("perfil", modelAndView.getViewName());
+        assertTrue((Boolean) modelAndView.getModel().get("estaSiguiendo"));
+        assertEquals("/dejarDeSeguir/1", modelAndView.getModel().get("seguirODejarUrl"));
+    }
+
+    @Test
+    public void testPerfilConComentariosRecientes() {
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(1);
+        when(usuarioServiceMock.buscarPorId(1)).thenReturn(perfilMock);
+        List<ComentarioDTO> comentarios = Collections.singletonList(mock(ComentarioDTO.class));
+        when(comentarioServiceMock.obtenerUltimosTresComentarios(1)).thenReturn(comentarios);
+
+        ModelAndView modelAndView = usuarioController.verPerfil(1, requestMock);
+
+        assertEquals("perfil", modelAndView.getViewName());
+        assertEquals(comentarios, modelAndView.getModel().get("comentariosRecientes"));
     }
 
     @Test
@@ -280,5 +354,65 @@ public class UsuarioControllerTest {
         assertNotNull(modelAndView.getModel().get("peliculasFavoritas"));
         assertTrue(((List<?>) modelAndView.getModel().get("peliculasFavoritas")).isEmpty());
     }
-    
+
+    @Test
+    public void testVerHistorialUsuarioNoLogueado() {
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(null);
+
+        ModelAndView modelAndView = usuarioController.verHistorial(requestMock);
+
+        assertEquals("redirect:/login", modelAndView.getViewName());
+    }
+
+    @Test
+    public void testVerHistorialUsuarioLogueadoSinHistorial() {
+        Integer usuarioId = 1;
+        PerfilDTO usuarioMock = mock(PerfilDTO.class);
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(usuarioId);
+        when(usuarioServiceMock.buscarPorId(usuarioId)).thenReturn(usuarioMock);
+        when(usuarioServiceMock.obtenerHistorialDePeliculasVistas(usuarioId)).thenReturn(Collections.emptyList());
+
+        ModelAndView modelAndView = usuarioController.verHistorial(requestMock);
+
+        assertEquals("historial", modelAndView.getViewName());
+        assertNotNull(modelAndView.getModel().get("historial"));
+        assertTrue(((List<?>) modelAndView.getModel().get("historial")).isEmpty());
+    }
+
+    @Test
+    public void testUsuarioLogueadoConListaVerMasTardeVacia() {
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(1);
+        when(usuarioServiceMock.buscarPorId(1)).thenReturn(perfilMock);
+        when(perfilMock.getId()).thenReturn(1);
+        when(usuarioServiceMock.obtenerListaVerMasTarde(1)).thenReturn(Collections.emptyList());
+
+        ModelAndView modelAndView = usuarioController.verMasTarde(requestMock);
+
+        assertEquals("verMasTarde", modelAndView.getViewName());
+        assertNotNull(modelAndView.getModel().get("verMasTarde"));
+        assertTrue(((List<?>) modelAndView.getModel().get("verMasTarde")).isEmpty());
+    }
+
+    @Test
+    public void testUsuarioLogueadoConListaVerMasTardeConElementos() {
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(1);
+        when(usuarioServiceMock.buscarPorId(1)).thenReturn(perfilMock);
+        when(perfilMock.getId()).thenReturn(1);
+
+        UsuarioMovieDTO movieMock = mock(UsuarioMovieDTO.class);
+        List<UsuarioMovieDTO> verMasTardeList = Collections.singletonList(movieMock);
+        when(usuarioServiceMock.obtenerListaVerMasTarde(1)).thenReturn(verMasTardeList);
+
+        ModelAndView modelAndView = usuarioController.verMasTarde(requestMock);
+
+        assertEquals("verMasTarde", modelAndView.getViewName());
+        assertNotNull(modelAndView.getModel().get("verMasTarde"));
+        assertEquals(verMasTardeList, modelAndView.getModel().get("verMasTarde"));
+    }
+
 }

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <title>Detalle de Lista</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+</head>
+<body>
+<div th:insert="fragments/header :: header"></div>
+
+<div class="container mt-5">
+    <h2 th:text="${lista.nombre}">Nombre de la Lista</h2>
+    <p><strong>Creada por:</strong> <span th:text="${lista.creador.nombre}">Creador</span></p>
+    <p><strong>Colaborador:</strong> <span th:text="${lista.colaborador.nombre}">Colaborador</span></p>
+    <p><strong>Fecha de Creación:</strong> <span th:text="${lista.fechaCreacion}">Fecha</span></p>
+
+    <h3>Películas en la Lista</h3>
+    <div class="row">
+        <div th:if="${peliculas != null and peliculas.isEmpty()}" class="col-12 text-center">
+            <p class="text-muted">No hay películas en esta lista.</p>
+        </div>
+
+        <div th:each="listaMovie : ${peliculas}" class="col-md-3 mb-4">
+            <div class="card">
+                <img th:src="@{'/images/' + ${listaMovie.pelicula.imagen}}" th:alt="${listaMovie.pelicula.nombre}" class="card-img-top">
+                <div class="card-body text-center">
+                    <h5 class="card-title" th:text="${listaMovie.pelicula.nombre}">Nombre de la película</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:insert="fragments/footer :: footer"></div>
+<script th:src="@{/webjars/bootstrap/5.2.0/js/bootstrap.min.js}" type="text/javascript"></script>
+</body>
+</html>

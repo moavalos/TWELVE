@@ -21,60 +21,87 @@
 
                 <img th:src="@{'/images/' + ${movie.imagen}}" alt="Movie Image" class="img-fluid rounded shadow movie-image">
 
-
             <div class="sidebar-buttons mt-4">
                 <!-- Botón Me gusta -->
-                <div th:if="${session.usuario != null}">
+                <div th:if="${session.usuario != null && fueEstrenada}">
                     <form th:action="@{/movie/{id}/like(id=${movie.id})}" method="post">
                         <button type="submit" class="btn w-100 mb-2 rounded-pill"
-                                th:classappend="${haDadoLike ? 'btn-danger' : 'btn-warning'}">
-                            <i th:classappend="${haDadoLike ? 'fa-solid fa-heart' : 'fa-regular fa-heart'}"></i>
-                            <span th:text="${haDadoLike ? 'Quitar Me gusta' : 'Me gusta'}"></span>
+                                th:classappend="${haDadoLike != null && haDadoLike ? 'btn-danger' : 'btn-warning'}">
+                            <i th:classappend="${haDadoLike != null && haDadoLike ? 'fa-solid fa-heart' : 'fa-regular fa-heart'}"></i>
+                            <span th:text="${haDadoLike != null && haDadoLike ? 'Quitar Me gusta' : 'Me gusta'}"></span>
+                        </button>
+                    </form>
+                </div>
+              
+                <!-- Botón ver más tarde -->
+                <div th:if="${session.usuario != null}">
+                    <form th:action="@{/movie/{id}/verMasTarde(id=${movie.id})}" method="post">
+                        <button type="submit" class="btn w-100 mb-2 rounded-pill"
+                                th:classappend="${enListaVerMasTarde != null && enListaVerMasTarde ? 'btn-primary' : 'btn-warning'}">
+                            <i th:classappend="${enListaVerMasTarde != null && enListaVerMasTarde ? 'fa-solid fa-clock' : 'fa-regular fa-clock'}"></i>
+                            <span th:text="${enListaVerMasTarde != null && enListaVerMasTarde ? 'Quitar de Ver más tarde' : 'Ver más tarde'}"></span>
                         </button>
                     </form>
                 </div>
 
-                <!-- Botón Plan to watch -->
-<!--                <div th:if="${session.usuario != null}">-->
-<!--                    <form th:action="@{/movie/{id}/like(id=${movie.id})}" method="post">-->
-<!--                        <button type="submit" class="btn w-100 mb-2 rounded-pill"-->
-<!--                                th:classappend="${haDadoLike ? 'btn-danger' : 'btn-warning'}">-->
-<!--                            <i th:classappend="${haDadoLike ? 'fa-solid fa-heart' : 'fa-regular fa-heart'}"></i>-->
-<!--                            <span th:text="${haDadoLike ? 'Quitar Me gusta' : 'Me gusta'}"></span>-->
-<!--                        </button>-->
-<!--                    </form>-->
-<!--                </div>-->
-
-
-                <button class="btn btn-warning w-100 mb-2 rounded-pill">+ Plan to Watch</button>
-
                 <!-- Botón de comentar -->
-                <div th:if="${session.usuario != null}">
+                <div th:if="${session.usuario != null && fueEstrenada}">
                     <button class="btn btn-warning w-100 rounded-pill" data-bs-toggle="modal" data-bs-target="#commentModal">
                         Comentar
                     </button>
                 </div>
-                <div th:if="${session.usuario == null}">
-                    <button class="btn btn-warning w-100 mb-2 rounded-pill">Comentar</button>
+<!--                <div th:if="${session.usuario == null}">-->
+<!--                    <button class="btn btn-warning w-100 mb-2 rounded-pill">Comentar</button>-->
+<!--                </div>-->
+
+                <!-- Formulario para agregar a la lista colaborativa -->
+                <div th:if="${session.usuario != null}" class="mt-4">
+                    <h5 class="text-secondary">Agregar a una lista colaborativa</h5>
+                    <form th:action="@{/movie/{id}/agregar-a-lista(id=${movie.id})}" method="post">
+                        <div class="mb-3">
+                            <label for="listaColaborativa" class="form-label">Seleccionar Lista</label>
+                            <select name="listaColaborativaId" id="listaColaborativa" class="form-select" required>
+                                <option value="" disabled selected>Seleccione una lista...</option>
+                                <th:block th:each="lista : ${listasColaborativas}">
+                                    <option th:value="${lista.id}" th:text="${lista.nombre}"></option>
+                                </th:block>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 rounded-pill">Agregar a la lista</button>
+                    </form>
                 </div>
+
+                <div th:if="${success}" class="alert alert-success" role="alert">
+                    <span th:text="${success}"></span>
+                </div>
+                <div th:if="${error}" class="alert alert-danger" role="alert">
+                    <span th:text="${error}"></span>
+                </div>
+
             </div>
         </div>
 
         <!-- Detalles de la película -->
         <div class="col-md-9">
+            <p th:if="${!fueEstrenada}"><strong>Fecha de estreno: </strong> <span th:text="${#temporals.format(movie.fechaLanzamiento, 'd') + ' de ' + #temporals.format(movie.fechaLanzamiento, 'MMMM') + ' de ' + #temporals.format(movie.fechaLanzamiento, 'yyyy')}"></span></p>
             <h2 th:text="${movie.nombre}" class="fw-bold text-primary"></h2>
             <p th:text="${movie.frase}" class="fst-italic"></p>
             <p>
-                <i class="bi bi-eye"></i> Vistas: <span th:text="${movie.cantVistas}"></span> |
-                &nbsp; Score: <span th:text="${#numbers.formatDecimal(movie.valoracion, 1, 1)}"></span>/10 |
-                &nbsp; Duración: <span th:text="${#numbers.formatInteger(movie.duracion, 0)} + ' min'"></span> |
+               <span th:if="${fueEstrenada}">
+                   <i class="bi bi-eye"></i> Vistas: <span th:text="${movie.cantVistas}"></span> |
+                Score: <span th:text="${#numbers.formatDecimal(movie.valoracion, 1, 1)}"></span>/10 |
+               </span>
+                Duración: <span th:text="${#numbers.formatInteger(movie.duracion, 0)} + ' min'"></span> |
                 Categorías:
                 <span th:each="categoria, iterStat : ${movie.categorias}">
-                    <a th:href="@{/categoria/{id}(id=${categoria.id})}" th:text="${categoria.nombre}" class="text-decoration-none"></a>
+                    <a th:href="@{/categoria/{id}(id=${categoria.id})}" th:text="${categoria.nombre}"
+                       class="text-decoration-none"></a>
                     <span th:if="${!iterStat.last}"> · </span>
                 </span> |
-                &nbsp;<span th:text="${movie.anioLanzamiento}"></span> |
+                &nbsp;<span th:text="${movie.anioLanzamiento}"></span>
+                <span th:if="${fueEstrenada}"> |
                 &nbsp;<i class="fa-solid fa-heart"></i> <span th:text="${movie.likes}"></span>
+                </span>
             </p>
             <hr>
 
@@ -84,7 +111,8 @@
                     <h4 class="text-secondary">Detalles</h4>
                     <p><strong>Director:</strong> <span th:text="${movie.director}"></span></p>
                     <p><strong>Escritores:</strong> <span th:text="${movie.escritor}"></span></p>
-                    <p><strong>País:</strong> <a th:href="@{/pais/{id}(id=${movie.pais.id})}" th:text="${movie.pais.nombre}" class="text-decoration-none"></a></p>
+                    <p><strong>País:</strong> <a th:href="@{/pais/{id}(id=${movie.pais.id})}"
+                                                 th:text="${movie.pais.nombre}" class="text-decoration-none"></a></p>
                     <p><strong>Idioma:</strong> <span th:text="${movie.idioma}"></span></p>
                     <p><strong>Datos de lanzamiento:</strong> <a href="#" class="text-decoration-none">Ver más</a></p>
                     <p><strong>También conocido como:</strong> <span th:text="${movie.tambienConocidaComo}"></span></p>
@@ -96,84 +124,109 @@
         </div>
 
         <!-- Comentarios populares -->
-        <h4 class="mt-5 text-primary">Comentarios Populares</h4>
-        <div class="review-section">
+        <h4 th:if="${fueEstrenada}" class="mt-5 text-primary">Comentarios Populares</h4>
+        <div th:if="${fueEstrenada}" class="review-section">
             <div th:each="comentario : ${comentarios}" class="card mb-3 shadow-sm">
                 <div class="card-body">
                     <div class="d-flex align-items-start">
-                        <img th:src="@{/images/user/foto-perfil.jpg}" alt="User Avatar" class="rounded-circle me-3" width="50">
+                        <img th:src="@{/images/user/foto-perfil.jpg}" alt="User Avatar" class="rounded-circle me-3"
+                             width="50">
                         <div>
                             <h6 class="mb-1">
                                 Comentario por <span class="fw-bold" th:text="${comentario.usuario.username}"></span>
                                 <span class="text-success">Puntaje: <span th:text="${comentario.valoracion}"></span>/10</span>
                             </h6>
                             <p th:text="${comentario.descripcion}" class="mb-0"></p>
+
+                            <p class="mt-2"><span th:text="${comentario.likes}"></span> Likes</p>
+
+                            <!-- btns like comentario de la muerte -->
+                            <div th:if="${usuarioLogueadoId != comentario.usuario.id}">
+                                <div th:if="${!usuarioLikes.contains(comentario.id)}">
+                                    <form th:action="@{/movie/{idMovie}/comment/{idComentario}/like(idMovie=${movie.id}, idComentario=${comentario.id})}"
+                                          method="post">
+                                        <button type="submit" class="btn btn-sm btn-primary mt-2">
+                                            <i class="fa-solid fa-thumbs-up"></i> Like
+                                        </button>
+                                    </form>
+                                </div>
+                                <div th:if="${usuarioLikes.contains(comentario.id)}">
+                                    <form th:action="@{/movie/{idMovie}/comment/{idComentario}/unlike(idMovie=${movie.id}, idComentario=${comentario.id})}"
+                                          method="post">
+                                        <button type="submit" class="btn btn-sm btn-danger mt-2">
+                                            <i class="fa-solid fa-thumbs-down"></i> Quitar Like
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Películas similares -->
+            <h4 class="mt-5 text-primary">Películas Similares</h4>
+            <div class="row similar-movies">
+                <div th:each="pelicula : ${peliculasSimilares}" class="col-md-2 col-sm-4 col-6 mb-3">
+                    <div class="card h-100 shadow-sm">
+                        <a th:href="@{/detalle-pelicula/{id}(id=${pelicula.id})}">
+                            <img th:src="@{'/images/' + ${pelicula.imagen}}" alt="Similar Movie"
+                                 class="card-img-top rounded">
+                        </a>
+                        <div class="card-body p-2">
+                            <h6 class="card-title text-center" th:text="${pelicula.nombre}"></h6>
                         </div>
                     </div>
                 </div>
             </div>
-            <a href="#" class="text-decoration-none">Ver todos los comentarios</a>
         </div>
+    </div>
 
-        <!-- Películas similares -->
-        <h4 class="mt-5 text-primary">Películas Similares</h4>
-        <div class="row similar-movies">
-            <div th:each="pelicula : ${peliculasSimilares}" class="col-md-2 col-sm-4 col-6 mb-3">
-                <div class="card shadow-sm">
-                    <a th:href="@{/detalle-pelicula/{id}(id=${pelicula.id})}">
-                        <img th:src="@{'/images/' + ${pelicula.imagen}}" alt="Similar Movie">
-                    </a>
-                    <div class="card-body p-2">
-                        <h6 class="card-title text-center" th:text="${pelicula.nombre}"></h6>
-                    </div>
+    <!-- Modal para agregar comentario -->
+    <div th:if="${session.usuario != null}" class="modal fade" id="commentModal" tabindex="-1"
+         aria-labelledby="commentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="commentModalLabel">Agregar Comentario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/guardar-comentario}" method="post">
+                        <input type="hidden" name="idMovie" th:value="${movie.id}"/>
+                        <input type="hidden" name="idUsuario" th:value="${session.usuario.id}"/>
+                        <input type="hidden" name="likes" value="0"/>
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Comentario:</label>
+                            <textarea name="descripcion" id="descripcion" rows="3" class="form-control"
+                                      required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="valoracion" class="form-label">Valoración:</label>
+                            <select name="valoracion" id="valoracion" class="form-select" required>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Comentar</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+
+    <div th:insert="fragments/footer :: footer"></div>
+    <script th:src="@{https://kit.fontawesome.com/9d21607fd1.js}" crossorigin="anonymous"></script>
+    <script th:src="@{/webjars/bootstrap/5.2.0/js/bootstrap.min.js}" type="text/javascript"></script>
 </div>
-
-<!-- Modal para agregar comentario -->
-<div th:if="${session.usuario != null}" class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="commentModalLabel">Agregar Comentario</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form th:action="@{/guardar-comentario}" method="post">
-                    <input type="hidden" name="idMovie" th:value="${movie.id}"/>
-                    <input type="hidden" name="idUsuario" th:value="${session.usuario.id}"/>
-                    <input type="hidden" name="likes" value="0"/>
-                    <div class="mb-3">
-                        <label for="descripcion" class="form-label">Comentario:</label>
-                        <textarea name="descripcion" id="descripcion" rows="3" class="form-control" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="valoracion" class="form-label">Valoración:</label>
-                        <select name="valoracion" id="valoracion" class="form-select" required>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Comentar</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div th:insert="fragments/footer :: footer"></div>
-<script th:src="@{https://kit.fontawesome.com/9d21607fd1.js}" crossorigin="anonymous"></script>
-<script th:src="@{/webjars/bootstrap/5.2.0/js/bootstrap.min.js}" type="text/javascript"></script>
-
 </body>
 </html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Películas para Ver Más Tarde</title>
+    <link rel="stylesheet" th:href="@{/css/perfil.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+</head>
+<body>
+
+<div th:insert="fragments/header :: header"></div>
+
+<section class="container my-5">
+    <h2 class="text-center mb-4">Películas para Ver Más Tarde</h2>
+
+    <div class="d-flex justify-content-center">
+        <div th:if="${verMasTarde.isEmpty()}" class="no-watch-later-message d-flex align-items-center justify-content-center bg-dark text-white rounded w-100" style="height: 200px;">
+            <p class="text-center m-0 fs-5">No tienes películas en tu lista de Ver Más Tarde</p>
+        </div>
+
+        <div class="movies-grid d-flex flex-wrap justify-content-start w-100" th:unless="${verMasTarde.isEmpty()}">
+            <div th:each="pelicula : ${verMasTarde}" class="movie text-center mx-2 mb-4">
+                <a class="no-link">
+                    <img th:src="@{'/images/' + ${pelicula.pelicula.imagen}}" th:alt="${pelicula.pelicula.nombre}" class="img-fluid rounded mb-2" style="width: 150px; height: auto;">
+                </a>
+                <p th:text="${pelicula.pelicula.nombre}" class="fw-bold">Nombre de la película</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div th:insert="fragments/footer :: footer"></div>
+
+<script th:src="@{/js/perfil.js}"></script>
+</body>
+</html>

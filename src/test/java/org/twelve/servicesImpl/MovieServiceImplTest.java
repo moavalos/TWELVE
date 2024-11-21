@@ -2,6 +2,7 @@ package org.twelve.servicesImpl;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.format.datetime.joda.LocalDateParser;
 import org.twelve.dominio.MovieRepository;
 import org.twelve.dominio.entities.Categoria;
 import org.twelve.dominio.entities.Movie;
@@ -12,6 +13,8 @@ import org.twelve.presentacion.dto.PaisDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -104,7 +107,8 @@ public class MovieServiceImplTest {
                 "Lana Wachowski, Lilly Wachowski", // director
                 "Lana Wachowski, Lilly Wachowski", // escritor
                 "Inglés",                         // idioma
-                "The Matrix, Matrix"// también conocida como
+                "The Matrix, Matrix",
+                LocalDate.of(1999, 6, 10)
         );
 
         when(movieRepository.guardar(any(Movie.class))).thenReturn(movie1);
@@ -349,6 +353,106 @@ public class MovieServiceImplTest {
         verify(movieRepository, never()).findByPaisIdTopRated(idPais);
         verify(movieRepository, never()).findByPaisIdNewest(idPais);
     }
+
+    @Test
+    public void testGetUpcomingMoviesDeberiaDevolverListaDeMovieDTO() {
+        Movie peliculaNoEstrenada1 = new Movie();
+        peliculaNoEstrenada1.setNombre("Pelicula No Estrenada 1");
+        peliculaNoEstrenada1.setFechaLanzamiento(LocalDate.now().plusDays(5));
+
+        Movie peliculaNoEstrenada2 = new Movie();
+        peliculaNoEstrenada2.setNombre("Pelicula No Estrenada 2");
+        peliculaNoEstrenada2.setFechaLanzamiento(LocalDate.now().plusDays(15));
+
+        List<Movie> upcomingMovies = Arrays.asList(peliculaNoEstrenada1, peliculaNoEstrenada2);
+        when(movieRepository.findUpcomingMovies()).thenReturn(upcomingMovies);
+
+        List<MovieDTO> result = movieServiceImpl.getUpcomingMovies();
+
+        assertEquals(2, result.size());
+        assertEquals("Pelicula No Estrenada 1", result.get(0).getNombre());
+        assertEquals("Pelicula No Estrenada 2", result.get(1).getNombre());
+    }
+
+    @Test
+    public void testIsMovieReleasedDevuelveTrueConPeliculasYaEstrenadas() {
+        MovieDTO peliculaEstrenada = new MovieDTO();
+        peliculaEstrenada.setNombre("Pelicula Estrenada");
+        peliculaEstrenada.setFechaLanzamiento(LocalDate.now().minusDays(1));
+
+        assertTrue(movieServiceImpl.isMovieReleased(peliculaEstrenada));
+    }
+
+
+    @Test
+    public void testIsMovieReleasedDevuelveFalseConPeliculasNoEstrenadas() {
+        MovieDTO  peliculaNoEstrenada = new MovieDTO();
+        peliculaNoEstrenada.setNombre("Pelicula No Estrenada");
+        peliculaNoEstrenada.setFechaLanzamiento(LocalDate.now().plusDays(1));
+
+        assertFalse(movieServiceImpl.isMovieReleased(peliculaNoEstrenada));
+    }
+
+
+    @Test
+    public void testGetUpcomingMoviesCalculaDiasQueFaltanParaEstrenoCorrectamente() {
+        LocalDate fechaEstreno = LocalDate.now().plusDays(15);
+        LocalDate hoy = LocalDate.now();
+        int diasQueFaltanEsperados = (int) ChronoUnit.DAYS.between(hoy, fechaEstreno);
+
+        Movie pelicula = new Movie();
+        pelicula.setNombre("Pelicula No Estrenada");
+        pelicula.setFechaLanzamiento(fechaEstreno);
+
+        when(movieRepository.findUpcomingMovies()).thenReturn(Collections.singletonList(pelicula));
+
+        List<MovieDTO> peliculas = movieServiceImpl.getUpcomingMovies();
+
+        int diasQueFaltanObtenidos = peliculas.get(0).getDiasParaEstreno();
+
+        assertEquals(diasQueFaltanEsperados, diasQueFaltanObtenidos);
+    }
+
+
+
+    @Test
+    public void testGetUpcomingMoviesByCategoryDevuelvePeliculasPorCategoria() {
+        Movie movie = new Movie();
+        movie.setNombre("Película no estrenada");
+        movie.setFechaLanzamiento(LocalDate.now().plusDays(10));
+
+        List<Movie> mockMovies = Collections.singletonList(movie);
+
+        when(movieRepository.findUpcomingMoviesByCategoria(1)).thenReturn(mockMovies);
+
+        List<MovieDTO> result = movieServiceImpl.getUpcomingMoviesByCategory(1);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        MovieDTO movieDTO = result.get(0);
+        assertEquals("Película no estrenada", movieDTO.getNombre());
+    }
+
+
+    @Test
+    public void testGetUpcomingMoviesByCategoryCalculaDiasParaEstreno() {
+        LocalDate fechaDeEstreno = LocalDate.now().plusDays(10);
+        Movie movie = new Movie();
+        movie.setNombre("Película no estrenada");
+        movie.setFechaLanzamiento(fechaDeEstreno);
+
+        List<Movie> mockMovies = Collections.singletonList(movie);
+
+        when(movieRepository.findUpcomingMoviesByCategoria(1)).thenReturn(mockMovies);
+
+        List<MovieDTO> result = movieServiceImpl.getUpcomingMoviesByCategory(1);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        MovieDTO movieDTO = result.get(0);
+        assertEquals(10, movieDTO.getDiasParaEstreno());
+    }
+
 
 
 }

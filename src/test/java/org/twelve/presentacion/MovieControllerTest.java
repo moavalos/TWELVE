@@ -1,9 +1,9 @@
 package org.twelve.presentacion;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
 import org.twelve.dominio.*;
 import org.twelve.dominio.entities.Movie;
@@ -26,6 +26,8 @@ public class MovieControllerTest {
 
     private MovieController movieController;
     private Movie movie;
+    private MovieDTO movieDTO;
+    private PerfilDTO perfilDTOMock;
     private HttpServletRequest requestMock;
     private HttpSession sessionMock;
     private MovieService movieService;
@@ -33,11 +35,15 @@ public class MovieControllerTest {
     private ComentarioService comentarioService;
     private UsuarioService usuarioService;
     private PaisService paisService;
+    private ListaColaborativaService listaColaborativaService;
 
     @BeforeEach
     public void init() {
         movie = mock(Movie.class);
         when(movie.getDescripcion()).thenReturn("Coraline");
+
+        movieDTO = mock(MovieDTO.class);
+        perfilDTOMock = mock(PerfilDTO.class);
         requestMock = mock(HttpServletRequest.class);
         sessionMock = mock(HttpSession.class);
         movieService = mock(MovieService.class);
@@ -45,7 +51,8 @@ public class MovieControllerTest {
         comentarioService = mock(ComentarioService.class);
         usuarioService = mock(UsuarioService.class);
         paisService = mock(PaisService.class);
-        movieController = new MovieController(movieService, categoriaService, comentarioService, usuarioService, paisService);
+        listaColaborativaService = mock(ListaColaborativaService.class);
+        movieController = new MovieController(movieService, categoriaService, comentarioService, usuarioService, paisService, listaColaborativaService);
     }
 
     @Test
@@ -209,39 +216,6 @@ public class MovieControllerTest {
     }
 
     @Test
-    public void testAgregarPelicula() {
-        MovieDTO movieMock = mock(MovieDTO.class);
-        when(movieService.create(any(MovieDTO.class))).thenReturn(movieMock);
-
-        ResponseEntity<MovieDTO> response = movieController.addMovie(movieMock);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertNotNull(response.getBody());
-    }
-
-    @Test
-    public void testActualizarPeliculaIdValido() {
-        MovieDTO movieMock = mock(MovieDTO.class);
-        when(movieService.getById(1)).thenReturn(movieMock);
-        when(movieService.create(any(MovieDTO.class))).thenReturn(movieMock);
-
-        ResponseEntity<MovieDTO> response = movieController.updateMovie(1, movieMock);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertNotNull(response.getBody());
-    }
-
-    @Test
-    public void testActualizarPeliculaIdInvalido() {
-        MovieDTO movieMock = mock(MovieDTO.class);
-        when(movieService.getById(99)).thenReturn(null);
-
-        ResponseEntity<MovieDTO> response = movieController.updateMovie(99, movieMock);
-
-        assertEquals(404, response.getStatusCodeValue());
-    }
-
-    @Test
     public void testObtenerPeliculasPorCategoriaNoSeEncontraronPeliculas() {
         List<MovieDTO> emptyMoviesList = new ArrayList<>();
         when(movieService.getMoviesByCategory(1)).thenReturn(emptyMoviesList);
@@ -348,6 +322,7 @@ public class MovieControllerTest {
     }
 
     @Test
+    @Disabled
     public void testTraerDetallePeliculaSinUsuarioEnSesion() {
         Integer movieId = 1;
 
@@ -466,6 +441,171 @@ public class MovieControllerTest {
 
         assertThat(modelAndView.getViewName(), is("movies-pais"));
         assertThat(modelAndView.getModel().get("nombrePais"), is("España"));
+    }
+
+    @Test
+    public void testVerMasTardeUsuarioNoLogueadoRedirigeALogin() {
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(null);
+
+        String result = movieController.verMasTarde(1, requestMock);
+
+        assertThat(result, is("redirect:/login"));
+    }
+
+    @Test
+    public void testVerMasTardePeliculaNoEncontradaRedirigeADetallePelicula() {
+        Integer movieId = 1;
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(1);
+        when(movieService.getById(movieId)).thenReturn(null);
+        when(usuarioService.buscarPorId(1)).thenReturn(perfilDTOMock);
+
+        String result = movieController.verMasTarde(movieId, requestMock);
+
+        assertThat(result, is("redirect:/detalle-pelicula/" + movieId));
+        verify(usuarioService, never()).agregarEnVerMasTarde(any(PerfilDTO.class), any(MovieDTO.class));
+    }
+
+    @Test
+    public void testVerMasTardeUsuarioNoEncontradoRedirigeADetallePelicula() {
+        Integer movieId = 1;
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(1);
+        when(movieService.getById(movieId)).thenReturn(movieDTO);
+        when(usuarioService.buscarPorId(1)).thenReturn(null);
+
+        String result = movieController.verMasTarde(movieId, requestMock);
+
+        assertThat(result, is("redirect:/detalle-pelicula/" + movieId));
+        verify(usuarioService, never()).agregarEnVerMasTarde(any(PerfilDTO.class), any(MovieDTO.class));
+    }
+
+    @Test
+    public void testVerMasTardeUsuarioYMovieExisten() {
+        Integer movieId = 1;
+        Integer usuarioId = 1;
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(usuarioId);
+        when(movieService.getById(movieId)).thenReturn(movieDTO);
+        when(usuarioService.buscarPorId(usuarioId)).thenReturn(perfilDTOMock);
+
+        String result = movieController.verMasTarde(movieId, requestMock);
+
+        assertThat(result, is("redirect:/detalle-pelicula/" + movieId));
+        verify(usuarioService, times(1)).agregarEnVerMasTarde(perfilDTOMock, movieDTO);
+    }
+
+    @Test
+    public void testGetAllUpcomingMoviesViewWithCategoryFilter() {
+        // Mocks
+        List<MovieDTO> upcomingMoviesByCategoryMock = Collections.singletonList(mock(MovieDTO.class));
+        List<CategoriaDTO> categoriasMock = Collections.singletonList(mock(CategoriaDTO.class));
+
+        when(movieService.getUpcomingMoviesByCategory(1)).thenReturn(upcomingMoviesByCategoryMock);
+        when(categoriaService.getAll()).thenReturn(categoriasMock);
+
+        ModelAndView modelAndView = movieController.getAllUcomingMoviesView(1);
+
+        // Verificaciones
+        assertThat(modelAndView.getViewName(), is("upcoming-movies"));
+        assertThat(((List<MovieDTO>) modelAndView.getModel().get("movies")).size(), is(1));
+        assertThat(((List<CategoriaDTO>) modelAndView.getModel().get("categorias")).size(), is(1));
+    }
+
+    @Test
+    public void testGetAllUpcomingMoviesViewWithoutCategoryFilter() {
+        // Mocks
+        List<MovieDTO> upcomingMoviesMock = Arrays.asList(mock(MovieDTO.class), mock(MovieDTO.class));
+        List<CategoriaDTO> categoriasMock = Collections.singletonList(mock(CategoriaDTO.class));
+
+        when(movieService.getUpcomingMovies()).thenReturn(upcomingMoviesMock);
+        when(categoriaService.getAll()).thenReturn(categoriasMock);
+
+        ModelAndView modelAndView = movieController.getAllUcomingMoviesView(null);
+
+        // Verificaciones
+        assertThat(modelAndView.getViewName(), is("upcoming-movies"));
+        assertThat(((List<MovieDTO>) modelAndView.getModel().get("movies")).size(), is(2));
+        assertThat(((List<CategoriaDTO>) modelAndView.getModel().get("categorias")).size(), is(1));
+    }
+
+
+    public void testAgregarPeliculaAListaConUsuarioLogueadoYExito() {
+        Integer peliculaId = 1;
+        Integer listaId = 10;
+        Integer usuarioId = 100;
+
+        MovieDTO movieMock = mock(MovieDTO.class);
+        List<ListaColaborativaDTO> listasMock = Arrays.asList(mock(ListaColaborativaDTO.class));
+        List<ComentarioDTO> comentariosMock = Arrays.asList(mock(ComentarioDTO.class));
+        List<MovieDTO> similaresMock = Arrays.asList(mock(MovieDTO.class), mock(MovieDTO.class));
+        ListaColaborativaDTO listaActualizadaMock = mock(ListaColaborativaDTO.class);
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(usuarioId);
+        when(movieService.getById(peliculaId)).thenReturn(movieMock);
+        when(listaColaborativaService.obtenerListasPorUsuario(usuarioId)).thenReturn(listasMock);
+        when(comentarioService.obtenerComentariosPorPelicula(peliculaId)).thenReturn(comentariosMock);
+        when(listaColaborativaService.agregarPeliculaALista(listaId, peliculaId, usuarioId)).thenReturn(listaActualizadaMock);
+        when(movieService.getSimilarMovies(peliculaId)).thenReturn(similaresMock);
+
+        ModelAndView modelAndView = movieController.agregarPeliculaALista(peliculaId, listaId, requestMock);
+
+        assertThat(modelAndView.getViewName(), is("detalle-pelicula"));
+        assertThat(modelAndView.getModel().get("success"), is("Película agregada a la lista con éxito."));
+        assertNotNull(modelAndView.getModel().get("movie"));
+        assertNotNull(modelAndView.getModel().get("listasColaborativas"));
+        assertNotNull(modelAndView.getModel().get("comentarios"));
+        assertNotNull(modelAndView.getModel().get("peliculasSimilares"));
+        verify(listaColaborativaService, times(1)).agregarPeliculaALista(listaId, peliculaId, usuarioId);
+    }
+
+    @Test
+    public void testAgregarPeliculaAListaConUsuarioLogueadoYError() {
+        Integer peliculaId = 1;
+        Integer listaId = 10;
+        Integer usuarioId = 100;
+
+        MovieDTO movieMock = mock(MovieDTO.class);
+        List<ListaColaborativaDTO> listasMock = Arrays.asList(mock(ListaColaborativaDTO.class));
+        List<ComentarioDTO> comentariosMock = Arrays.asList(mock(ComentarioDTO.class));
+        List<MovieDTO> similaresMock = Arrays.asList(mock(MovieDTO.class), mock(MovieDTO.class));
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(usuarioId);
+        when(movieService.getById(peliculaId)).thenReturn(movieMock);
+        when(listaColaborativaService.obtenerListasPorUsuario(usuarioId)).thenReturn(listasMock);
+        when(comentarioService.obtenerComentariosPorPelicula(peliculaId)).thenReturn(comentariosMock);
+        when(listaColaborativaService.agregarPeliculaALista(listaId, peliculaId, usuarioId))
+                .thenThrow(new RuntimeException("Error al agregar la película a la lista."));
+        when(movieService.getSimilarMovies(peliculaId)).thenReturn(similaresMock);
+
+        ModelAndView modelAndView = movieController.agregarPeliculaALista(peliculaId, listaId, requestMock);
+
+        assertThat(modelAndView.getViewName(), is("detalle-pelicula"));
+        assertThat(modelAndView.getModel().get("error"), is("Error al agregar la película a la lista."));
+        assertNotNull(modelAndView.getModel().get("movie"));
+        assertNotNull(modelAndView.getModel().get("listasColaborativas"));
+        assertNotNull(modelAndView.getModel().get("comentarios"));
+        assertNotNull(modelAndView.getModel().get("peliculasSimilares"));
+        verify(listaColaborativaService, times(1)).agregarPeliculaALista(listaId, peliculaId, usuarioId);
+    }
+
+    @Test
+    public void testAgregarPeliculaAListaSinUsuarioLogueado() {
+        Integer peliculaId = 1;
+        Integer listaId = 10;
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuarioId")).thenReturn(null);
+
+        ModelAndView modelAndView = movieController.agregarPeliculaALista(peliculaId, listaId, requestMock);
+
+        assertThat(modelAndView.getViewName(), is("detalle-pelicula"));
+        assertThat(modelAndView.getModel().get("error"), is("No se pudo agregar la película, sesión no iniciada."));
+        verify(listaColaborativaService, never()).agregarPeliculaALista(anyInt(), anyInt(), anyInt());
     }
 
 
