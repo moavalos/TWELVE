@@ -217,6 +217,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         }
 
         return nombreArchivo;
+    }
 
     @Override
     public List<UsuarioMovieDTO> obtenerHistorialDePeliculasVistas(Integer usuarioId) {
