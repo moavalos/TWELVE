@@ -21,7 +21,7 @@
 
         <div class="movies-grid d-flex flex-wrap justify-content-start w-100" th:unless="${verMasTarde.isEmpty()}">
             <div th:each="pelicula : ${verMasTarde}" class="movie text-center mx-2 mb-4">
-                <a th:href="@{/detalle-pelicula/{id}(id=${pelicula.id})}" class="no-link">
+                <a class="no-link">
                     <img th:src="@{'/images/' + ${pelicula.pelicula.imagen}}" th:alt="${pelicula.pelicula.nombre}" class="img-fluid rounded mb-2" style="width: 150px; height: auto;">
                 </a>
                 <p th:text="${pelicula.pelicula.nombre}" class="fw-bold">Nombre de la película</p>
