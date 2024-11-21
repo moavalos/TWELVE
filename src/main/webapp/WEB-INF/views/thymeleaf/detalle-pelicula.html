@@ -22,7 +22,7 @@
                  class="img-fluid rounded shadow movie-image">
             <div class="sidebar-buttons mt-4">
                 <!-- Botón Me gusta -->
-                <div th:if="${session.usuario != null}">
+                <div th:if="${session.usuario != null && fueEstrenada}">
                     <form th:action="@{/movie/{id}/like(id=${movie.id})}" method="post">
                         <button type="submit" class="btn w-100 mb-2 rounded-pill"
                                 th:classappend="${haDadoLike != null && haDadoLike ? 'btn-danger' : 'btn-warning'}">
@@ -44,15 +44,14 @@
                 </div>
 
                 <!-- Botón de comentar -->
-                <div th:if="${session.usuario != null}">
-                    <button class="btn btn-warning w-100 rounded-pill" data-bs-toggle="modal"
-                            data-bs-target="#commentModal">
+                <div th:if="${session.usuario != null && fueEstrenada}">
+                    <button class="btn btn-warning w-100 rounded-pill" data-bs-toggle="modal" data-bs-target="#commentModal">
                         Comentar
                     </button>
                 </div>
-                <div th:if="${session.usuario == null}">
-                    <button class="btn btn-warning w-100 mb-2 rounded-pill">Comentar</button>
-                </div>
+<!--                <div th:if="${session.usuario == null}">-->
+<!--                    <button class="btn btn-warning w-100 mb-2 rounded-pill">Comentar</button>-->
+<!--                </div>-->
 
                 <!-- Formulario para agregar a la lista colaborativa -->
                 <div th:if="${session.usuario != null}" class="mt-4">
@@ -83,20 +82,25 @@
 
         <!-- Detalles de la película -->
         <div class="col-md-9">
+            <p th:if="${!fueEstrenada}"><strong>Fecha de estreno: </strong> <span th:text="${#temporals.format(movie.fechaLanzamiento, 'd') + ' de ' + #temporals.format(movie.fechaLanzamiento, 'MMMM') + ' de ' + #temporals.format(movie.fechaLanzamiento, 'yyyy')}"></span></p>
             <h2 th:text="${movie.nombre}" class="fw-bold text-primary"></h2>
             <p th:text="${movie.frase}" class="fst-italic"></p>
             <p>
-                <i class="bi bi-eye"></i> Vistas: <span th:text="${movie.cantVistas}"></span> |
-                &nbsp; Score: <span th:text="${#numbers.formatDecimal(movie.valoracion, 1, 1)}"></span>/10 |
-                &nbsp; Duración: <span th:text="${#numbers.formatInteger(movie.duracion, 0)} + ' min'"></span> |
+               <span th:if="${fueEstrenada}">
+                   <i class="bi bi-eye"></i> Vistas: <span th:text="${movie.cantVistas}"></span> |
+                Score: <span th:text="${#numbers.formatDecimal(movie.valoracion, 1, 1)}"></span>/10 |
+               </span>
+                Duración: <span th:text="${#numbers.formatInteger(movie.duracion, 0)} + ' min'"></span> |
                 Categorías:
                 <span th:each="categoria, iterStat : ${movie.categorias}">
                     <a th:href="@{/categoria/{id}(id=${categoria.id})}" th:text="${categoria.nombre}"
                        class="text-decoration-none"></a>
                     <span th:if="${!iterStat.last}"> · </span>
                 </span> |
-                &nbsp;<span th:text="${movie.anioLanzamiento}"></span> |
+                &nbsp;<span th:text="${movie.anioLanzamiento}"></span>
+                <span th:if="${fueEstrenada}"> |
                 &nbsp;<i class="fa-solid fa-heart"></i> <span th:text="${movie.likes}"></span>
+                </span>
             </p>
             <hr>
 
@@ -119,9 +123,8 @@
         </div>
 
         <!-- Comentarios populares -->
-        <h4 class="mt-5 text-primary">Comentarios Populares</h4>
-        <div class="review-section">
-
+        <h4 th:if="${fueEstrenada}" class="mt-5 text-primary">Comentarios Populares</h4>
+        <div th:if="${fueEstrenada}" class="review-section">
             <div th:each="comentario : ${comentarios}" class="card mb-3 shadow-sm">
                 <div class="card-body">
                     <div class="d-flex align-items-start">
@@ -138,7 +141,7 @@
 
                             <!-- btns like comentario de la muerte -->
                             <div th:if="${usuarioLogueadoId != comentario.usuario.id}">
-                                <div>
+                                <div th:if="${!usuarioLikes.contains(comentario.id)}">
                                     <form th:action="@{/movie/{idMovie}/comment/{idComentario}/like(idMovie=${movie.id}, idComentario=${comentario.id})}"
                                           method="post">
                                         <button type="submit" class="btn btn-sm btn-primary mt-2">
@@ -146,7 +149,7 @@
                                         </button>
                                     </form>
                                 </div>
-                                <div>
+                                <div th:if="${usuarioLikes.contains(comentario.id)}">
                                     <form th:action="@{/movie/{idMovie}/comment/{idComentario}/unlike(idMovie=${movie.id}, idComentario=${comentario.id})}"
                                           method="post">
                                         <button type="submit" class="btn btn-sm btn-danger mt-2">

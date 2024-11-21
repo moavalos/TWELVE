@@ -11,6 +11,7 @@ import org.twelve.dominio.*;
 import org.twelve.presentacion.dto.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -46,9 +47,12 @@ public class MovieController {
         List<PerfilDTO> perfiles = usuarioService.encontrarTodos();
         List<ComentarioDTO> comentariosPopulares = comentarioService.obtener3ComentariosConMasLikes();
 
+        List<MovieDTO> upcomingMovies = movieService.getUpcomingMovies();
+
         ModelMap modelo = new ModelMap();
         modelo.put("movies", topMovies);
         modelo.put("perfiles", perfiles);
+        modelo.put("upcomingMovies", upcomingMovies);
         modelo.put("comentariosPopulares", comentariosPopulares);
 
         return new ModelAndView("home", modelo);
@@ -76,6 +80,8 @@ public class MovieController {
         modelo.put("categorias", categorias);
         modelo.put("selectedFilter", filter);
 
+
+
         return new ModelAndView("movies", modelo);
     }
 
@@ -91,10 +97,15 @@ public class MovieController {
         //lista de comentarios
         List<ComentarioDTO> comentarios = comentarioService.obtenerComentariosPorPelicula(id);
         List<MovieDTO> similarMovies = movieService.getSimilarMovies(id);
-        PerfilDTO usuario = usuarioService.buscarPorId(usuarioLogueadoId);
+        boolean fueEstrenada = movieService.isMovieReleased(movie);
+
+        PerfilDTO usuario = usuarioLogueadoId != null ? usuarioService.buscarPorId(usuarioLogueadoId) : null;
+
         boolean haDadoLike = usuario != null && usuarioService.haDadoLike(usuario, movie);
         boolean enListaVerMasTarde = usuario != null && usuarioService.estaEnListaVerMasTarde(usuario, movie);
-        List<ListaColaborativaDTO> listasColaborativas = listaColaborativaService.obtenerListasPorUsuario(usuario.getId());
+        List<ListaColaborativaDTO> listasColaborativas = usuario != null
+                ? listaColaborativaService.obtenerListasPorUsuario(usuario.getId())
+                : Collections.emptyList();
 
         Set<Integer> usuarioLikes = comentarioService.obtenerLikesPorUsuario(usuarioLogueadoId);
 
@@ -108,6 +119,7 @@ public class MovieController {
         modelo.put("usuario", usuario);
         modelo.put("haDadoLike", haDadoLike);
         modelo.put("enListaVerMasTarde", enListaVerMasTarde);
+        modelo.put("fueEstrenada", fueEstrenada);
         modelo.put("listasColaborativas", listasColaborativas);
         modelo.put("usuarioLikes", usuarioLikes);
         modelo.put("usuarioLogueadoId", usuarioLogueadoId);
@@ -237,14 +249,43 @@ public class MovieController {
         List<ListaColaborativaDTO> listasColaborativas = listaColaborativaService.obtenerListasPorUsuario(usuarioLogueadoId);
         List<ComentarioDTO> comentarios = comentarioService.obtenerComentariosPorPelicula(id);
         List<MovieDTO> similarMovies = movieService.getSimilarMovies(id);
+        boolean fueEstrenada = movieService.isMovieReleased(movie);
+        Set<Integer> usuarioLikes = comentarioService.obtenerLikesPorUsuario(usuarioLogueadoId);
+
+
 
         model.put("movie", movie);
         model.put("listasColaborativas", listasColaborativas);
         model.put("comentarios", comentarios);
         model.put("peliculasSimilares", similarMovies);
+        model.put("fueEstrenada",fueEstrenada);
+        model.put("usuarioLikes",usuarioLikes);
+
 
         return new ModelAndView("detalle-pelicula", model);
     }
+
+    @RequestMapping(path = "/upcoming-movies", method = RequestMethod.GET)
+    public ModelAndView getAllUcomingMoviesView(
+            @RequestParam(value = "idCategoria", required = false) Integer idCategoria) {
+
+        List<MovieDTO> movies;
+         if (idCategoria != null) {
+             movies = movieService.getUpcomingMoviesByCategory(idCategoria);
+         } else {
+             movies = movieService.getUpcomingMovies();
+         }
+
+        List<CategoriaDTO> categorias = categoriaService.getAll();
+
+        ModelMap modelo = new ModelMap();
+        modelo.put("movies", movies);
+        modelo.put("categorias", categorias);
+
+        return new ModelAndView("upcoming-movies", modelo);
+    }
+
+
 
     @RequestMapping(path = "/movie/{idMovie}/comment/{idComentario}/like", method = RequestMethod.POST)
     public String likeComentario(@PathVariable Integer idMovie,

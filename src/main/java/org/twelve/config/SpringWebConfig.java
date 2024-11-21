@@ -14,6 +14,7 @@ import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.twelve.presentacion.converter.StringToPaisDTOConverter;
+import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 
 @EnableWebMvc
 @Configuration
@@ -67,6 +68,8 @@ public class SpringWebConfig implements WebMvcConfigurer {
         // across different data types, so this flag is "false" by default
         // for safer backwards compatibility.
         templateEngine.setEnableSpringELCompiler(true);
+        templateEngine.addDialect(new Java8TimeDialect());
+
         return templateEngine;
     }
 
