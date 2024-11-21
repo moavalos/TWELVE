@@ -15,7 +15,6 @@ import org.twelve.integracion.config.HibernateTestConfig;
 
 import javax.persistence.Query;
 import javax.transaction.Transactional;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;

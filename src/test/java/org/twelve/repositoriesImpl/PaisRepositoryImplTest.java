@@ -66,7 +66,7 @@ public class PaisRepositoryImplTest {
     @Transactional
     @Rollback
     public void testFindByIdConIdInexistenteDevuelveNoResultException() {
-       Integer idInexistente = 999;
+        Integer idInexistente = 999;
 
         assertThrows(NoResultException.class, () -> {
             paisRepository.findById(idInexistente);

@@ -12,20 +12,16 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.twelve.dominio.entities.Categoria;
 import org.twelve.dominio.entities.Movie;
 import org.twelve.dominio.entities.Pais;
-import org.twelve.infraestructura.CategoriaRepositoryImpl;
 import org.twelve.infraestructura.MovieRepositoryImpl;
-import org.twelve.infraestructura.PaisRepositoryImpl;
 import org.twelve.integracion.config.HibernateTestConfig;
 
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
@@ -369,6 +365,7 @@ public class MovieRepositoryImplTest {
         assertFalse(topRatedMovies.isEmpty());
         assertEquals("Movie B", topRatedMovies.get(0).getNombre());
     }
+
     @Test
     @Transactional
     @Rollback

@@ -27,7 +27,7 @@ public class ListaColaborativaServiceImplTest {
     private MovieRepository movieRepository;
 
     @BeforeEach
-    public void init(){
+    public void init() {
         movieRepository = mock(MovieRepository.class);
         repositorioUsuario = mock(RepositorioUsuario.class);
         listaColaborativaRepository = mock(ListaColaborativaRepository.class);

@@ -3,7 +3,9 @@ package org.twelve.presentacion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
-import org.twelve.dominio.*;
+import org.twelve.dominio.ListaColaborativaService;
+import org.twelve.dominio.MovieService;
+import org.twelve.dominio.UsuarioService;
 import org.twelve.dominio.entities.ListaMovie;
 import org.twelve.presentacion.dto.ListaColaborativaDTO;
 import org.twelve.presentacion.dto.MovieDTO;
@@ -11,7 +13,6 @@ import org.twelve.presentacion.dto.PerfilDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -136,8 +137,8 @@ public class ListaColaborativaControllerTest {
 
     @Test
     public void testMostrarFormularioAgregarPeliculaSinListasNiPeliculas() {
-        when(listaColaborativaService.obtenerTodasLasListasColaborativas()).thenReturn(Arrays.asList());
-        when(movieService.getAll()).thenReturn(Arrays.asList());
+        when(listaColaborativaService.obtenerTodasLasListasColaborativas()).thenReturn(List.of());
+        when(movieService.getAll()).thenReturn(List.of());
 
         ModelAndView modelAndView = listaColaborativaController.mostrarFormularioAgregarPelicula();
 
@@ -180,7 +181,7 @@ public class ListaColaborativaControllerTest {
 
         when(requestMock.getSession()).thenReturn(sessionMock);
         when(sessionMock.getAttribute("usuarioId")).thenReturn(usuarioLogueadoId);
-        when(listaColaborativaService.obtenerListasPorUsuario(usuarioLogueadoId)).thenReturn(Arrays.asList());
+        when(listaColaborativaService.obtenerListasPorUsuario(usuarioLogueadoId)).thenReturn(List.of());
 
         ModelAndView modelAndView = listaColaborativaController.mostrarListasUsuario(usuarioLogueadoId, requestMock);
 
@@ -225,7 +226,7 @@ public class ListaColaborativaControllerTest {
         ListaColaborativaDTO listaMock = mock(ListaColaborativaDTO.class);
 
         when(listaColaborativaService.obtenerDetalleLista(listaId)).thenReturn(listaMock);
-        when(listaColaborativaService.obtenerPeliculasPorListaId(listaId)).thenReturn(Arrays.asList());
+        when(listaColaborativaService.obtenerPeliculasPorListaId(listaId)).thenReturn(List.of());
 
         ModelAndView modelAndView = listaColaborativaController.mostrarDetalleLista(listaId);
 

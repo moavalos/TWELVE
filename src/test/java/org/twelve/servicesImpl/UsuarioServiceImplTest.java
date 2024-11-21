@@ -1,7 +1,6 @@
 package org.twelve.servicesImpl;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.twelve.dominio.MovieRepository;
 import org.twelve.dominio.RepositorioUsuario;
@@ -283,26 +282,6 @@ public class UsuarioServiceImplTest {
         verify(repositorioUsuario, times(1)).buscarPorId(1);
         verify(repositorioUsuario, times(1)).buscarPorId(2);
         verify(repositorioUsuario, times(1)).estaSiguiendo(usuarioMock, seguidoMock);
-    }
-
-    @Test
-    @Disabled
-    public void testGuardarMeGustaActualizaLikesEnLaPelicula() {
-        PerfilDTO usuarioDTO = new PerfilDTO();
-        usuarioDTO.setId(1);
-
-        MovieDTO movieDTO = new MovieDTO();
-        movieDTO.setLikes(5);
-
-        Usuario usuario = new Usuario();
-        Movie movie = MovieDTO.convertToEntity(movieDTO);
-
-        when(usuarioMovieRepository.buscarMeGustaPorUsuario(usuario, movie)).thenReturn(Optional.empty());
-
-        usuarioServiceImpl.guardarMeGusta(usuarioDTO, movieDTO);
-
-        assertEquals(6, movie.getLikes());
-        verify(movieRepository, times(1)).actualizar(movie);
     }
 
     @Test
@@ -777,19 +756,6 @@ public class UsuarioServiceImplTest {
     }
 
     @Test
-    @Disabled
-    public void testSonAmigosCuandoNingunoSigueAlOtro() {
-        when(repositorioUsuario.existeRelacion(1, 2)).thenReturn(false);
-        when(repositorioUsuario.existeRelacion(2, 1)).thenReturn(false);
-
-        boolean resultado = usuarioServiceImpl.sonAmigos(1, 2);
-
-        assertFalse(resultado);
-        verify(repositorioUsuario, times(1)).existeRelacion(1, 2);
-        verify(repositorioUsuario, times(1)).existeRelacion(2, 1);
-    }
-
-    @Test
     public void testObtenerAmigosCuandoHayAmigos() {
         Usuario seguido1 = new Usuario();
         seguido1.setId(2);
@@ -851,7 +817,6 @@ public class UsuarioServiceImplTest {
         verify(repositorioUsuario, times(1)).obtenerUsuariosSeguidos(1);
         verify(repositorioUsuario, never()).existeRelacion(anyInt(), eq(1));
     }
-
 
 
 }

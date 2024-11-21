@@ -2,19 +2,20 @@ package org.twelve.repositoriesImpl;
 
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.twelve.dominio.entities.*;
+import org.twelve.dominio.entities.Comentario;
+import org.twelve.dominio.entities.Movie;
+import org.twelve.dominio.entities.Usuario;
+import org.twelve.dominio.entities.UsuarioComentario;
 import org.twelve.infraestructura.UsuarioComentarioRepositoryImpl;
 import org.twelve.integracion.config.HibernateTestConfig;
 
 import javax.transaction.Transactional;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -194,57 +195,6 @@ public class UsuarioComentarioRepositoryImplTest {
 
         //validacion
         assertNull(resultado, "comentario deberia ser eliminado");
-    }
-
-    @Test
-    @Transactional
-    @Rollback
-    @Disabled
-    public void testFindComentarioIdsByUsuarioId() {
-        //preparacion
-        Usuario usuario = new Usuario();
-        usuario.setId(1);
-        usuario.setUsername("agusmd");
-        sessionFactory.getCurrentSession().save(usuario);
-
-        Movie pelicula = new Movie();
-        pelicula.setId(1);
-        pelicula.setNombre("Hercules");
-        sessionFactory.getCurrentSession().save(pelicula);
-
-        Comentario comentario1 = new Comentario();
-        comentario1.setId(1);
-        comentario1.setUsuario(usuario);
-        comentario1.setMovie(pelicula);
-        comentario1.setDescripcion("Comentario 1");
-        sessionFactory.getCurrentSession().save(comentario1);
-
-        Comentario comentario2 = new Comentario();
-        comentario2.setId(2);
-        comentario2.setUsuario(usuario);
-        comentario2.setMovie(pelicula);
-        comentario2.setDescripcion("Comentario 2");
-        sessionFactory.getCurrentSession().save(comentario2);
-
-        UsuarioComentario usuarioComentario1 = new UsuarioComentario();
-        usuarioComentario1.setComentario(comentario1);
-        usuarioComentario1.setUsuario(usuario);
-        usuarioComentario1.setLikeComentario(true);
-        sessionFactory.getCurrentSession().save(usuarioComentario1);
-
-        UsuarioComentario usuarioComentario2 = new UsuarioComentario();
-        usuarioComentario2.setComentario(comentario2);
-        usuarioComentario2.setUsuario(usuario);
-        usuarioComentario2.setLikeComentario(true);
-        sessionFactory.getCurrentSession().save(usuarioComentario2);
-
-        //ejecucion
-        List<Integer> comentarioIds = usuarioComentarioRepository.findComentarioIdsByUsuarioId(usuario.getId());
-
-        //valiracion
-        assertEquals(2, comentarioIds.size(), "el user deberia tener 2 comentarios likeados");
-        assertTrue(comentarioIds.contains(1), "comentario 1");
-        assertTrue(comentarioIds.contains(2), "comentario 2");
     }
 
 

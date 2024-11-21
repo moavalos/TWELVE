@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
 import org.twelve.dominio.PaisService;
 import org.twelve.dominio.ServicioLogin;
-import org.twelve.dominio.entities.Usuario;
 import org.twelve.presentacion.dto.PerfilDTO;
 
 import javax.servlet.http.HttpServletRequest;
