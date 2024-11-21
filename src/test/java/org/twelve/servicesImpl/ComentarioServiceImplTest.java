@@ -1,7 +1,6 @@
 package org.twelve.servicesImpl;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.twelve.dominio.*;
 import org.twelve.dominio.entities.Comentario;
@@ -65,28 +64,6 @@ public class ComentarioServiceImplTest {
         verify(comentarioRepository, times(1)).findByIdMovie(1);
     }
 
-
-    @Test
-    @Disabled
-    public void testQueUnUsuarioPuedaAgregarUnComentario() {
-        //preparacion
-        ComentarioDTO comentarioDTO = new ComentarioDTO();
-        comentarioDTO.setDescripcion("Comentario de prueba");
-        comentarioDTO.setValoracion(8.0);
-        comentarioDTO.setIdUsuario(1);
-        comentarioDTO.setIdMovie(1);
-
-        when(repositorioUsuario.buscarPorId(1)).thenReturn(usuario1);
-        when(movieRepository.findById(1)).thenReturn(movie1);
-
-        //ejecucion
-        comentarioServiceImpl.agregarComentario(comentarioDTO);
-
-        //validacion
-        verify(comentarioRepository, times(1)).save(any(Comentario.class));
-        verify(movieRepository, times(1)).guardar(movie1);
-    }
-
     @Test
     public void testQueSiLaMismaPeliculaTieneDosComentariosPorDosUsuariosDiferentesTeTraeLosDosComentarios() {
 
@@ -119,11 +96,11 @@ public class ComentarioServiceImplTest {
 
         assertEquals("comentario1", listaComentario.get(0).getDescripcion());
         assertEquals(7.0, listaComentario.get(0).getValoracion());
-        assertEquals("userTest1", listaComentario.get(0).getUsuario().getUsername());
+        assertEquals("userTest1", listaComentario.get(0).getUsuario().getNombre());
 
         assertEquals("comentario2", listaComentario.get(1).getDescripcion());
         assertEquals(6.0, listaComentario.get(1).getValoracion());
-        assertEquals("userTest2", listaComentario.get(1).getUsuario().getUsername());
+        assertEquals("userTest2", listaComentario.get(1).getUsuario().getNombre());
 
         verify(comentarioRepository, times(1)).findByIdMovie(1);
 

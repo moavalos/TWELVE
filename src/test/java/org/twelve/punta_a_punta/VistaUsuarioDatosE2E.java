@@ -5,7 +5,8 @@ import org.junit.jupiter.api.*;
 import org.twelve.punta_a_punta.vistas.VistaUsuarioDatos;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
 public class VistaUsuarioDatosE2E {
 

@@ -609,4 +609,117 @@ public class ListaColaborativaRepositoryImplTest {
 
         assertFalse(resultado);
     }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testExisteListaConNombreParaUsuarioCuandoNoExiste() throws Exception {
+        Usuario usuario = new Usuario();
+        usuario.setEmail("usuario@unlam.com");
+        usuario.setPassword("password");
+        sessionFactory.getCurrentSession().save(usuario);
+
+        boolean resultado = listaColaborativaRepositoryImpl.existeListaConNombreParaUsuario(usuario.getId(), "Lista Inexistente");
+
+        assertFalse(resultado, "El resultado debe ser false porque no hay ninguna lista con ese nombre para el usuario.");
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testExisteListaConNombreParaUsuarioUsuarioInexistente() throws Exception {
+        boolean resultado = listaColaborativaRepositoryImpl.existeListaConNombreParaUsuario(999, "Lista Inexistente");
+
+        assertFalse(resultado, "El resultado debe ser false porque el usuario no existe.");
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testEliminarCuandoListaExiste() throws Exception {
+        Usuario creador = new Usuario();
+        creador.setEmail("creador@unlam.com");
+        creador.setPassword("password1");
+        sessionFactory.getCurrentSession().save(creador);
+
+        Usuario colaborador = new Usuario();
+        colaborador.setEmail("colaborador@unlam.com");
+        colaborador.setPassword("password2");
+        sessionFactory.getCurrentSession().save(colaborador);
+
+        ListaColaborativa lista = new ListaColaborativa();
+        lista.setNombre("Lista a Eliminar");
+        lista.setCreador(creador);
+        lista.setColaborador(colaborador);
+        lista.setFechaCreacion(LocalDate.now());
+        sessionFactory.getCurrentSession().save(lista);
+
+        Integer listaId = lista.getId();
+
+        ListaColaborativa listaAntesDeEliminar = listaColaborativaRepositoryImpl.buscarPorId(listaId);
+        assertNotNull(listaAntesDeEliminar, "La lista debe existir antes de ser eliminada");
+
+        listaColaborativaRepositoryImpl.eliminar(listaId);
+
+        ListaColaborativa listaDespuesDeEliminar = listaColaborativaRepositoryImpl.buscarPorId(listaId);
+        assertNull(listaDespuesDeEliminar, "La lista no debe existir después de ser eliminada");
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testEliminarCuandoListaNoExiste() throws Exception {
+        Integer listaIdInexistente = 999;
+
+        listaColaborativaRepositoryImpl.eliminar(listaIdInexistente);
+
+        ListaColaborativa listaDespuesDeIntentarEliminar = listaColaborativaRepositoryImpl.buscarPorId(listaIdInexistente);
+        assertNull(listaDespuesDeIntentarEliminar, "No debe existir ninguna lista con el ID dado");
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testEliminarPeliculaCuandoExiste() throws Exception {
+        Usuario creador = new Usuario();
+        creador.setEmail("creador@unlam.com");
+        creador.setPassword("password1");
+        sessionFactory.getCurrentSession().save(creador);
+
+        Usuario colaborador = new Usuario();
+        colaborador.setEmail("colaborador@unlam.com");
+        colaborador.setPassword("password2");
+        sessionFactory.getCurrentSession().save(colaborador);
+
+        Movie pelicula = new Movie();
+        pelicula.setNombre("Pelicula a Eliminar");
+        sessionFactory.getCurrentSession().save(pelicula);
+
+        ListaColaborativa lista = new ListaColaborativa();
+        lista.setNombre("Lista con Película");
+        lista.setCreador(creador);
+        lista.setColaborador(colaborador);
+        lista.setFechaCreacion(LocalDate.now());
+        sessionFactory.getCurrentSession().save(lista);
+
+        ListaMovie listaPelicula = new ListaMovie();
+        listaPelicula.setLista(lista);
+        listaPelicula.setPelicula(pelicula);
+        listaPelicula.setUsuarioAgregador(creador);
+        listaPelicula.setFechaAgregada(LocalDate.now());
+        sessionFactory.getCurrentSession().save(listaPelicula);
+
+        String hql = "FROM ListaMovie WHERE id = :id";
+        ListaMovie peliculaEnLista = (ListaMovie) sessionFactory.getCurrentSession()
+                .createQuery(hql)
+                .setParameter("id", listaPelicula.getId())
+                .getSingleResult();
+        assertNotNull(peliculaEnLista, "La película debe estar en la lista antes de eliminarla");
+
+        listaColaborativaRepositoryImpl.eliminarPelicula(listaPelicula);
+
+        List<ListaMovie> peliculasRestantes = listaColaborativaRepositoryImpl.buscarPeliculasPorListaId(lista.getId());
+        assertTrue(peliculasRestantes.isEmpty(), "No deben quedar películas en la lista después de eliminarlas");
+    }
+
 }

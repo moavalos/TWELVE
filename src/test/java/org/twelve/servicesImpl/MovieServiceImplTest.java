@@ -2,7 +2,6 @@ package org.twelve.servicesImpl;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.format.datetime.joda.LocalDateParser;
 import org.twelve.dominio.MovieRepository;
 import org.twelve.dominio.entities.Categoria;
 import org.twelve.dominio.entities.Movie;
@@ -274,7 +273,6 @@ public class MovieServiceImplTest {
     }
 
 
-
     @Test
     public void testGetSimilarMoviesCuandoExistenPeliculasSimilaresDeberiaRetornarListaDeMovieDTO() {
         Categoria categoria1 = new Categoria(1, "Acción");
@@ -292,7 +290,7 @@ public class MovieServiceImplTest {
         movie2.setCategorias(Collections.singleton(categoria2));
 
         when(movieRepository.findById(1)).thenReturn(movie1);
-        when(movieRepository.findSimilarMovies(1, categorias)).thenReturn(Arrays.asList(movie2));
+        when(movieRepository.findSimilarMovies(1, categorias)).thenReturn(List.of(movie2));
 
         List<MovieDTO> result = movieServiceImpl.getSimilarMovies(1);
 
@@ -386,7 +384,7 @@ public class MovieServiceImplTest {
 
     @Test
     public void testIsMovieReleasedDevuelveFalseConPeliculasNoEstrenadas() {
-        MovieDTO  peliculaNoEstrenada = new MovieDTO();
+        MovieDTO peliculaNoEstrenada = new MovieDTO();
         peliculaNoEstrenada.setNombre("Pelicula No Estrenada");
         peliculaNoEstrenada.setFechaLanzamiento(LocalDate.now().plusDays(1));
 
@@ -412,7 +410,6 @@ public class MovieServiceImplTest {
 
         assertEquals(diasQueFaltanEsperados, diasQueFaltanObtenidos);
     }
-
 
 
     @Test
@@ -452,7 +449,6 @@ public class MovieServiceImplTest {
         MovieDTO movieDTO = result.get(0);
         assertEquals(10, movieDTO.getDiasParaEstreno());
     }
-
 
 
 }

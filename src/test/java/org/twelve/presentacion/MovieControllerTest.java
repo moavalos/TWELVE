@@ -1,7 +1,6 @@
 package org.twelve.presentacion;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.ModelAndView;
@@ -321,27 +320,6 @@ public class MovieControllerTest {
         assertEquals(5, movieMock.getLikes());
     }
 
-    @Test
-    @Disabled
-    public void testTraerDetallePeliculaSinUsuarioEnSesion() {
-        Integer movieId = 1;
-
-        MovieDTO movieMock = mock(MovieDTO.class);
-        List<ComentarioDTO> comentariosMock = new ArrayList<>();
-
-        when(requestMock.getSession()).thenReturn(sessionMock);
-        when(sessionMock.getAttribute("usuarioId")).thenReturn(null);
-        when(movieService.getById(movieId)).thenReturn(movieMock);
-        when(comentarioService.obtenerComentariosPorPelicula(movieId)).thenReturn(comentariosMock);
-
-        ModelAndView modelAndView = movieController.traerDetallePelicula(movieId, requestMock);
-
-        assertEquals("detalle-pelicula", modelAndView.getViewName());
-        assertNotNull(modelAndView.getModel().get("movie"));
-        assertEquals(comentariosMock, modelAndView.getModel().get("comentarios"));
-        assertNull(modelAndView.getModel().get("usuario"));
-        assertEquals(false, modelAndView.getModel().get("haDadoLike"));
-    }
 
     @Test
     public void testDarMeGustaUsuarioNoEnSesion() {
@@ -538,8 +516,8 @@ public class MovieControllerTest {
         Integer usuarioId = 100;
 
         MovieDTO movieMock = mock(MovieDTO.class);
-        List<ListaColaborativaDTO> listasMock = Arrays.asList(mock(ListaColaborativaDTO.class));
-        List<ComentarioDTO> comentariosMock = Arrays.asList(mock(ComentarioDTO.class));
+        List<ListaColaborativaDTO> listasMock = Collections.singletonList(mock(ListaColaborativaDTO.class));
+        List<ComentarioDTO> comentariosMock = Collections.singletonList(mock(ComentarioDTO.class));
         List<MovieDTO> similaresMock = Arrays.asList(mock(MovieDTO.class), mock(MovieDTO.class));
         ListaColaborativaDTO listaActualizadaMock = mock(ListaColaborativaDTO.class);
 
@@ -569,8 +547,8 @@ public class MovieControllerTest {
         Integer usuarioId = 100;
 
         MovieDTO movieMock = mock(MovieDTO.class);
-        List<ListaColaborativaDTO> listasMock = Arrays.asList(mock(ListaColaborativaDTO.class));
-        List<ComentarioDTO> comentariosMock = Arrays.asList(mock(ComentarioDTO.class));
+        List<ListaColaborativaDTO> listasMock = Collections.singletonList(mock(ListaColaborativaDTO.class));
+        List<ComentarioDTO> comentariosMock = Collections.singletonList(mock(ComentarioDTO.class));
         List<MovieDTO> similaresMock = Arrays.asList(mock(MovieDTO.class), mock(MovieDTO.class));
 
         when(requestMock.getSession()).thenReturn(sessionMock);
