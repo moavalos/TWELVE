@@ -306,7 +306,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         return seguidos.stream()
                 .filter(seguido -> repositorioUsuario.existeRelacion(seguido.getId(), usuarioId))
-                .map(usuario -> new PerfilDTO(usuario.getId(), usuario.getNombre()))
+                .map(usuario -> new PerfilDTO(usuario.getId(), usuario.getUsername()))
                 .collect(Collectors.toList());
     }
 

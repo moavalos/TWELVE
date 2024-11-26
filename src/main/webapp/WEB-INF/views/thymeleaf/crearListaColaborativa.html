@@ -34,7 +34,7 @@
             <select class="form-select" id="usuarioColaborador" name="usuarioColaborador" required>
                 <option value="" disabled selected>Seleccione un usuario...</option>
                 <th:block th:each="usuario : ${usuarios}">
-                    <option th:value="${usuario.id}" th:text="${usuario.nombre}"></option>
+                    <option th:value="${usuario.id}" th:text="${usuario.username}"></option>
                 </th:block>
             </select>
         </div>
