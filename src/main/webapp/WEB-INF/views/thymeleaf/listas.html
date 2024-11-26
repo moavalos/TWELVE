@@ -31,7 +31,7 @@
             <div class="card shadow">
                 <div class="card-body">
                     <h5 class="card-title text-primary" th:text="${lista.nombre}">Nombre de la lista</h5>
-                    <p class="card-text"><strong>Colaborador:</strong> <span th:text="${lista.colaborador.nombre}">Usuario colaborador</span></p>
+                    <p class="card-text"><strong>Colaborador:</strong> <span th:text="${lista.colaborador.username}">Usuario colaborador</span></p>
                     <p class="card-text"><strong>Fecha de creación:</strong> <span th:text="${lista.fechaCreacion}">Fecha</span></p>
                     <a th:href="@{/listas/detalle/{id}(id=${lista.id})}" class="btn btn-outline-primary">Ver Detalle</a>
                 </div>

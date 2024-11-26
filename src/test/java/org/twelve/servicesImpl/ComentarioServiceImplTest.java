@@ -96,11 +96,11 @@ public class ComentarioServiceImplTest {
 
         assertEquals("comentario1", listaComentario.get(0).getDescripcion());
         assertEquals(7.0, listaComentario.get(0).getValoracion());
-        assertEquals("userTest1", listaComentario.get(0).getUsuario().getNombre());
+        assertEquals("userTest1", listaComentario.get(0).getUsuario().getUsername());
 
         assertEquals("comentario2", listaComentario.get(1).getDescripcion());
         assertEquals(6.0, listaComentario.get(1).getValoracion());
-        assertEquals("userTest2", listaComentario.get(1).getUsuario().getNombre());
+        assertEquals("userTest2", listaComentario.get(1).getUsuario().getUsername());
 
         verify(comentarioRepository, times(1)).findByIdMovie(1);
 
