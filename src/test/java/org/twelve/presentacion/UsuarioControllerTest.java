@@ -4,8 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
 import org.twelve.dominio.ComentarioService;
+import org.twelve.dominio.PaisService;
 import org.twelve.dominio.UsuarioService;
 import org.twelve.dominio.entities.Movie;
+import org.twelve.dominio.serviceImpl.PaisServiceImpl;
 import org.twelve.presentacion.dto.ComentarioDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
 import org.twelve.presentacion.dto.UsuarioMovieDTO;
@@ -29,6 +31,7 @@ public class UsuarioControllerTest {
     private PerfilDTO perfilMock;
     private HttpSession sessionMock;
     private HttpServletRequest requestMock;
+    private PaisService paisServiceMock;
 
     @BeforeEach
     public void setUp() {
@@ -39,7 +42,8 @@ public class UsuarioControllerTest {
         sessionMock = mock(HttpSession.class);
         requestMock = mock(HttpServletRequest.class);
         comentarioServiceMock = mock(ComentarioService.class);
-        usuarioController = new UsuarioController(usuarioServiceMock, sessionMock, comentarioServiceMock);
+        paisServiceMock = mock(PaisService.class);
+        usuarioController = new UsuarioController(usuarioServiceMock, sessionMock, comentarioServiceMock, paisServiceMock);
     }
 
     @Test

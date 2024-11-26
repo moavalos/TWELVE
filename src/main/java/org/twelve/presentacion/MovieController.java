@@ -137,14 +137,21 @@ public class MovieController {
     }
 
     @RequestMapping(path = "/search", method = RequestMethod.GET)
-    public ModelAndView searchMovies(@RequestParam("title") String title) {
-        List<MovieDTO> movies = movieService.searchByTitle(title);
+    public ModelAndView searchMovies(@RequestParam("query") String query) {
+        List<MovieDTO> movies = movieService.searchByTitle(query);
+        List<PerfilDTO> users = usuarioService.buscarPorUsername(query);
         ModelMap modelo = new ModelMap();
 
         if (!movies.isEmpty()) {
             modelo.addAttribute("movies", movies);
-        } else {
-            modelo.addAttribute("message", "No se encontraron películas con el título proporcionado.");
+        }
+
+        if (!users.isEmpty()) {
+            modelo.addAttribute("users", users);
+        }
+
+        if (movies.isEmpty() && users.isEmpty()) {
+            modelo.addAttribute("message", "No se encontraron resultados para la consulta proporcionada.");
         }
 
         return new ModelAndView("search-results", modelo);
@@ -252,15 +259,12 @@ public class MovieController {
         boolean fueEstrenada = movieService.isMovieReleased(movie);
         Set<Integer> usuarioLikes = comentarioService.obtenerLikesPorUsuario(usuarioLogueadoId);
 
-
-
         model.put("movie", movie);
         model.put("listasColaborativas", listasColaborativas);
         model.put("comentarios", comentarios);
         model.put("peliculasSimilares", similarMovies);
         model.put("fueEstrenada",fueEstrenada);
         model.put("usuarioLikes",usuarioLikes);
-
 
         return new ModelAndView("detalle-pelicula", model);
     }
@@ -284,8 +288,6 @@ public class MovieController {
 
         return new ModelAndView("upcoming-movies", modelo);
     }
-
-
 
     @RequestMapping(path = "/movie/{idMovie}/comment/{idComentario}/like", method = RequestMethod.POST)
     public String likeComentario(@PathVariable Integer idMovie,
@@ -316,6 +318,5 @@ public class MovieController {
         comentarioService.quitarMeGustaComentario(idComentario, idUsuario);
         return "redirect:/detalle-pelicula/" + idMovie;
     }
-
 
 }

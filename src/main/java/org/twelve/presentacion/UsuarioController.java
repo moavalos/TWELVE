@@ -11,16 +11,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.twelve.dominio.ComentarioService;
+import org.twelve.dominio.PaisService;
 import org.twelve.dominio.UsuarioService;
 import org.twelve.dominio.entities.Movie;
-import org.twelve.dominio.entities.UsuarioMovie;
+import org.twelve.dominio.entities.Pais;
 import org.twelve.presentacion.dto.ComentarioDTO;
+import org.twelve.presentacion.dto.PaisDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
 import org.twelve.presentacion.dto.UsuarioMovieDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,13 +30,15 @@ public class UsuarioController {
 
     private final ComentarioService comentarioService;
     private final UsuarioService usuarioService;
+    private final PaisService paisService;
     private HttpSession session;
 
     @Autowired
-    public UsuarioController(UsuarioService usuarioService, HttpSession session, ComentarioService comentarioService) {
+    public UsuarioController(UsuarioService usuarioService, HttpSession session, ComentarioService comentarioService, PaisService paisService) {
         this.usuarioService = usuarioService;
         this.session = session;
         this.comentarioService = comentarioService;
+        this.paisService = paisService;
     }
 
     @RequestMapping(path = "/perfil/{id}", method = RequestMethod.GET)
@@ -66,6 +69,9 @@ public class UsuarioController {
         //agrego comentarios
         List<ComentarioDTO> comentariosRecientes = comentarioService.obtenerUltimosTresComentarios(id);
 
+        List<PaisDTO> paises = paisService.findAll();
+
+
         model.put("usuario", usuario);
         model.put("estaSiguiendo", estaSiguiendo);
         model.put("seguirODejarUrl", seguirODejarUrl);
@@ -79,6 +85,7 @@ public class UsuarioController {
         model.put("esPerfilPropio", esPerfilPropio);
         // model.put("actividadReciente", ultimosComentarios);
         model.put("comentariosRecientes", comentariosRecientes);
+        model.put("paises", paises);
         return new ModelAndView("perfil", model);
     }
 
@@ -127,17 +134,18 @@ public class UsuarioController {
             @RequestParam("username") String username,
             @RequestParam("descripcion") String descripcion,
             @RequestParam("nombre") String nombre,
-            @RequestParam("pais") String pais,
+            @RequestParam("pais") PaisDTO pais,
             @RequestParam(value = "fotoPerfil", required = false) MultipartFile fotoPerfil,
             HttpServletRequest request) {
 
         Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
 
+
         if (usuarioLogueadoId == null) {
             return "redirect:/login";
         }
 
-        if (username.isEmpty() || nombre.isEmpty() || pais.isEmpty()) {
+        if (username.isEmpty() || nombre.isEmpty()) {
             return "redirect:/perfil/" + usuarioLogueadoId + "?error=Campos obligatorios";
         }
 

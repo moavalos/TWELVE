@@ -31,9 +31,9 @@ public class PerfilDTO {
     public PerfilDTO() {
     }
 
-    public PerfilDTO(Integer id, String username) {
+    public PerfilDTO(Integer id, String nombre) {
         this.id = id;
-        this.username = username;
+        this.nombre = nombre;
     }
 
     public String getUsername() {

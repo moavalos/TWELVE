@@ -58,8 +58,18 @@ public class ListaColaborativaController {
             return new ModelAndView("crearListaColaborativa", model);
         }
 
-        listaColaborativaService.crearListaColaborativa(usuarioLogueadoId, usuarioColaborador, nombreLista);
-        return new ModelAndView("redirect:/listas/" + usuarioLogueadoId);
+        try {
+            listaColaborativaService.crearListaColaborativa(usuarioLogueadoId, usuarioColaborador, nombreLista);
+            return new ModelAndView("redirect:/listas/" + usuarioLogueadoId);
+        } catch (RuntimeException e) {
+            if ("Ya existe una lista con este nombre para el usuario.".equals(e.getMessage())) {
+                model.put("error", "Ya existe una lista con este nombre para el usuario.");
+            } else {
+                model.put("error", "Ocurrió un error al crear la lista. Intenta nuevamente.");
+            }
+            model.put("usuarios", usuarioService.obtenerAmigos(usuarioLogueadoId));
+            return new ModelAndView("crearListaColaborativa", model);
+        }
     }
 
     @RequestMapping(path = "/agregarPelicula", method = RequestMethod.GET)
@@ -87,8 +97,10 @@ public class ListaColaborativaController {
     }
 
     @RequestMapping(path = "/listas/detalle/{id}", method = RequestMethod.GET)
-    public ModelAndView mostrarDetalleLista(@PathVariable Integer id) {
+    public ModelAndView mostrarDetalleLista(@PathVariable Integer id, HttpServletRequest request) {
         ModelMap model = new ModelMap();
+
+        Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
 
         ListaColaborativaDTO lista = listaColaborativaService.obtenerDetalleLista(id);
 
@@ -98,9 +110,28 @@ public class ListaColaborativaController {
         }
 
         List<ListaMovie> peliculas = listaColaborativaService.obtenerPeliculasPorListaId(id);
+
+        if (!lista.getCreador().getId().equals(usuarioLogueadoId) &&
+                !lista.getColaborador().getId().equals(usuarioLogueadoId)) {
+            return new ModelAndView("redirect:/error", "error", "No tienes permiso para ver esta lista.");
+        }
+
         model.put("peliculas", peliculas);
         model.put("lista", lista);
 
         return new ModelAndView("detalleLista", model);
     }
+
+    @RequestMapping(path = "/listas/eliminar/{id}", method = RequestMethod.POST)
+    public ModelAndView eliminarLista(@PathVariable Integer id, HttpServletRequest request) {
+        Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
+
+        if (usuarioLogueadoId == null) {
+            return new ModelAndView("redirect:/login");
+        }
+
+        listaColaborativaService.eliminarListaColaborativa(id, usuarioLogueadoId);
+        return new ModelAndView("redirect:/listas/" + usuarioLogueadoId);
+    }
+
 }

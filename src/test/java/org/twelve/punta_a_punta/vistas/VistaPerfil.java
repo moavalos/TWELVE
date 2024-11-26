@@ -2,7 +2,7 @@ package org.twelve.punta_a_punta.vistas;
 
 import com.microsoft.playwright.Page;
 
-public class VistaPerfil extends VistaWeb{
+public class VistaPerfil extends VistaWeb {
 
     public VistaPerfil(Page page, int userId) {
         super(page);

@@ -9,6 +9,7 @@ import org.twelve.dominio.UsuarioMovieRepository;
 import org.twelve.dominio.UsuarioService;
 import org.twelve.dominio.entities.*;
 import org.twelve.presentacion.dto.MovieDTO;
+import org.twelve.presentacion.dto.PaisDTO;
 import org.twelve.presentacion.dto.PerfilDTO;
 import org.twelve.presentacion.dto.UsuarioMovieDTO;
 
@@ -177,20 +178,13 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public void actualizarPerfil(Integer userId, String username, String descripcion, String nombre, String pais, MultipartFile fotoPerfil) {
+    public void actualizarPerfil(Integer userId, String username, String descripcion, String nombre, PaisDTO pais, MultipartFile fotoPerfil) {
         Usuario usuario = repositorioUsuario.buscarPorId(userId);
 
         usuario.setUsername(username);
         usuario.setDescripcion(descripcion);
         usuario.setNombre(nombre);
-
-        if (usuario.getPais() != null) {
-            usuario.getPais().setNombre(pais);
-        } else {
-            Pais nuevoPais = new Pais();
-            nuevoPais.setNombre(pais);
-            usuario.setPais(nuevoPais);
-        }
+        usuario.setPais(PaisDTO.convertToEntity(pais));
 
         if (fotoPerfil != null && !fotoPerfil.isEmpty()) {
             String nombreArchivo = guardarFoto(fotoPerfil);
@@ -315,6 +309,15 @@ public class UsuarioServiceImpl implements UsuarioService {
                 .map(usuario -> new PerfilDTO(usuario.getId(), usuario.getNombre()))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<PerfilDTO> buscarPorUsername(String username) {
+        List<Usuario> users = repositorioUsuario.buscarPorUsername(username);
+        return users.stream()
+                .map(PerfilDTO::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
 
 }
 

@@ -123,8 +123,17 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
         String hql = "SELECT s.seguido FROM Seguidor s WHERE s.usuario.id = :usuarioId";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setParameter("usuarioId", usuarioId);
-        return query.getResultList();
+
+        List<Usuario> usuariosSeguidos = query.getResultList();
+        return usuariosSeguidos;
     }
 
+    @Override
+    public List<Usuario> buscarPorUsername(String username) {
+        String hql = "FROM Usuario WHERE lower(username) LIKE :username";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("username", "%" + username.toLowerCase() + "%");
+        return query.getResultList();
+    }
 
 }
