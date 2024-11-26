@@ -310,5 +310,14 @@ public class UsuarioServiceImpl implements UsuarioService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<PerfilDTO> buscarPorUsername(String username) {
+        List<Usuario> users = repositorioUsuario.buscarPorUsername(username);
+        return users.stream()
+                .map(PerfilDTO::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+
 }
 

@@ -128,4 +128,12 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
         return usuariosSeguidos;
     }
 
+    @Override
+    public List<Usuario> buscarPorUsername(String username) {
+        String hql = "FROM Usuario WHERE lower(username) LIKE :username";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("username", "%" + username.toLowerCase() + "%");
+        return query.getResultList();
+    }
+
 }
