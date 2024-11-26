@@ -29,5 +29,7 @@ public interface RepositorioUsuario {
 
     List<Usuario> obtenerUsuariosSeguidos(Integer usuarioId);
 
+    List<Usuario> buscarPorUsername(String username);
+
 }
 
