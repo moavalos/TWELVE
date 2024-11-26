@@ -167,7 +167,7 @@ public class MovieControllerTest {
         assertEquals("search-results", modelAndView.getViewName());
 
         assertNotNull(modelAndView.getModel().get("message"));
-        assertEquals("No se encontraron películas con el título proporcionado.", modelAndView.getModel().get("message"));
+        assertEquals("No se encontraron resultados para la consulta proporcionada.", modelAndView.getModel().get("message"));
     }
 
     @Test

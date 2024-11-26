@@ -137,14 +137,21 @@ public class MovieController {
     }
 
     @RequestMapping(path = "/search", method = RequestMethod.GET)
-    public ModelAndView searchMovies(@RequestParam("title") String title) {
-        List<MovieDTO> movies = movieService.searchByTitle(title);
+    public ModelAndView searchMovies(@RequestParam("query") String query) {
+        List<MovieDTO> movies = movieService.searchByTitle(query);
+        List<PerfilDTO> users = usuarioService.buscarPorUsername(query);
         ModelMap modelo = new ModelMap();
 
         if (!movies.isEmpty()) {
             modelo.addAttribute("movies", movies);
-        } else {
-            modelo.addAttribute("message", "No se encontraron películas con el título proporcionado.");
+        }
+
+        if (!users.isEmpty()) {
+            modelo.addAttribute("users", users);
+        }
+
+        if (movies.isEmpty() && users.isEmpty()) {
+            modelo.addAttribute("message", "No se encontraron resultados para la consulta proporcionada.");
         }
 
         return new ModelAndView("search-results", modelo);

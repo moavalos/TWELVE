@@ -49,4 +49,6 @@ public interface UsuarioService {
 
     List<PerfilDTO> obtenerAmigos(Integer usuarioId);
 
+    List<PerfilDTO> buscarPorUsername(String username);
+
 }

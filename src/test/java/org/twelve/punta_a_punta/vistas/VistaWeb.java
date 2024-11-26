@@ -3,6 +3,8 @@ package org.twelve.punta_a_punta.vistas;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
+import java.util.List;
+
 public class VistaWeb {
 
     protected Page page;
@@ -29,5 +31,9 @@ public class VistaWeb {
 
     public Locator obtenerElemento(String selectorCSS) {
         return page.locator(selectorCSS);
+    }
+
+    public List<Locator> obtenerElementos(String selectorCSS) {
+        return page.locator(selectorCSS).all();
     }
 }
