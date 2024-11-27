@@ -135,7 +135,6 @@ public class UsuarioController {
             @RequestParam("descripcion") String descripcion,
             @RequestParam("nombre") String nombre,
             @RequestParam("pais") PaisDTO pais,
-            @RequestParam(value = "fotoPerfil", required = false) MultipartFile fotoPerfil,
             HttpServletRequest request) {
 
         Integer usuarioLogueadoId = (Integer) request.getSession().getAttribute("usuarioId");
@@ -150,7 +149,7 @@ public class UsuarioController {
         }
 
         try {
-            usuarioService.actualizarPerfil(usuarioLogueadoId, username, descripcion, nombre, pais, fotoPerfil);
+            usuarioService.actualizarPerfil(usuarioLogueadoId, username, descripcion, nombre, pais);
         } catch (DataIntegrityViolationException e) {
             return "redirect:/perfil/" + usuarioLogueadoId + "?error=Error de datos";
         } catch (Exception e) {

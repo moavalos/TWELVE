@@ -19,7 +19,8 @@
         <!-- Columna imagen y botones -->
         <div class="col-md-3 text-center">
 
-                <img th:src="@{'/images/' + ${movie.imagen}}" alt="Movie Image" class="img-fluid rounded shadow movie-image">
+            <img th:src="@{'/images/' + ${movie.imagen}}" alt="Movie Image"
+                 class="img-fluid rounded shadow movie-image">
 
             <div class="sidebar-buttons mt-4">
                 <!-- Botón Me gusta -->
@@ -32,7 +33,7 @@
                         </button>
                     </form>
                 </div>
-              
+
                 <!-- Botón ver más tarde -->
                 <div th:if="${session.usuario != null}">
                     <form th:action="@{/movie/{id}/verMasTarde(id=${movie.id})}" method="post">
@@ -46,13 +47,14 @@
 
                 <!-- Botón de comentar -->
                 <div th:if="${session.usuario != null && fueEstrenada}">
-                    <button class="btn btn-warning w-100 rounded-pill" data-bs-toggle="modal" data-bs-target="#commentModal">
+                    <button class="btn btn-warning w-100 rounded-pill" data-bs-toggle="modal"
+                            data-bs-target="#commentModal">
                         Comentar
                     </button>
                 </div>
-<!--                <div th:if="${session.usuario == null}">-->
-<!--                    <button class="btn btn-warning w-100 mb-2 rounded-pill">Comentar</button>-->
-<!--                </div>-->
+                <!--                <div th:if="${session.usuario == null}">-->
+                <!--                    <button class="btn btn-warning w-100 mb-2 rounded-pill">Comentar</button>-->
+                <!--                </div>-->
 
                 <!-- Formulario para agregar a la lista colaborativa -->
                 <div th:if="${session.usuario != null}" class="mt-4">
@@ -83,7 +85,9 @@
 
         <!-- Detalles de la película -->
         <div class="col-md-9">
-            <p th:if="${!fueEstrenada}"><strong>Fecha de estreno: </strong> <span th:text="${#temporals.format(movie.fechaLanzamiento, 'd') + ' de ' + #temporals.format(movie.fechaLanzamiento, 'MMMM') + ' de ' + #temporals.format(movie.fechaLanzamiento, 'yyyy')}"></span></p>
+            <p th:if="${!fueEstrenada}"><strong>Fecha de estreno: </strong> <span
+                    th:text="${#temporals.format(movie.fechaLanzamiento, 'd') + ' de ' + #temporals.format(movie.fechaLanzamiento, 'MMMM') + ' de ' + #temporals.format(movie.fechaLanzamiento, 'yyyy')}"></span>
+            </p>
             <h2 th:text="${movie.nombre}" class="fw-bold text-primary"></h2>
             <p th:text="${movie.frase}" class="fst-italic"></p>
             <p>
@@ -129,8 +133,8 @@
             <div th:each="comentario : ${comentarios}" class="card mb-3 shadow-sm">
                 <div class="card-body">
                     <div class="d-flex align-items-start">
-                        <img th:src="@{/images/user/foto-perfil.jpg}" alt="User Avatar" class="rounded-circle me-3"
-                             width="50">
+                        <img th:src="@{'/images/user/' + ${comentario.usuario.username} + '.jpg'}" alt="User Avatar"
+                             class="rounded-circle me-3" width="50" height="50">
                         <div>
                             <h6 class="mb-1">
                                 Comentario por <span class="fw-bold" th:text="${comentario.usuario.username}"></span>

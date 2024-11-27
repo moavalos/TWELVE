@@ -33,7 +33,7 @@ public interface UsuarioService {
 
     List<Movie> obtenerPeliculasFavoritas(Integer usuarioId);
 
-    void actualizarPerfil(Integer userId, String username, String descripcion, String nombre, PaisDTO pais, MultipartFile fotoPerfil);
+    void actualizarPerfil(Integer userId, String username, String descripcion, String nombre, PaisDTO pais);
 
     String guardarFoto(MultipartFile fotoPerfil);
 

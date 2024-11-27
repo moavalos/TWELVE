@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil de Usuario</title>
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
-        <link rel="stylesheet" th:href="@{/css/perfil.css}"/>
+    <link rel="stylesheet" th:href="@{/css/perfil.css}"/>
 </head>
 <body>
 
@@ -16,8 +16,8 @@
     <div class="profile-info row mb-4">
         <div class="profile-left col-md-8 d-flex align-items-start bg-light p-4 rounded shadow">
             <div class="avatar">
-                <img th:src="@{/images/user/icono-perfil.jpg}" alt="User Avatar" class="img-fluid rounded-circle shadow"
-                     style="width: 150px; height: 150px;">
+                <img th:src="@{/images/user/{fotoDePerfil}(fotoDePerfil=${usuario.fotoDePerfil})}" alt="User Avatar"
+                     class="img-fluid rounded-circle shadow" style="width: 150px; height: 150px;">
             </div>
             <div class="info ms-4">
                 <h1 th:text="${usuario.username}" class="text-primary">Nombre del Usuario</h1>
@@ -42,11 +42,6 @@
                                             aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="mb-3">
-                                        <label for="fotoPerfil" class="form-label">Foto de Perfil</label>
-                                        <input type="file" class="form-control" id="fotoPerfil" name="fotoPerfil"
-                                               accept="image/*">
-                                    </div>
                                     <div class="mb-3">
                                         <label for="username" class="form-label">Nombre de Usuario</label>
                                         <input type="text" class="form-control" id="username" name="username"
