@@ -178,18 +178,13 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public void actualizarPerfil(Integer userId, String username, String descripcion, String nombre, PaisDTO pais, MultipartFile fotoPerfil) {
+    public void actualizarPerfil(Integer userId, String username, String descripcion, String nombre, PaisDTO pais) {
         Usuario usuario = repositorioUsuario.buscarPorId(userId);
 
         usuario.setUsername(username);
         usuario.setDescripcion(descripcion);
         usuario.setNombre(nombre);
         usuario.setPais(PaisDTO.convertToEntity(pais));
-
-        if (fotoPerfil != null && !fotoPerfil.isEmpty()) {
-            String nombreArchivo = guardarFoto(fotoPerfil);
-            usuario.setFotoDePerfil(nombreArchivo);
-        }
 
         repositorioUsuario.guardar(usuario);
     }

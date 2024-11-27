@@ -13,11 +13,11 @@ VALUES (1, 'Argentina'),
 INSERT INTO Usuario (email, password, nombre, username, foto_de_perfil, pais_id, descripcion, rol, activo)
 VALUES
     ('admin@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Admin User', 'admin', 'admin.jpg', 1, 'Administrador del sistema', 'ADMIN', TRUE),
-    ('juan.perez@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Juan Perez', 'juanperez', 'juan.jpg', 2, 'Cinéfilo amateur', 'USER', FALSE),
-    ('moderador@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Moderador Uno', 'moduser', 'moderador.jpg', 4, 'Encargado de moderar reseñas', 'MOD', TRUE),
-    ('ana.gomez@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Ana Gomez', 'anagomez', 'ana.jpg', 3, 'Amante de películas de acción', 'USER', TRUE),
-    ('carlos.lopez@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Carlos Lopez', 'carlosl', 'carlos.jpg', 5, 'Fanático del cine clásico', 'USER', FALSE),
-    ('mora@gmail.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Mora', 'moras', 'mora.jpg', 5, 'user para pruebas', 'USER', TRUE),
+    ('juan.perez@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Juan Perez', 'juanperez', 'juanperez.jpg', 2, 'Cinéfilo amateur', 'USER', FALSE),
+    ('moderador@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Moderador Uno', 'moduser', 'moduser.jpg', 4, 'Encargado de moderar reseñas', 'MOD', TRUE),
+    ('ana.gomez@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Ana Gomez', 'anagomez', 'anagomez.jpg', 3, 'Amante de películas de acción', 'USER', TRUE),
+    ('carlos.lopez@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Agustin', 'agusmd', 'agusmd.jpg', 5, 'Fanático del cine clásico', 'USER', FALSE),
+    ('mora@gmail.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Mora', 'moras', 'moras.jpg', 5, 'user para pruebas', 'USER', TRUE),
     ('morae2e@gmail.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Mora E2E', 'morae2e', 'morae2e.jpg', 5, 'user para pruebas e2e', 'USER', TRUE),
     ('flor@unlam.edu.ar', '$2a$10$BqkXqgYnG35/LujcXESGP.QQOhecbLVcBe6fJcG3CZ62SKjUi5.3e', 'Florencia', 'flor', 'flor.jpg', 1, 'hola', 'USER', TRUE);
 
