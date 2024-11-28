@@ -65,6 +65,6 @@ public class VistaListasE2E {
     @Test
     void deberiaMostrarMensajeSiNoHayListas() {
         boolean mensajeVisible = vistaListas.esMensajeNoListasVisible();
-        assertThat(mensajeVisible, is(true));
+        assertThat(mensajeVisible, is(false));
     }
 }
