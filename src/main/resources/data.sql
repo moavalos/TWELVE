@@ -7,44 +7,49 @@ VALUES (1, 'Argentina'),
        (6, 'Italia');
 
 
-
 -- Inserts del Usuario
 
 INSERT INTO Usuario (email, password, nombre, username, foto_de_perfil, pais_id, descripcion, rol, activo)
-VALUES
-    ('admin@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Admin User', 'admin', 'admin.jpg', 1, 'Administrador del sistema', 'ADMIN', TRUE),
-    ('juan.perez@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Juan Perez', 'juanperez', 'juan.jpg', 2, 'Cinéfilo amateur', 'USER', FALSE),
-    ('moderador@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Moderador Uno', 'moduser', 'moderador.jpg', 4, 'Encargado de moderar reseñas', 'MOD', TRUE),
-    ('ana.gomez@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Ana Gomez', 'anagomez', 'ana.jpg', 3, 'Amante de películas de acción', 'USER', TRUE),
-    ('carlos.lopez@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Carlos Lopez', 'carlosl', 'carlos.jpg', 5, 'Fanático del cine clásico', 'USER', FALSE),
-    ('mora@gmail.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Mora', 'moras', 'mora.jpg', 5, 'user para pruebas', 'USER', TRUE),
-    ('morae2e@gmail.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Mora E2E', 'morae2e', 'morae2e.jpg', 5, 'user para pruebas e2e', 'USER', TRUE),
-    ('flor@unlam.edu.ar', '$2a$10$BqkXqgYnG35/LujcXESGP.QQOhecbLVcBe6fJcG3CZ62SKjUi5.3e', 'Florencia', 'flor', 'flor.jpg', 1, 'hola', 'USER', TRUE);
+VALUES ('admin@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Admin User', 'admin',
+        'admin.jpg', 1, 'Administrador del sistema', 'ADMIN', TRUE),
+       ('juan.perez@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Juan Perez',
+        'juanperez', 'juan.jpg', 2, 'Cinéfilo amateur', 'USER', FALSE),
+       ('moderador@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Moderador Uno',
+        'moduser', 'moderador.jpg', 4, 'Encargado de moderar reseñas', 'MOD', TRUE),
+       ('ana.gomez@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Ana Gomez',
+        'anagomez', 'ana.jpg', 3, 'Amante de películas de acción', 'USER', TRUE),
+       ('carlos.lopez@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Carlos Lopez',
+        'carlosl', 'carlos.jpg', 5, 'Fanático del cine clásico', 'USER', FALSE),
+       ('mora@gmail.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Mora', 'moras', 'mora.jpg',
+        5, 'user para pruebas', 'USER', TRUE),
+       ('morae2e@gmail.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Mora E2E', 'morae2e',
+        'morae2e.jpg', 5, 'user para pruebas e2e', 'USER', TRUE),
+       ('flor@unlam.edu.ar', '$2a$10$BqkXqgYnG35/LujcXESGP.QQOhecbLVcBe6fJcG3CZ62SKjUi5.3e', 'Florencia', 'flor',
+        'flor.jpg', 1, 'hola', 'USER', TRUE);
 
 INSERT INTO Seguidor(usuario_id, seguido_id)
-VALUES
-    (6, 5),
-    (5, 6),
-    (5, 8),
-    (8, 5),
-    (2,8),
-    (8,2),
-    (1, 2),
-    (1, 3),
-    (1, 4),
-    (2, 3),
-    (2, 6),
-    (3, 4),
-    (3, 7),
-    (4, 5),
-    (4, 8),
-    (5, 7),
-    (6, 7),
-    (6, 8),
-    (7, 1),
-    (7, 3),
-    (8, 1),
-    (8, 4);
+VALUES (6, 5),
+       (5, 6),
+       (5, 8),
+       (8, 5),
+       (2, 8),
+       (8, 2),
+       (1, 2),
+       (1, 3),
+       (1, 4),
+       (2, 3),
+       (2, 6),
+       (3, 4),
+       (3, 7),
+       (4, 5),
+       (4, 8),
+       (5, 7),
+       (6, 7),
+       (6, 8),
+       (7, 1),
+       (7, 3),
+       (8, 1),
+       (8, 4);
 
 INSERT INTO Categoria (id, nombre)
 VALUES (1, 'SUSPENSO'),
@@ -132,18 +137,22 @@ VALUES ('Volver al Futuro',
        ('Un Completo Desconocido',
         'Un joven Bob Dylan sacude la escena de la música folk cuando conecta su guitarra eléctrica en el Festival de Folk de Newport en 1965.',
         '', 120.0, 2, 0, '2024', '2024-12-25', 'un_completo_desconocido.jpg', NULL,
-        0.0,'James Mangold','James Mangold','Inglés','A Complete Unknown'),
+        0.0, 'James Mangold', 'James Mangold', 'Inglés', 'A Complete Unknown'),
 
        ('El Hombre Lobo',
         'Un hombre busca proteger a su familia de un peligroso depredador.',
         '', 122.0, 2, 0, '2025', '2025-01-15', 'el_hombre_lobo.jpg', NULL,
-        0.0,'Leigh Whannell','Rebecca Angelo, Lauren Schuker','Inglés','Wolf Man'),
+        0.0, 'Leigh Whannell', 'Rebecca Angelo, Lauren Schuker', 'Inglés', 'Wolf Man'),
 
        ('Mickey 17',
         'Para evitar que Mickey8, su clon sustituto, ocupe su lugar, Mickey7, un robot llamado "prescindible" es enviado a un planeta frío para colonizarlo.',
         '', 120.0, 3, 0, '2025', '2025-04-18', 'mickey17.jpg', NULL,
-        0.0,'Bong Joon Ho','Bong Joon Ho, Edward Ashton','Inglés','Mickey 17');
+        0.0, 'Bong Joon Ho', 'Bong Joon Ho, Edward Ashton', 'Inglés', 'Mickey 17'),
 
+       ('F1',
+        'La leyenda de las carreras, Sonny Hayes, es persuadido para salir de su retiro y liderar a un equipo de Fórmula 1 en crisis, mientras entrena a un joven piloto prometedor y busca una última oportunidad de gloria.',
+        '', 120.0, 3, 0, '2025', '2025-06-25', 'f1.jpg', NULL,
+        0.0, 'Joseph Kosinski', 'Ehren Kruger', 'Inglés', 'F1');
 
 
 
@@ -205,7 +214,7 @@ VALUES (1, 6, TRUE),   -- El usuario 6 da like al comentario 1
        (13, 4, TRUE),  -- El usuario 4 da like al comentario 13
        (14, 5, TRUE),  -- El usuario 5 da like al comentario 14
        (15, 6, FALSE), -- El usuario 6 no da like al comentario 15
-       (16, 7, TRUE);  -- El usuario 7 da like al comentario 16
+       (16, 7, TRUE); -- El usuario 7 da like al comentario 16
 
 INSERT INTO movie_categoria (movie_id, categoria_id)
 VALUES (1, 6),
@@ -233,29 +242,27 @@ VALUES (1, 6),
        (12, 4),
        (13, 1),
        (14, 3),
-       (14,6);
+       (14, 6);
 
 INSERT INTO ListaColaborativa (nombre, creador_id, colaborador_id, fechaCreacion)
-VALUES
-    ('Películas favoritas de acción', 1, 2, '2024-01-01'),
-    ('Comedias para el fin de semana', 3, 4, '2024-02-10'),
-    ('Clásicos imperdibles', 5, 6, '2024-03-15'),
-    ('Documentales recomendados', 7, 8, '2024-04-20'),
-    ('Películas románticas', 2, 3, '2024-05-05');
+VALUES ('Películas favoritas de acción', 1, 2, '2024-01-01'),
+       ('Comedias para el fin de semana', 3, 4, '2024-02-10'),
+       ('Clásicos imperdibles', 5, 6, '2024-03-15'),
+       ('Documentales recomendados', 7, 8, '2024-04-20'),
+       ('Películas románticas', 2, 3, '2024-05-05');
 
 INSERT INTO ListaMovie (lista_id, movie_id, usuario_id, fechaAgregada)
-VALUES
-    (1, 1, 1, '2024-01-02'),  -- Usuario 1 agrega película 1 a la lista 1
-    (1, 2, 2, '2024-01-03'),  -- Usuario 2 agrega película 2 a la lista 1
-    (1, 3, 3, '2024-01-04'),  -- Usuario 3 agrega película 3 a la lista 1
-    (2, 4, 4, '2024-02-11'),  -- Usuario 4 agrega película 4 a la lista 2
-    (2, 5, 5, '2024-02-12'),  -- Usuario 5 agrega película 5 a la lista 2
-    (3, 6, 6, '2024-03-16'),  -- Usuario 6 agrega película 6 a la lista 3
-    (3, 7, 7, '2024-03-17'),  -- Usuario 7 agrega película 7 a la lista 3
-    (3, 8, 8, '2024-03-18'),  -- Usuario 8 agrega película 8 a la lista 3
-    (4, 9, 1, '2024-04-21'),  -- Usuario 1 agrega película 9 a la lista 4
-    (4, 10, 2, '2024-04-22'), -- Usuario 2 agrega película 10 a la lista 4
-    (4, 11, 3, '2024-04-23'), -- Usuario 3 agrega película 11 a la lista 4
-    (5, 12, 4, '2024-05-06'), -- Usuario 4 agrega película 12 a la lista 5
-    (5, 13, 5, '2024-05-07'), -- Usuario 5 agrega película 13 a la lista 5
-    (5, 14, 6, '2024-05-08'); -- Usuario 6 agrega película 14 a la lista 5
+VALUES (1, 1, 1, '2024-01-02'),  -- Usuario 1 agrega película 1 a la lista 1
+       (1, 2, 2, '2024-01-03'),  -- Usuario 2 agrega película 2 a la lista 1
+       (1, 3, 3, '2024-01-04'),  -- Usuario 3 agrega película 3 a la lista 1
+       (2, 4, 4, '2024-02-11'),  -- Usuario 4 agrega película 4 a la lista 2
+       (2, 5, 5, '2024-02-12'),  -- Usuario 5 agrega película 5 a la lista 2
+       (3, 6, 6, '2024-03-16'),  -- Usuario 6 agrega película 6 a la lista 3
+       (3, 7, 7, '2024-03-17'),  -- Usuario 7 agrega película 7 a la lista 3
+       (3, 8, 8, '2024-03-18'),  -- Usuario 8 agrega película 8 a la lista 3
+       (4, 9, 1, '2024-04-21'),  -- Usuario 1 agrega película 9 a la lista 4
+       (4, 10, 2, '2024-04-22'), -- Usuario 2 agrega película 10 a la lista 4
+       (4, 11, 3, '2024-04-23'), -- Usuario 3 agrega película 11 a la lista 4
+       (5, 12, 4, '2024-05-06'), -- Usuario 4 agrega película 12 a la lista 5
+       (5, 13, 5, '2024-05-07'), -- Usuario 5 agrega película 13 a la lista 5
+       (5, 14, 6, '2024-05-08'); -- Usuario 6 agrega película 14 a la lista 5
