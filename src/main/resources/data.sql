@@ -144,7 +144,7 @@ VALUES ('Volver al Futuro',
 
        ('F1',
         'La leyenda de las carreras, Sonny Hayes, es persuadido para salir de su retiro y liderar a un equipo de Fórmula 1 en crisis, mientras entrena a un joven piloto prometedor y busca una última oportunidad de gloria.',
-        '', 120.0, 3, 0, '2025', '2025-06-25', 'f1.jpg', NULL,
+        '', 120.0, 2, 0, '2025', '2025-06-25', 'f1.jpg', NULL,
         0.0, 'Joseph Kosinski', 'Ehren Kruger', 'Inglés', 'F1');
 
 
@@ -226,7 +226,9 @@ VALUES (1, 6),
        (12, 4),
        (13, 1),
        (14, 3),
-       (14, 6);
+       (14, 6),
+       (15, 2),
+       (15,4);
 
 INSERT INTO ListaColaborativa (nombre, creador_id, colaborador_id, fechaCreacion)
 VALUES ('Películas favoritas de acción', 1, 2, '2024-01-01'),
