@@ -10,22 +10,15 @@ VALUES (1, 'Argentina'),
 -- Inserts del Usuario
 
 INSERT INTO Usuario (email, password, nombre, username, foto_de_perfil, pais_id, descripcion, rol, activo)
-VALUES ('admin@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Admin User', 'admin',
-        'admin.jpg', 1, 'Administrador del sistema', 'ADMIN', TRUE),
-       ('juan.perez@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Juan Perez',
-        'juanperez', 'juan.jpg', 2, 'Cinéfilo amateur', 'USER', FALSE),
-       ('moderador@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Moderador Uno',
-        'moduser', 'moderador.jpg', 4, 'Encargado de moderar reseñas', 'MOD', TRUE),
-       ('ana.gomez@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Ana Gomez',
-        'anagomez', 'ana.jpg', 3, 'Amante de películas de acción', 'USER', TRUE),
-       ('carlos.lopez@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Carlos Lopez',
-        'carlosl', 'carlos.jpg', 5, 'Fanático del cine clásico', 'USER', FALSE),
-       ('mora@gmail.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Mora', 'moras', 'mora.jpg',
-        5, 'user para pruebas', 'USER', TRUE),
-       ('morae2e@gmail.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Mora E2E', 'morae2e',
-        'morae2e.jpg', 5, 'user para pruebas e2e', 'USER', TRUE),
-       ('flor@unlam.edu.ar', '$2a$10$BqkXqgYnG35/LujcXESGP.QQOhecbLVcBe6fJcG3CZ62SKjUi5.3e', 'Florencia', 'flor',
-        'flor.jpg', 1, 'hola', 'USER', TRUE);
+VALUES
+    ('admin@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Admin User', 'admin', 'admin.jpg', 1, 'Administrador del sistema', 'ADMIN', TRUE),
+    ('juan.perez@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Juan Perez', 'juanperez', 'juanperez.jpg', 2, 'Cinéfilo amateur', 'USER', FALSE),
+    ('moderador@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Moderador Uno', 'moduser', 'moduser.jpg', 4, 'Encargado de moderar reseñas', 'MOD', TRUE),
+    ('ana.gomez@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Ana Gomez', 'anagomez', 'anagomez.jpg', 3, 'Amante de películas de acción', 'USER', TRUE),
+    ('carlos.lopez@example.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Agustin', 'agusmd', 'agusmd.jpg', 5, 'Fanático del cine clásico', 'USER', FALSE),
+    ('mora@gmail.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Mora', 'moras', 'moras.jpg', 5, 'user para pruebas', 'USER', TRUE),
+    ('morae2e@gmail.com', '$2a$10$TVwK/Y5fxZ0jlSdyA2tCieyNQB79HjMzyc6PT3qQHhiOSV5BeIBVe', 'Mora E2E', 'morae2e', 'morae2e.jpg', 5, 'user para pruebas e2e', 'USER', TRUE),
+    ('flor@unlam.edu.ar', '$2a$10$BqkXqgYnG35/LujcXESGP.QQOhecbLVcBe6fJcG3CZ62SKjUi5.3e', 'Florencia', 'flor', 'flor.jpg', 1, 'hola', 'USER', TRUE);
 
 INSERT INTO Seguidor(usuario_id, seguido_id)
 VALUES (6, 5),
@@ -185,17 +178,11 @@ VALUES (null, 'buenisima', 1, 9, 1, 1),
        (null, 'El final es increíble, me encantó', 10, 9, 4, 3),
        (null, 'Un clásico, siempre es bueno volver a verla', 8, 10, 1, 4),
        (null, 'La actuación principal es impecable', 4, 7, 5, 5),
-       (null, 'La trama es muy predecible, no me gustó', 1, 3, 6, 6),
+       (null, 'La trama es muy predecible, no me gustó', 20, 3, 6, 6),
        (null, 'Una obra maestra, sin duda', 12, 10, 7, 7),
        (null, 'Buena, pero esperaba más', 6, 6, 8, 8),
        (null, 'Los efectos especiales son increíbles', 9, 8, 9, 1),
-       (null, 'Demasiado lenta para mi gusto', 2, 4, 10, 2),
-       (null, 'Excelente dirección y guion', 11, 9, 11, 3),
-       (null, 'Me aburrió, pero tiene algunos momentos buenos', 3, 5, 12, 4),
-       (null, 'Recomendable para ver en familia', 7, 8, 13, 5),
-       (null, 'Parece más un documental que una película', 2, 6, 14, 6),
-       (null, 'Mi película favorita de este año', 15, 10, 14, 7),
-       (null, 'No entiendo cómo tiene tan buenas críticas', 1, 2, 12, 8);
+       (null, 'Demasiado lenta para mi gusto', 2, 4, 10, 2);
 
 -- Insertar likes en la tabla UsuarioComentario
 INSERT INTO UsuarioComentario (comentario_id, usuario_id, likeComentario)
@@ -211,10 +198,7 @@ VALUES (1, 6, TRUE),   -- El usuario 6 da like al comentario 1
        (10, 1, TRUE),  -- El usuario 1 da like al comentario 10
        (11, 2, TRUE),  -- El usuario 2 da like al comentario 11
        (12, 3, FALSE), -- El usuario 3 no da like al comentario 12
-       (13, 4, TRUE),  -- El usuario 4 da like al comentario 13
-       (14, 5, TRUE),  -- El usuario 5 da like al comentario 14
-       (15, 6, FALSE), -- El usuario 6 no da like al comentario 15
-       (16, 7, TRUE); -- El usuario 7 da like al comentario 16
+       (13, 4, TRUE);  -- El usuario 4 da like al comentario 13
 
 INSERT INTO movie_categoria (movie_id, categoria_id)
 VALUES (1, 6),
